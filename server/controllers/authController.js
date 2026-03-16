@@ -1,40 +1,48 @@
 import User from '../models/User.js'
 import generateToken from '../utils/generateToken.js'
+import sendEmail from '../utils/sendEmail.js'
+import { generateOTP } from './otpController.js'
 
 // @desc    Register user
 // @route   POST /api/auth/register
-
-
 export const register = async (req, res) => {
   try {
-    console.log('Register hit:', req.body)
     const { name, email, password, role, city, phone } = req.body
 
-    // Check if user already exists
     const userExists = await User.findOne({ email })
     if (userExists) {
       return res.status(400).json({ message: 'Email already registered' })
     }
 
-    // Create user
+    const otp = generateOTP()
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000)
+
     const user = await User.create({
-      name, email, password, role, city, phone
+      name, email, password, role, city, phone,
+      verifyOTP: otp,
+      verifyOTPExpiry: otpExpiry
     })
 
-    // Send response with token
+    await sendEmail(
+      email,
+      'Verify your TiffinBox account',
+      `
+        <h2>Welcome to TiffinBox! 🍱</h2>
+        <p>Hi ${name},</p>
+        <p>Your verification OTP is:</p>
+        <h1 style="color: #E07B2A; letter-spacing: 5px;">${otp}</h1>
+        <p>This OTP expires in <b>10 minutes.</b></p>
+        <p>If you did not register, please ignore this email.</p>
+      `
+    )
+
     res.status(201).json({
       success: true,
-      token: generateToken(user._id, user.role),
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        city: user.city
-      }
+      message: 'Registration successful! Please verify your email.',
+      email
     })
+
   } catch (error) {
-    console.log('EXACT ERROR:', error)
     res.status(500).json({ message: error.message })
   }
 }
@@ -45,19 +53,23 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Check if user exists
     const user = await User.findOne({ email })
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
 
-    // Check password
+    if (!user.isVerified) {
+      return res.status(401).json({
+        message: 'Please verify your email first',
+        isVerified: false,
+        email
+      })
+    }
+
     const isMatch = await user.matchPassword(password)
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
-
-    // Send response with token
     res.status(200).json({
       success: true,
       token: generateToken(user._id, user.role),
