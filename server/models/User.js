@@ -28,7 +28,9 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   phone: {
-    type: String
+    type: String,
+    minlength: 0,
+    maxlength: 10
   },
   avatar: {
     type: String,
