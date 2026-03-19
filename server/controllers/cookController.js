@@ -91,14 +91,12 @@ export const updateCookProfile = async (req, res) => {
     }
 
     cookProfile.bio = bio || cookProfile.bio
-    cookProfile.cuisineType = cuisineType
-      ? cuisineType.split(',').map(c => c.trim())
-      : cookProfile.cuisineType
+    cookProfile.cuisineType = cuisineType ? cuisineType.split(',').map(c => c.trim()) : cookProfile.cuisineType
     cookProfile.city = city || cookProfile.city
     cookProfile.address = address || cookProfile.address
     cookProfile.photo = photoUrl
 
-    await cookProfile.save()
+    await cookProfile.save() // Save the updated profile
 
     res.status(200).json({ success: true, cookProfile })
 
@@ -116,7 +114,7 @@ export const getAllCooks = async (req, res) => {
     const cooks = await CookProfile.find({
       isVerified: true,
       isAvailable: true,
-      ...(city && { city: { $regex: city, $options: 'i' } })
+      ...(city && { city: { $regex: city, $options: 'i' } }) // Case-insensitive search if city query is provided
     }).populate('userId', 'name email')
 
     res.status(200).json({ success: true, cooks })

@@ -19,7 +19,7 @@ function VerifyOTP() {
   if (!email) {
     navigate('/login')
   }
-}, [email, navigate])
+}, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,8 +29,13 @@ function VerifyOTP() {
     try {
       const { data } = await axiosInstance.post('/auth/verify-otp', { email, otp })
       dispatch(setCredentials({ token: data.token, user: data.user }))
+
+      // Auto redirect based on role — no login needed!
+      if (data.user.role === 'cook') navigate('/cook/setup')
+      else if (data.user.role === 'admin') navigate('/admin/dashboard')
+      else navigate('/home') 
+    
       localStorage.removeItem('verifyEmail')
-      navigate('/home')
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid OTP')
     } finally {

@@ -9,6 +9,8 @@ import {
 } from '../controllers/adminController.js'
 import { protect } from '../middleware/authMiddleware.js'
 import { authorizeRoles } from '../middleware/roleMiddleware.js'
+import { deleteUser } from '../controllers/adminController.js'
+
 
 const router = express.Router()
 
@@ -21,5 +23,7 @@ router.put('/cooks/:id/reject', rejectCook)
 router.get('/users', getAllUsers)
 router.get('/stats', getStats)
 router.put('/users/:id/ban', banUser)
+router.delete('/users/:id', deleteUser)
+
 
 export default router

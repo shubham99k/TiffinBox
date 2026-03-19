@@ -33,6 +33,7 @@ function Login() {
       if (err.response?.data?.isVerified === false) {
         localStorage.setItem("verifyEmail", err.response.data.email);
         navigate("/verify-otp");
+        return
       }
       setError(err.response?.data?.message || "Something went wrong");
     } finally {

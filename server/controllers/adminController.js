@@ -110,7 +110,7 @@ export const getStats = async (req, res) => {
   }
 }
 
-// @desc    Ban user
+/// @desc    Ban user
 // @route   PUT /api/admin/users/:id/ban
 export const banUser = async (req, res) => {
   try {
@@ -125,6 +125,30 @@ export const banUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: `User ${user.isActive ? 'unbanned' : 'banned'} successfully`
+    })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+// @desc    Delete user
+// @route   DELETE /api/admin/users/:id
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Delete cook profile if exists
+    await CookProfile.deleteOne({ userId: req.params.id })
+
+    // Delete user
+    await User.findByIdAndDelete(req.params.id)
+
+    res.status(200).json({
+      success: true,
+      message: 'User and related data deleted successfully'
     })
   } catch (error) {
     res.status(500).json({ message: error.message })

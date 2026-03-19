@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 import bcryptjs from 'bcryptjs'
+import CookProfile from './CookProfile.js'
+
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -60,5 +62,13 @@ userSchema.pre('save', async function () {
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcryptjs.compare(enteredPassword, this.password)
 }
+
+// Auto delete CookProfile when user is deleted
+userSchema.post('findOneAndDelete', async function (doc) {
+  if (doc) {
+    const CookProfile = (await import('./CookProfile.js')).default
+    await CookProfile.deleteOne({ userId: doc._id })
+  }
+})
 
 export default mongoose.model('User', userSchema)

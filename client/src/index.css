@@ -669,3 +669,427 @@ html, body, #root {
   background: var(--brand-pale);
   color: var(--brand);
 }
+
+/* ─── DASHBOARD LAYOUT ────────────────────────────────── */
+
+.dashboard-wrap {
+  min-height: 100vh;
+  background: #f7f6f3;
+  font-family: var(--font-body);
+}
+
+.dashboard-navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dashboard-navbar-brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -0.5px;
+}
+
+.dashboard-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard-navbar-user {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.dashboard-navbar-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand);
+  cursor: pointer;
+  background: var(--brand-light);
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+
+.dashboard-navbar-btn:hover { background: #ddd6fe; }
+
+.dashboard-content {
+  padding: 36px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.dashboard-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+
+/* ─── STAT CARDS ──────────────────────────────────────── */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.stat-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.stat-card-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1px;
+}
+
+.stat-card-value.purple { color: var(--brand); }
+.stat-card-value.green { color: #16A34A; }
+.stat-card-value.amber { color: #D97706; }
+
+/* ─── TABLE ───────────────────────────────────────────── */
+
+.table-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.table-card-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  text-align: left;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  font-size: 14px;
+  color: var(--ink-mid);
+  padding: 14px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  font-weight: 400;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafafa; }
+
+/* ─── BADGES ──────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-pending { background: #FEF3C7; color: #D97706; }
+.badge-verified { background: #DCFCE7; color: #16A34A; }
+.badge-rejected { background: #FEE2E2; color: #DC2626; }
+.badge-customer { background: var(--brand-light); color: var(--brand); }
+.badge-cook { background: #FEF3C7; color: #D97706; }
+.badge-admin { background: #F3F4F6; color: #374151; }
+
+/* ─── ACTION BUTTONS ──────────────────────────────────── */
+
+.btn-approve {
+  background: #DCFCE7;
+  color: #16A34A;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+
+.btn-approve:hover { background: #bbf7d0; }
+
+.btn-reject {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+  margin-left: 8px;
+}
+
+.btn-reject:hover { background: #fecaca; }
+
+/* ─── PROFILE SETUP ───────────────────────────────────── */
+
+.setup-wrap {
+  min-height: 100vh;
+  background: #f7f6f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.setup-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.setup-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+
+.setup-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+/* ─── PENDING STATUS ──────────────────────────────────── */
+
+.pending-wrap {
+  min-height: 100vh;
+  background: #f7f6f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.pending-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.pending-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.pending-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.pending-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ─── COOK PROFILE PHOTO UPLOAD ───────────────────────── */
+
+.photo-upload {
+  width: 100%;
+  height: 120px;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+.photo-upload:hover {
+  border-color: var(--brand);
+  background: var(--brand-pale);
+}
+
+.photo-upload-preview {
+ width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.photo-upload-text {
+  font-size: 13px;
+  color: var(--subtle);
+  font-weight: 500;
+}
+
+.photo-upload-hint {
+  font-size: 11px;
+  color: #D1D5DB;
+  margin-top: 2px;
+}
+
+/* ─── DASHBOARD RESPONSIVE ───────────────────────────── */
+
+@media (max-width: 768px) {
+
+  .dashboard-navbar {
+    padding: 0 16px;
+  }
+
+  .dashboard-navbar-brand {
+    font-size: 15px;
+  }
+
+  .dashboard-navbar-user {
+    display: none;
+  }
+
+  .dashboard-content {
+    padding: 20px 16px;
+  }
+
+  .dashboard-title {
+    font-size: 22px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    padding: 14px 16px;
+  }
+
+  .stat-card-value {
+    font-size: 24px;
+  }
+
+  /* ── Table horizontal scroll ── */
+  .table-card {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px;
+  }
+
+  th, td {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .table-card-header {
+    padding: 14px 16px;
+  }
+
+  .table-card-title {
+    font-size: 14px;
+  }
+
+  /* ── Pending Cooks ── */
+  .dashboard-content .table-card > div {
+    padding: 14px 16px;
+  }
+
+  /* Cook summary row wrap on mobile */
+  .pending-cook-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .pending-cook-actions {
+    width: 100%;
+    justify-content: flex-start !important;
+    flex-wrap: wrap;
+  }
+
+  /* Expanded details — single column on mobile */
+  .pending-cook-details {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Stat cards single column on very small screens ── */
+  @media (max-width: 360px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
