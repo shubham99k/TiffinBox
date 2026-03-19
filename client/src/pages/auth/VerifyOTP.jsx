@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../redux/slices/authSlice'
@@ -8,12 +8,18 @@ import OTPInput from '../../components/OTPInput'
 function VerifyOTP() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const email = localStorage.getItem('verifyEmail')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [resending, setResending] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const email = localStorage.getItem('verifyEmail')
+  useEffect(() => {
+  if (!email) {
+    navigate('/login')
+  }
+}, [email, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,7 +30,7 @@ function VerifyOTP() {
       const { data } = await axiosInstance.post('/auth/verify-otp', { email, otp })
       dispatch(setCredentials({ token: data.token, user: data.user }))
       localStorage.removeItem('verifyEmail')
-      navigate('/login')
+      navigate('/home')
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid OTP')
     } finally {
