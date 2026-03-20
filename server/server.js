@@ -5,20 +5,24 @@ import connectDB from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import cookRoutes from './routes/cookRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+import menuRoutes from './routes/menuRoutes.js'
 
 dotenv.config()
 connectDB()
 
 const app = express()
-app.use(cors())
+
+app.use(cors({ origin: '*' }))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/api/auth', authRoutes)
 app.use('/api/cook', cookRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/menu', menuRoutes)
 
 app.get('/', (req, res) => {
-  res.json({ message: 'TiffinBox API is running 🍱' })
+  res.json({ message: 'TiffinBox API is running' })
 })
 
 const PORT = process.env.PORT || 5000

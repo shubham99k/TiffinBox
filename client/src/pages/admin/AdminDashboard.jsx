@@ -69,7 +69,7 @@ function AdminDashboard() {
 
       {/* ── Navbar ── */}
       <div className='dashboard-navbar'>
-        <div className='dashboard-navbar-brand'>🍱 TiffinBox Admin</div>
+        <div className='dashboard-navbar-brand'>TiffinBox Admin</div>
         <div className='dashboard-navbar-right'>
           <div className='dashboard-navbar-user'>👤 {user?.name}</div>
           <button className='dashboard-navbar-btn' onClick={handleLogout}>Logout</button>

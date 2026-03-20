@@ -11,10 +11,15 @@ import ResetPassword from './pages/auth/ResetPassword'
 // Cook Pages
 import CookProfileSetup from './pages/cook/CookProfileSetup'
 import CookDashboard from './pages/cook/CookDashboard'
+import PostMenu from './pages/cook/PostMenu'
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard'
 import PendingCooks from './pages/admin/PendingCooks'
+
+// Customer Pages
+import Home from './pages/customer/Home'
+import CookPublicProfile from './pages/customer/CookPublicProfile'
 
 function App() {
   const { user } = useSelector((state) => state.auth)
@@ -28,17 +33,22 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/verify-otp' element={<VerifyOTP />} />
-        <Route path='/home' element={<div style={{ padding: '40px', fontFamily: 'Geist', fontSize: '24px', fontWeight: 700 }}>🍱 Customer Home — Coming Soon!</div>} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/reset-password' element={<ResetPassword />} />
 
         {/* Cook */}
         <Route path='/cook/setup' element={<CookProfileSetup />} />
         <Route path='/cook/dashboard' element={<CookDashboard />} />
+        <Route path='/cook/post-menu' element={<PostMenu />} />
+
 
         {/* Admin */}
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
         <Route path='/admin/pending-cooks' element={<PendingCooks />} />
+
+        {/* Customer */}
+        <Route path='/home' element={<Home />} />
+        <Route path='/cook/:id' element={<CookPublicProfile />} />
       </Routes>
     </BrowserRouter>
   )

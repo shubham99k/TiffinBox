@@ -1093,3 +1093,211 @@ tr:hover td { background: #fafafa; }
     }
   }
 }
+
+/* ─── POST MENU ───────────────────────────────────────── */
+
+.menu-wrap {
+  min-height: 100vh;
+  background: #f7f6f3;
+}
+
+.dish-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.dish-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.dish-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dish-remove-btn {
+  background: #FEE2E2;
+  color: #DC2626;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.add-dish-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--brand-light);
+  color: var(--brand);
+  border: 2px dashed var(--brand);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+  margin-bottom: 20px;
+}
+
+.add-dish-btn:hover { background: #ddd6fe; }
+
+/* ─── STOCK PHOTO PICKER ──────────────────────────────── */
+
+.photo-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.photo-picker-item {
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+  aspect-ratio: 1;
+}
+
+.photo-picker-item:hover { border-color: var(--brand); }
+.photo-picker-item.selected { border-color: var(--brand); }
+
+.photo-picker-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-picker-name {
+  font-size: 9px;
+  text-align: center;
+  color: var(--subtle);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── MENU CARD (Customer) ────────────────────────────── */
+
+.cook-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.cook-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.cook-card-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: var(--brand-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.cook-card-body {
+  padding: 16px;
+}
+
+.cook-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.cook-card-meta {
+  font-size: 12px;
+  color: var(--subtle);
+  margin-bottom: 8px;
+}
+
+.cook-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cook-tag {
+  background: var(--brand-light);
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.menu-dish-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  gap: 0;
+}
+
+.menu-dish-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.menu-dish-body {
+  padding: 14px;
+  flex: 1;
+}
+
+.menu-dish-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.menu-dish-desc {
+  font-size: 12px;
+  color: var(--subtle);
+  margin-bottom: 8px;
+}
+
+.menu-dish-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-dish-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--brand);
+  letter-spacing: -0.5px;
+}
+
+.menu-dish-portions {
+  font-size: 11px;
+  color: var(--subtle);
+  font-weight: 500;
+}

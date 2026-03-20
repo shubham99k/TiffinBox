@@ -71,7 +71,7 @@ function PendingCooks() {
     <div className="dashboard-wrap">
       {/* Navbar */}
       <div className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">🍱 TiffinBox Admin</div>
+        <div className="dashboard-navbar-brand">TiffinBox Admin</div>
         <div className="dashboard-navbar-right">
           <button
             className="dashboard-navbar-btn"
