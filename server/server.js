@@ -6,6 +6,8 @@ import authRoutes from './routes/authRoutes.js'
 import cookRoutes from './routes/cookRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import menuRoutes from './routes/menuRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
+
 
 dotenv.config()
 connectDB()
@@ -20,6 +22,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/cook', cookRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/menu', menuRoutes)
+
+app.use('/api/orders', orderRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'TiffinBox API is running' })
