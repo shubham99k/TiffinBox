@@ -116,6 +116,9 @@ function CookDashboard() {
           <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/post-menu')}>
             + Post Menu
           </button>
+          <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/orders')}>
+  📦 Orders
+</button>
           <button className='dashboard-navbar-btn' onClick={handleLogout}>Logout</button>
         </div>
       </div>

@@ -21,6 +21,11 @@ import PendingCooks from './pages/admin/PendingCooks'
 import Home from './pages/customer/Home'
 import CookPublicProfile from './pages/customer/CookPublicProfile'
 
+// Order Pages
+import PlaceOrder from './pages/customer/PlaceOrder'
+import OrderHistory from './pages/customer/OrderHistory'
+import CookOrders from './pages/cook/CookOrders'
+
 function App() {
   const { user } = useSelector((state) => state.auth)
 
@@ -49,6 +54,11 @@ function App() {
         {/* Customer */}
         <Route path='/home' element={<Home />} />
         <Route path='/cook/:id' element={<CookPublicProfile />} />
+
+        {/* Orders */}
+        <Route path='/orders/place' element={<PlaceOrder />} />
+        <Route path='/orders/my' element={<OrderHistory />} />
+        <Route path='/cook/orders' element={<CookOrders />} />
       </Routes>
     </BrowserRouter>
   )

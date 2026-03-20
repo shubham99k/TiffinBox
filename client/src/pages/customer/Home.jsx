@@ -50,6 +50,9 @@ function Home() {
         <div className="dashboard-navbar-brand">TiffinBox</div>
         <div className="dashboard-navbar-right">
           <div className="dashboard-navbar-user">👤 {user?.name}</div>
+          <button className='dashboard-navbar-btn' onClick={() => navigate('/orders/my')}>
+  My Orders
+</button>
           <button className="dashboard-navbar-btn" onClick={handleLogout}>
             Logout
           </button>

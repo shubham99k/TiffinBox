@@ -267,8 +267,42 @@ function CookPublicProfile() {
                       )}
                       <div className="menu-dish-footer">
                         <div className="menu-dish-price">₹{dish.price}</div>
-                        <div className="menu-dish-portions">
-                          {dish.portionsLeft} portions left
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          <div className="menu-dish-portions">
+                            {dish.portionsLeft} left
+                          </div>
+                          {dish.portionsLeft > 0 && (
+                            <button
+                              onClick={() =>
+                                navigate("/orders/place", {
+                                  state: {
+                                    menuId: menu._id,
+                                    dishIndex: i,
+                                    dish,
+                                  },
+                                })
+                              }
+                              style={{
+                                background: "var(--brand)",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "8px",
+                                padding: "6px 14px",
+                                fontSize: "12px",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                                fontFamily: "var(--font-body)",
+                              }}
+                            >
+                              Order
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
