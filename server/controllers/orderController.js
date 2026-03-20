@@ -2,6 +2,8 @@ import Order from '../models/Order.js'
 import Menu from '../models/Menu.js'
 import CookProfile from '../models/CookProfile.js'
 import sendEmail from '../utils/sendEmail.js'
+import Notification from '../models/Notification.js'
+
 
 // Helper — check if cutoff time has passed
 const isCutoffPassed = (cutoffTime) => {
@@ -65,6 +67,12 @@ export const placeOrder = async (req, res) => {
       status: 'confirmed',
       paymentStatus: 'pending'
     })
+
+    await Notification.create({
+    userId: cookProfile.userId._id,
+    message: `New order received for ${dish.name}!`,
+    type: 'order_placed'
+  })
 
     // Notify cook via email
     const cookProfile = await CookProfile.findById(menu.cookId)
@@ -144,6 +152,12 @@ export const updateOrderStatus = async (req, res) => {
 
     order.status = status
     await order.save()
+
+    await Notification.create({
+    userId: order.customerId._id,
+    message: `Your order for ${order.dish.name} is now ${status}!`,
+    type: `order_${status}`
+  })
 
     // Notify customer via email
     await sendEmail(

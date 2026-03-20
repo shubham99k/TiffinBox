@@ -6,6 +6,9 @@ function OrderHistory() {
   const navigate = useNavigate()
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
+  const [reviewingId, setReviewingId] = useState(null)
+  const [reviewData, setReviewData] = useState({ rating: 5, comment: '' })
+  const [reviewSuccess, setReviewSuccess] = useState('')
 
   useEffect(() => {
     fetchOrders()
@@ -31,6 +34,25 @@ function OrderHistory() {
       ))
     } catch (err) {
       alert(err.response?.data?.message || 'Cannot cancel order')
+    }
+  }
+
+  const handleReview = async (orderId) => {
+    try {
+      await axiosInstance.post('/reviews', {
+        orderId,
+        rating: reviewData.rating,
+        comment: reviewData.comment
+      })
+      setOrders(orders.map(o =>
+        o._id === orderId ? { ...o, isReviewed: true } : o
+      ))
+      setReviewingId(null)
+      setReviewData({ rating: 5, comment: '' })
+      setReviewSuccess('Review submitted successfully!')
+      setTimeout(() => setReviewSuccess(''), 3000)
+    } catch (err) {
+      alert(err.response?.data?.message || 'Something went wrong')
     }
   }
 
@@ -68,6 +90,8 @@ function OrderHistory() {
         <div className='dashboard-title'>My Orders</div>
         <div className='dashboard-subtitle'>{orders.length} orders total</div>
 
+        {reviewSuccess && <div className='success-box'>{reviewSuccess}</div>}
+
         {orders.length === 0 ? (
           <div className='table-card'>
             <div style={{ padding: '48px', textAlign: 'center' }}>
@@ -88,45 +112,112 @@ function OrderHistory() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {orders.map(order => (
               <div key={order._id} className='table-card'>
-                <div style={{ padding: '20px 24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <div style={{ padding: '20px 24px' }}>
 
-                  {/* Dish Photo */}
-                  {order.dish?.photo && (
-                    <img src={order.dish.photo} alt={order.dish.name}
-                      style={{ width: '72px', height: '72px', borderRadius: '12px', objectFit: 'cover', flexShrink: 0 }} />
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    {order.dish?.photo && (
+                      <img src={order.dish.photo} alt={order.dish.name}
+                        style={{ width: '72px', height: '72px', borderRadius: '12px', objectFit: 'cover', flexShrink: 0 }} />
+                    )}
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                        <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ink)' }}>
+                          {order.dish?.name}
+                        </div>
+                        <span className={`badge ${statusColor(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '13px', color: 'var(--subtle)', marginBottom: '4px' }}>
+                        Qty: {order.quantity} · ₹{order.totalAmount} · COD
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--subtle)', marginBottom: '8px' }}>
+                        📍 {order.deliveryAddress}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--subtle)' }}>
+                        {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString()}
+                      </div>
+
+                      {/* Cancel Button */}
+                      {['confirmed', 'pending'].includes(order.status) && (
+                        <button
+                          onClick={() => handleCancel(order._id)}
+                          className='btn-reject'
+                          style={{ marginLeft: 0, marginTop: '10px' }}
+                        >
+                          Cancel Order
+                        </button>
+                      )}
+
+                      {/* Review Button */}
+                      {order.status === 'delivered' && !order.isReviewed && (
+                        <button
+                          onClick={() => setReviewingId(order._id)}
+                          className='btn-approve'
+                          style={{ marginTop: '10px' }}
+                        >
+                          ⭐ Leave Review
+                        </button>
+                      )}
+
+                      {order.isReviewed && (
+                        <div style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600, marginTop: '8px' }}>
+                          ✓ Reviewed
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Review Form */}
+                  {reviewingId === order._id && (
+                    <div style={{ borderTop: '1px solid var(--border)', marginTop: '16px', paddingTop: '16px' }}>
+
+                      {/* Star Rating */}
+                      <div style={{ marginBottom: '12px' }}>
+                        <div className='inp-label' style={{ marginBottom: '8px' }}>Rating</div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          {[1, 2, 3, 4, 5].map(star => (
+                            <span
+                              key={star}
+                              onClick={() => setReviewData({ ...reviewData, rating: star })}
+                              style={{
+                                fontSize: '24px', cursor: 'pointer',
+                                opacity: star <= reviewData.rating ? 1 : 0.3,
+                                transition: 'opacity 0.15s'
+                              }}
+                            >
+                              ⭐
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Comment */}
+                      <div className='inp-wrap' style={{ marginBottom: '12px' }}>
+                        <div className='inp-label'>Comment (optional)</div>
+                        <input
+                          className='inp-field' type='text'
+                          value={reviewData.comment}
+                          onChange={(e) => setReviewData({ ...reviewData, comment: e.target.value })}
+                          placeholder='How was the food?'
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button className='btn-approve' onClick={() => handleReview(order._id)}>
+                          Submit Review
+                        </button>
+                        <button
+                          onClick={() => setReviewingId(null)}
+                          style={{ background: 'none', border: 'none', color: 'var(--subtle)', cursor: 'pointer', fontSize: '13px', fontFamily: 'var(--font-body)' }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+
+                    </div>
                   )}
 
-                  {/* Order Info */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                      <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ink)' }}>
-                        {order.dish?.name}
-                      </div>
-                      <span className={`badge ${statusColor(order.status)}`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '13px', color: 'var(--subtle)', marginBottom: '4px' }}>
-                      Qty: {order.quantity} · ₹{order.totalAmount} · COD
-                    </div>
-                    <div style={{ fontSize: '12px', color: 'var(--subtle)', marginBottom: '8px' }}>
-                      📍 {order.deliveryAddress}
-                    </div>
-                    <div style={{ fontSize: '11px', color: 'var(--subtle)' }}>
-                      {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString()}
-                    </div>
-
-                    {/* Cancel Button */}
-                    {['confirmed', 'pending'].includes(order.status) && (
-                      <button
-                        onClick={() => handleCancel(order._id)}
-                        className='btn-reject'
-                        style={{ marginLeft: 0, marginTop: '10px' }}
-                      >
-                        Cancel Order
-                      </button>
-                    )}
-                  </div>
                 </div>
               </div>
             ))}

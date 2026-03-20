@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import axiosInstance from "../../utils/axiosInstance";
+import NotificationBell from '../../components/NotificationBell'
+
 
 function Home() {
   const navigate = useNavigate();
@@ -49,6 +51,7 @@ function Home() {
       <div className="dashboard-navbar">
         <div className="dashboard-navbar-brand">TiffinBox</div>
         <div className="dashboard-navbar-right">
+            <NotificationBell />  
           <div className="dashboard-navbar-user">👤 {user?.name}</div>
           <button className='dashboard-navbar-btn' onClick={() => navigate('/orders/my')}>
   My Orders

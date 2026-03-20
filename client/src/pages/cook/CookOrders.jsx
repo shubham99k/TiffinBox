@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import NotificationBell from '../../components/NotificationBell'
+
 
 function CookOrders() {
   const navigate = useNavigate()
@@ -65,6 +67,7 @@ function CookOrders() {
       <div className='dashboard-navbar'>
         <div className='dashboard-navbar-brand'>🍱 TiffinBox</div>
         <div className='dashboard-navbar-right'>
+            <NotificationBell />
           <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/dashboard')}>
             ← Dashboard
           </button>
