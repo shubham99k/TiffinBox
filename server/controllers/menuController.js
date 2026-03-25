@@ -109,11 +109,14 @@ export const getMyMenus = async (req, res) => {
       return res.status(404).json({ message: 'Cook profile not found' })
     }
     const today = getTodayDate()
-    const menus = await Menu.find({
-      cookId: cookProfile._id,
-      date: today
-    })
-    res.status(200).json({ success: true, menus })
+    const menus = await Menu.find({ cookId: cookProfile._id, date: today })
+
+    const menusWithExpiry = menus.map(menu => ({
+      ...menu.toObject(),
+      isExpired: isCutoffPassed(menu.cutoffTime)
+    }))
+
+    res.status(200).json({ success: true, menus: menusWithExpiry })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -205,6 +208,31 @@ export const getAllMenus = async (req, res) => {
 
     res.status(200).json({ success: true, menus: activeMenus })
 
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+// @desc    Get cook's past/expired menus
+// @route   GET /api/menu/history
+export const getMenuHistory = async (req, res) => {
+  try {
+    const cookProfile = await CookProfile.findOne({ userId: req.user.id })
+    if (!cookProfile) {
+      return res.status(404).json({ message: 'Cook profile not found' })
+    }
+
+    const today = getTodayDate()
+
+    // Past days menus + today's expired menus
+    const allMenus = await Menu.find({ cookId: cookProfile._id })
+
+    const historyMenus = allMenus
+      .filter(menu => menu.date < today || (menu.date === today && isCutoffPassed(menu.cutoffTime)))
+      .map(menu => ({ ...menu.toObject(), isExpired: true }))
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+
+    res.status(200).json({ success: true, menus: historyMenus })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }

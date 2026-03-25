@@ -15,6 +15,7 @@ function OrderHistory() {
   const [reviewData, setReviewData] = useState({ rating: 5, comment: "" });
   const [reviewSuccess, setReviewSuccess] = useState("");
   const [confirmCancelId, setConfirmCancelId] = useState(null)
+  const [expandedReviewId, setExpandedReviewId] = useState(null)
 
   useEffect(() => {
     fetchOrders();
@@ -227,15 +228,42 @@ function OrderHistory() {
                       )}
 
                       {order.isReviewed && (
-                        <div
-                          style={{
-                            fontSize: "12px",
-                            color: "#16A34A",
-                            fontWeight: 600,
-                            marginTop: "8px",
-                          }}
-                        >
-                          <CheckCircle2 size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Reviewed
+                        <div style={{ marginTop: '8px' }}>
+                          <div
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                            onClick={() => setExpandedReviewId(expandedReviewId === order._id ? null : order._id)}
+                          >
+                            <div style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <CheckCircle2 size={12} /> Reviewed
+                            </div>
+                            <span style={{ fontSize: '11px', color: 'var(--subtle)' }}>
+                              {expandedReviewId === order._id ? 'Hide ▲' : 'View ▼'}
+                            </span>
+                          </div>
+
+                          {expandedReviewId === order._id && order.review && (
+                            <div style={{
+                              marginTop: '8px',
+                              padding: '10px 14px',
+                              background: '#F0FDF4',
+                              borderRadius: '8px',
+                              border: '1px solid #BBF7D0'
+                            }}>
+                              <div style={{ display: 'flex', gap: '3px', marginBottom: '4px' }}>
+                                {Array.from({ length: order.review.rating }).map((_, i) => (
+                                  <Star key={i} size={14} color="#D97706" fill="#D97706" />
+                                ))}
+                              </div>
+                              {order.review.comment && (
+                                <div style={{ fontSize: '13px', color: 'var(--ink)', lineHeight: 1.5 }}>
+                                  {order.review.comment}
+                                </div>
+                              )}
+                              <div style={{ fontSize: '11px', color: 'var(--subtle)', marginTop: '4px' }}>
+                                {new Date(order.review.createdAt).toLocaleDateString('en-GB')}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

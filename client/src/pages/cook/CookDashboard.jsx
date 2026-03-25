@@ -5,7 +5,7 @@ import { logout } from '../../redux/slices/authSlice'
 import axiosInstance from '../../utils/axiosInstance'
 import NotificationBell from '../../components/NotificationBell'
 import Alert from '../../components/Alert'
-import { ListOrdered, Hourglass, ChefHat, Star, BadgeCheck, PlusCircle, LogOut } from 'lucide-react'
+import { ListOrdered, Hourglass, ChefHat, Star, BadgeCheck, PlusCircle, LogOut, Clock, UtensilsCrossed } from 'lucide-react'
 
 
 function CookDashboard() {
@@ -21,12 +21,30 @@ function CookDashboard() {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [todayMenus, setTodayMenus] = useState([])
+
+  const getTimeRemaining = (cutoffTime) => {
+    const now = new Date()
+    const [hours, minutes] = cutoffTime.split(':').map(Number)
+    const cutoff = new Date()
+    cutoff.setHours(hours, minutes, 0, 0)
+    const diff = cutoff - now
+    if (diff <= 0) return 'Expired'
+    const h = Math.floor(diff / (1000 * 60 * 60))
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+    const s = Math.floor((diff % (1000 * 60)) / 1000)
+    if (h > 0) return `${h}h ${m}m remaining`
+    if (m > 0) return `${m}m remaining`
+    return `${s}s remaining`
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const { data } = await axiosInstance.get('/cook/profile/me')
         setCookProfile(data.cookProfile)
+        const menuRes = await axiosInstance.get('/menu/my')
+        setTodayMenus(menuRes.data.menus)
         setFormData({
           bio: data.cookProfile.bio,
           cuisineType: data.cookProfile.cuisineType?.join(', '),
@@ -159,6 +177,64 @@ function CookDashboard() {
             <div className='stat-card-label'>Total Reviews</div>
             <div className='stat-card-value'>{cookProfile?.totalReviews || 0}</div>
           </div>
+        </div>
+
+        {/* Live Menu */}
+        <div className='table-card' style={{ marginBottom: '24px' }}>
+          <div className='table-card-header'>
+            <div className='table-card-title'>Today's Live Menu</div>
+            <button
+              className='dashboard-navbar-btn'
+              onClick={() => navigate('/cook/post-menu')}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <PlusCircle size={14} /> Post Menu
+            </button>
+          </div>
+
+          {todayMenus.length === 0 ? (
+            <div style={{ padding: '32px', textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', color: 'var(--subtle)' }}>
+                <UtensilsCrossed size={32} />
+              </div>
+              <div style={{ fontSize: '14px', color: 'var(--subtle)' }}>No menu posted today</div>
+            </div>
+          ) : (
+            <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {todayMenus.map((menu) => {
+                const expired = getTimeRemaining(menu.cutoffTime) === 'Expired'
+                return (
+                  <div
+                    key={menu._id}
+                    style={{
+                      padding: '14px 16px',
+                      background: expired ? '#fafafa' : '#f0fdf4',
+                      borderRadius: '10px',
+                      border: `1px solid ${expired ? 'var(--border)' : '#bbf7d0'}`,
+                      opacity: expired ? 0.6 : 1
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--ink)', textTransform: 'capitalize' }}>
+                        {menu.mealType} menu
+                      </div>
+                      <div style={{ fontSize: '12px', color: expired ? '#DC2626' : '#16A34A', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Clock size={12} />
+                        {expired ? 'Expired' : `Cutoff ${menu.cutoffTime} · ${getTimeRemaining(menu.cutoffTime)}`}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      {menu.dishes?.map((d, i) => (
+                        <span key={i} className='cook-tag'>
+                          {d.name} · ₹{d.price} · {d.portionsLeft}/{d.maxPortions} left
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* Profile Card */}

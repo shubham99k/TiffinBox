@@ -3,6 +3,7 @@ import Menu from '../models/Menu.js'
 import CookProfile from '../models/CookProfile.js'
 import sendEmail from '../utils/sendEmail.js'
 import Notification from '../models/Notification.js'
+import Review from '../models/Review.js'
 
 // Helper — check if cutoff time has passed
 const isCutoffPassed = (cutoffTime) => {
@@ -107,7 +108,16 @@ export const getMyOrders = async (req, res) => {
       .populate('cookId')
       .sort({ createdAt: -1 })
 
-    res.status(200).json({ success: true, orders })
+    const Review = (await import('../models/Review.js')).default
+    const orderIds = orders.map(o => o._id)
+    const reviews = await Review.find({ orderId: { $in: orderIds } })
+
+    const ordersWithReview = orders.map(order => {
+      const review = reviews.find(r => r.orderId.toString() === order._id.toString())
+      return { ...order.toObject(), review: review || null }
+    })
+
+    res.status(200).json({ success: true, orders: ordersWithReview })
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
