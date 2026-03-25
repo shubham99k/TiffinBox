@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import stockPhotos from "../../utils/stockPhotos";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
+import Alert from "../../components/Alert";
+import { validateMenu } from "../../utils/validate";
+import Navbar from '../../components/Navbar'
+import ConfirmDialog from '../../components/ConfirmDialog'
 
 function PostMenu() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
   const [mealType, setMealType] = useState("lunch");
   const [cutoffTime, setCutoffTime] = useState("10:00");
   const [dishes, setDishes] = useState([
@@ -25,6 +23,13 @@ function PostMenu() {
   const [success, setSuccess] = useState("");
   const [showPhotoPicker, setShowPhotoPicker] = useState(null);
   const [existingMenus, setExistingMenus] = useState([]);
+  const [editingMenu, setEditingMenu] = useState(null);
+  const [confirmDeleteMenuId, setConfirmDeleteMenuId] = useState(null)
+
+  const getCurrentTime = () => {
+    const now = new Date()
+    return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+  }
 
   useEffect(() => {
     fetchMyMenus();
@@ -53,6 +58,7 @@ function PostMenu() {
   };
 
   const handleRemoveDish = (index) => {
+    if (dishes.length === 1) return;
     setDishes(dishes.filter((_, i) => i !== index));
   };
 
@@ -61,13 +67,44 @@ function PostMenu() {
     setShowPhotoPicker(null);
   };
 
+  const handleEditMenu = (menu) => {
+    setEditingMenu(menu);
+    setMealType(menu.mealType);
+    setCutoffTime(menu.cutoffTime);
+    setDishes(
+      menu.dishes.map((d) => ({
+        name: d.name,
+        photo: d.photo,
+        description: d.description,
+        price: d.price,
+        maxPortions: d.maxPortions,
+      })),
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDeleteMenu = async () => {
+    try {
+      await axiosInstance.delete(`/menu/${confirmDeleteMenuId}`)
+      setExistingMenus(existingMenus.filter((m) => m._id !== confirmDeleteMenuId))
+      setSuccess("Menu deleted successfully!")
+      setConfirmDeleteMenuId(null)
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong")
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationError = validateMenu(dishes, cutoffTime);
+    if (validationError) return setError(validationError);
+
     setLoading(true);
     setError("");
     setSuccess("");
+
     try {
-      await axiosInstance.post("/menu", {
+      const payload = {
         mealType,
         cutoffTime,
         dishes: dishes.map((d) => ({
@@ -75,12 +112,22 @@ function PostMenu() {
           price: Number(d.price),
           maxPortions: Number(d.maxPortions),
         })),
-      });
-      setSuccess(`${mealType} menu posted successfully!`);
+      };
+
+      if (editingMenu) {
+        await axiosInstance.put(`/menu/${editingMenu._id}`, payload);
+        setSuccess("Menu updated successfully!");
+        setEditingMenu(null);
+      } else {
+        await axiosInstance.post("/menu", payload);
+        setSuccess(`${mealType} menu posted successfully!`);
+      }
+
       fetchMyMenus();
       setDishes([
         { name: "", photo: "", description: "", price: "", maxPortions: "" },
       ]);
+      setCutoffTime(mealType === "lunch" ? "10:00" : "16:00");
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
@@ -88,59 +135,147 @@ function PostMenu() {
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
+
 
   return (
     <div className="menu-wrap">
-      {/* Navbar */}
-      <div className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">TiffinBox</div>
-        <div className="dashboard-navbar-right">
-          <button
-            className="dashboard-navbar-btn"
-            onClick={() => navigate("/cook/dashboard")}
-          >
-            ← Dashboard
-          </button>
-          <button className="dashboard-navbar-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </div>
+      <Navbar showBack backPath='/cook/dashboard' backLabel='Dashboard' />
+
 
       <div className="dashboard-content">
-        <div className="dashboard-title">Post Today's Menu</div>
+        <div className="dashboard-title">
+          {editingMenu ? "Update Menu" : "Post Today's Menu"}
+        </div>
         <div className="dashboard-subtitle">
-          Add dishes for lunch or dinner today
+          {editingMenu
+            ? "Edit your existing menu"
+            : "Add dishes for lunch or dinner today"}
         </div>
 
-        {/* Existing Menus */}
+        <Alert type="error" message={error} onClose={() => setError("")} />
+        <Alert
+          type="success"
+          message={success}
+          onClose={() => setSuccess("")}
+        />
+
+        {/* Today's Posted Menus */}
         {existingMenus.length > 0 && (
           <div className="table-card" style={{ marginBottom: "24px" }}>
             <div className="table-card-header">
-              <div className="table-card-title">Already Posted Today</div>
+              <div className="table-card-title">Today's Posted Menus</div>
             </div>
-            <div style={{ padding: "16px 24px", display: "flex", gap: "10px" }}>
+            <div
+              style={{
+                padding: "16px 24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+              }}
+            >
               {existingMenus.map((menu) => (
-                <span key={menu._id} className="badge badge-verified">
-                  ✓ {menu.mealType} menu posted
-                </span>
+                <div
+                  key={menu._id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "12px 16px",
+                    background: "#fafafa",
+                    borderRadius: "10px",
+                    border: "1px solid var(--border)",
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        color: "var(--ink)",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {menu.mealType === "lunch" ? "" : ""} {menu.mealType}{" "}
+                      menu
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "var(--subtle)",
+                        marginTop: "2px",
+                      }}
+                    >
+                      {menu.dishes?.length} dishes · cutoff {menu.cutoffTime}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "6px",
+                        marginTop: "6px",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {menu.dishes?.map((d, i) => (
+                        <span key={i} className="cook-tag">
+                          {d.name} · ₹{d.price}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                    <button
+                      className="btn-approve"
+                      onClick={() => handleEditMenu(menu)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn-reject"
+                      style={{ marginLeft: 0 }}
+                      onClick={() => setConfirmDeleteMenuId(menu._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         )}
 
-        {error && <div className="error-box">{error}</div>}
-        {success && <div className="success-box">{success}</div>}
-
-        <form onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           {/* Meal Type + Cutoff Time */}
           <div className="table-card" style={{ marginBottom: "20px" }}>
             <div className="table-card-header">
               <div className="table-card-title">Menu Details</div>
+              {editingMenu && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingMenu(null);
+                    setDishes([
+                      {
+                        name: "",
+                        photo: "",
+                        description: "",
+                        price: "",
+                        maxPortions: "",
+                      },
+                    ]);
+                    setCutoffTime(mealType === "lunch" ? "10:00" : "16:00");
+                  }}
+                  style={{
+                    fontSize: "12px",
+                    color: "var(--subtle)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  Cancel Edit
+                </button>
+              )}
             </div>
             <div style={{ padding: "20px 24px" }}>
               <div className="inp-row">
@@ -153,6 +288,7 @@ function PostMenu() {
                       <button
                         key={type}
                         type="button"
+                        disabled={!!editingMenu}
                         onClick={() => {
                           setMealType(type);
                           setCutoffTime(type === "lunch" ? "10:00" : "16:00");
@@ -175,12 +311,13 @@ function PostMenu() {
                               : "var(--subtle)",
                           fontWeight: 600,
                           fontSize: "13px",
-                          cursor: "pointer",
+                          cursor: editingMenu ? "not-allowed" : "pointer",
                           fontFamily: "var(--font-body)",
                           textTransform: "capitalize",
+                          opacity: editingMenu ? 0.6 : 1,
                         }}
                       >
-                        {type === "lunch" ? "Lunch" : "Dinner"}
+                        {type === "lunch" ? " Lunch" : "Dinner"}
                       </button>
                     ))}
                   </div>
@@ -193,6 +330,8 @@ function PostMenu() {
                       type="time"
                       value={cutoffTime}
                       onChange={(e) => setCutoffTime(e.target.value)}
+                        min={getCurrentTime()}
+                      max={mealType === 'lunch' ? '13:00' : '20:00'}
                       required
                     />
                   </div>
@@ -291,8 +430,6 @@ function PostMenu() {
                         + Pick a photo
                       </button>
                     )}
-
-                    {/* Photo Grid */}
                     {showPhotoPicker === index && (
                       <div style={{ marginTop: "12px" }}>
                         <div className="photo-picker-grid">
@@ -389,11 +526,22 @@ function PostMenu() {
 
           <button type="submit" className="auth-btn" disabled={loading}>
             {loading
-              ? "Posting menu..."
-              : `Post ${mealType === "lunch" ? "Lunch" : "Dinner"} Menu`}
+              ? "Saving..."
+              : editingMenu
+                ? "Update Menu"
+                : `Post ${mealType === "lunch" ? " Lunch" : "Dinner"} Menu`}
           </button>
         </form>
       </div>
+      {confirmDeleteMenuId && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this menu?"
+          confirmLabel="Delete"
+          confirmColor="#DC2626"
+          onConfirm={handleDeleteMenu}
+          onCancel={() => setConfirmDeleteMenuId(null)}
+        />
+      )}
     </div>
   );
 }

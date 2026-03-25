@@ -1,4 +1,6 @@
 import axios from 'axios'
+import store from '../redux/store'
+import { setBanned } from '../redux/slices/authSlice'
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -12,5 +14,18 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config
 })
+
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (
+      error.response?.status === 401 &&
+      error.response?.data?.message === 'Your account has been suspended'
+    ) {
+      store.dispatch(setBanned())
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default axiosInstance

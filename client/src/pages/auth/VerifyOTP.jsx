@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../redux/slices/authSlice'
 import axiosInstance from '../../utils/axiosInstance'
 import OTPInput from '../../components/OTPInput'
+import { ArrowLeft } from "lucide-react";
 
 function VerifyOTP() {
   const navigate = useNavigate()
@@ -16,10 +17,10 @@ function VerifyOTP() {
 
   const email = localStorage.getItem('verifyEmail')
   useEffect(() => {
-  if (!email) {
-    navigate('/login')
-  }
-}, [])
+    if (!email) {
+      navigate('/login')
+    }
+  }, [email, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -65,8 +66,8 @@ function VerifyOTP() {
       <div className='auth-left'>
         <div className='auth-left-inner'>
 
-          <span className='auth-back' onClick={() => navigate('/register')}>
-            ← Back to register
+          <span className='auth-back' onClick={() => navigate('/register')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ArrowLeft size={16} /> Back to register
           </span>
 
           <div className='auth-page-title'>

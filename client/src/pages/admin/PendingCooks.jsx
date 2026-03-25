@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import Navbar from '../../components/Navbar'
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 function PendingCooks() {
-  const navigate = useNavigate();
   const [cooks, setCooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [rejectReason, setRejectReason] = useState("");
   const [rejectingId, setRejectingId] = useState(null);
+  const [confirmApproveId, setConfirmApproveId] = useState(null)
+  const [confirmRejectId, setConfirmRejectId] = useState(null)
 
   useEffect(() => {
     fetchPendingCooks();
@@ -25,25 +27,23 @@ function PendingCooks() {
     }
   };
 
-  const handleApprove = async (id) => {
+  const handleApprove = async () => {
     try {
-      await axiosInstance.put(`/admin/cooks/${id}/verify`);
-      setCooks(cooks.filter((c) => c._id !== id));
+      await axiosInstance.put(`/admin/cooks/${confirmApproveId}/verify`);
+      setCooks(cooks.filter((c) => c._id !== confirmApproveId));
+      setConfirmApproveId(null)
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleReject = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to reject this cook?",
-    );
-    if (!confirm) return;
+  const handleReject = async () => {
     try {
-      await axiosInstance.put(`/admin/cooks/${id}/reject`, {
+      await axiosInstance.put(`/admin/cooks/${confirmRejectId}/reject`, {
         reason: rejectReason,
       });
-      setCooks(cooks.filter((c) => c._id !== id));
+      setCooks(cooks.filter((c) => c._id !== confirmRejectId));
+      setConfirmRejectId(null)
       setRejectingId(null);
       setRejectReason("");
     } catch (err) {
@@ -53,169 +53,61 @@ function PendingCooks() {
 
   if (loading)
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <div style={{ fontSize: "14px", color: "var(--muted)" }}>
-          Loading...
-        </div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+        <div style={{ fontSize: "14px", color: "var(--muted)" }}>Loading...</div>
       </div>
     );
 
   return (
     <div className="dashboard-wrap">
-      {/* Navbar */}
-      <div className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">TiffinBox Admin</div>
-        <div className="dashboard-navbar-right">
-          <button
-            className="dashboard-navbar-btn"
-            onClick={() => navigate("/admin/dashboard")}
-          >
-            ← Dashboard
-          </button>
-        </div>
-      </div>
+      <Navbar showBack backPath='/admin/dashboard' backLabel='Dashboard' />
 
       <div className="dashboard-content">
         <div className="dashboard-title">Pending Cooks</div>
         <div className="dashboard-subtitle">
-          {cooks.length} cook{cooks.length !== 1 ? "s" : ""} waiting for
-          approval
+          {cooks.length} cook{cooks.length !== 1 ? "s" : ""} waiting for approval
         </div>
 
         {cooks.length === 0 ? (
           <div className="table-card">
-            <div
-              style={{
-                padding: "48px",
-                textAlign: "center",
-                color: "var(--muted)",
-                fontSize: "14px",
-              }}
-            >
-              No pending cooks 🎉
+            <div style={{ padding: "48px", textAlign: "center", color: "var(--muted)", fontSize: "14px" }}>
+              No pending cooks
             </div>
           </div>
         ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
             {cooks.map((cook) => (
               <div key={cook._id} className="table-card">
                 {/* Cook Summary Row */}
                 <div
                   className="pending-cook-row"
-                  style={{
-                    padding: "20px 24px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "16px",
-                  }}
+                  style={{ padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "14px",
-                    }}
-                  >
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                     {cook.photo ? (
-                      <img
-                        src={cook.photo}
-                        alt="cook"
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "10px",
-                          objectFit: "cover",
-                          flexShrink: 0,
-                        }}
-                      />
+                      <img src={cook.photo} alt="cook" style={{ width: "48px", height: "48px", borderRadius: "10px", objectFit: "cover", flexShrink: 0 }} />
                     ) : (
-                      <div
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "10px",
-                          background: "var(--brand-light)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: "20px",
-                          flexShrink: 0,
-                        }}
-                      >
+                      <div style={{ width: "48px", height: "48px", borderRadius: "10px", background: "var(--brand-light)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", flexShrink: 0 }}>
                         👩‍🍳
                       </div>
                     )}
                     <div>
-                      <div
-                        style={{
-                          fontWeight: 700,
-                          color: "var(--ink)",
-                          fontSize: "15px",
-                        }}
-                      >
-                        {cook.userId?.name}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "12px",
-                          color: "var(--subtle)",
-                          marginTop: "2px",
-                        }}
-                      >
-                        {cook.userId?.email} · {cook.city}
-                      </div>
+                      <div style={{ fontWeight: 700, color: "var(--ink)", fontSize: "15px" }}>{cook.userId?.name}</div>
+                      <div style={{ fontSize: "12px", color: "var(--subtle)", marginTop: "2px" }}>{cook.userId?.email} · {cook.city}</div>
                     </div>
                   </div>
 
-                  <div
-                    className="pending-cook-actions"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
+                  <div className="pending-cook-actions" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                     <button
-                      onClick={() =>
-                        setExpandedId(expandedId === cook._id ? null : cook._id)
-                      }
-                      style={{
-                        background: "none",
-                        border: "1.5px solid var(--border)",
-                        borderRadius: "8px",
-                        padding: "7px 14px",
-                        fontSize: "12px",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        color: "var(--muted)",
-                        fontFamily: "var(--font-body)",
-                      }}
+                      onClick={() => setExpandedId(expandedId === cook._id ? null : cook._id)}
+                      style={{ background: "none", border: "1.5px solid var(--border)", borderRadius: "8px", padding: "7px 14px", fontSize: "12px", fontWeight: 600, cursor: "pointer", color: "var(--muted)", fontFamily: "var(--font-body)" }}
                     >
-                      {expandedId === cook._id
-                        ? "Hide Details"
-                        : "View Details"}
+                      {expandedId === cook._id ? "Hide Details" : "View Details"}
                     </button>
-                    <button
-                      className="btn-approve"
-                      onClick={() => handleApprove(cook._id)}
-                    >
+                    <button className="btn-approve" onClick={() => setConfirmApproveId(cook._id)}>
                       Approve
                     </button>
-                    <button
-                      className="btn-reject"
-                      style={{ marginLeft: 0 }}
-                      onClick={() => setRejectingId(cook._id)}
-                    >
+                    <button className="btn-reject" style={{ marginLeft: 0 }} onClick={() => setRejectingId(cook._id)}>
                       Reject
                     </button>
                   </div>
@@ -225,232 +117,56 @@ function PendingCooks() {
                 {expandedId === cook._id && (
                   <div
                     className="pending-cook-details"
-                    style={{
-                      borderTop: "1px solid var(--border)",
-                      padding: "24px",
-                      background: "#fafafa",
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "16px",
-                    }}
+                    style={{ borderTop: "1px solid var(--border)", padding: "24px", background: "#fafafa", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}
                   >
                     {cook.photo && (
                       <div style={{ gridColumn: "1 / -1" }}>
-                        <img
-                          src={cook.photo}
-                          alt="cook"
-                          style={{
-                            width: "120px",
-                            height: "120px",
-                            borderRadius: "12px",
-                            objectFit: "cover",
-                          }}
-                        />
+                        <img src={cook.photo} alt="cook" style={{ width: "120px", height: "120px", borderRadius: "12px", objectFit: "cover" }} />
                       </div>
                     )}
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Full Name
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {cook.userId?.name}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Full Name</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>{cook.userId?.name}</div>
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Email
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {cook.userId?.email}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Email</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>{cook.userId?.email}</div>
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        City
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {cook.city}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>City</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>{cook.city}</div>
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Address
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {cook.address}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Address</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>{cook.address}</div>
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Cuisine Type
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {cook.cuisineType?.join(", ")}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Cuisine Type</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>{cook.cuisineType?.join(", ")}</div>
                     </div>
                     <div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Submitted On
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {new Date(cook.createdAt).toLocaleDateString()} at{" "}
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Submitted On</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500 }}>
+                        {new Date(cook.createdAt).toLocaleDateString('en-GB')} at{" "}
                         {new Date(cook.createdAt).toLocaleTimeString()}
                       </div>
                     </div>
                     <div style={{ gridColumn: "1 / -1" }}>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "var(--subtle)",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.5px",
-                          marginBottom: "4px",
-                        }}
-                      >
-                        Bio
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          color: "var(--ink)",
-                          fontWeight: 500,
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {cook.bio}
-                      </div>
+                      <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--subtle)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Bio</div>
+                      <div style={{ fontSize: "14px", color: "var(--ink)", fontWeight: 500, lineHeight: 1.6 }}>{cook.bio}</div>
                     </div>
                   </div>
                 )}
 
                 {/* Reject Reason */}
                 {rejectingId === cook._id && (
-                  <div
-                    style={{
-                      borderTop: "1px solid #FECACA",
-                      padding: "16px 24px",
-                      background: "#fff5f5",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        color: "#DC2626",
-                        marginBottom: "10px",
-                      }}
-                    >
+                  <div style={{ borderTop: "1px solid #FECACA", padding: "16px 24px", background: "#fff5f5" }}>
+                    <div style={{ fontSize: "13px", fontWeight: 600, color: "#DC2626", marginBottom: "10px" }}>
                       Enter rejection reason:
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "10px",
-                        alignItems: "center",
-                      }}
-                    >
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                       <input
-                        style={{
-                          border: "1.5px solid #FECACA",
-                          borderRadius: "8px",
-                          padding: "8px 12px",
-                          flex: 1,
-                          background: "#fff",
-                          fontSize: "14px",
-                          outline: "none",
-                          fontFamily: "var(--font-body)",
-                        }}
+                        style={{ border: "1.5px solid #FECACA", borderRadius: "8px", padding: "8px 12px", flex: 1, background: "#fff", fontSize: "14px", outline: "none", fontFamily: "var(--font-body)" }}
                         placeholder="e.g. Profile information incomplete..."
                         value={rejectReason}
                         onChange={(e) => setRejectReason(e.target.value)}
@@ -458,23 +174,13 @@ function PendingCooks() {
                       <button
                         className="btn-reject"
                         style={{ marginLeft: 0 }}
-                        onClick={() => handleReject(cook._id)}
+                        onClick={() => setConfirmRejectId(cook._id)}  
                       >
                         Confirm
                       </button>
                       <button
-                        onClick={() => {
-                          setRejectingId(null);
-                          setRejectReason("");
-                        }}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "var(--subtle)",
-                          cursor: "pointer",
-                          fontSize: "13px",
-                          fontFamily: "var(--font-body)",
-                        }}
+                        onClick={() => { setRejectingId(null); setRejectReason(""); }}
+                        style={{ background: "none", border: "none", color: "var(--subtle)", cursor: "pointer", fontSize: "13px", fontFamily: "var(--font-body)" }}
                       >
                         Cancel
                       </button>
@@ -486,6 +192,29 @@ function PendingCooks() {
           </div>
         )}
       </div>
+
+      {/* ── Confirm Approve Dialog ── */}
+      {confirmApproveId && (
+        <ConfirmDialog
+          message={`Are you sure you want to approve ${cooks.find(c => c._id === confirmApproveId)?.userId?.name}?`}
+          confirmLabel="Approve"
+          confirmColor="#16A34A"
+          onConfirm={handleApprove}
+          onCancel={() => setConfirmApproveId(null)}
+        />
+      )}
+
+      {/* ── Confirm Reject Dialog ── */}
+      {confirmRejectId && (
+        <ConfirmDialog
+          message={`Are you sure you want to reject ${cooks.find(c => c._id === confirmRejectId)?.userId?.name}?`}
+          confirmLabel="Reject"
+          confirmColor="#DC2626"
+          onConfirm={handleReject}
+          onCancel={() => { setConfirmRejectId(null) }}
+        />
+      )}
+
     </div>
   );
 }

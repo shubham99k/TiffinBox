@@ -33,12 +33,12 @@ export const verifyCook = async (req, res) => {
     await sendEmail(
       cookProfile.userId.email,
       'Your TiffinBox cook profile is approved! 🎉',
+      'You are approved! 🎉',
       `
-        <h2>Congratulations ${cookProfile.userId.name}! 🍱</h2>
-        <p>Your cook profile has been approved by TiffinBox team.</p>
-        <p>You can now start posting your daily menu and accepting orders.</p>
-        <p>Welcome to the TiffinBox family!</p>
-      `
+    <p class="text">Congratulations ${cookProfile.userId.name}!</p>
+    <p class="text">Your cook profile has been <strong>approved</strong> by the TiffinBox team. You can now start posting your daily menu and accepting orders.</p>
+    <p class="text">Welcome to the TiffinBox family! </p>
+  `
     )
 
     res.status(200).json({ success: true, message: 'Cook approved successfully' })
@@ -65,14 +65,19 @@ export const rejectCook = async (req, res) => {
     await sendEmail(
       cookProfile.userId.email,
       'TiffinBox cook profile update',
+      'Profile Not Approved',
       `
-        <h2>Hi ${cookProfile.userId.name},</h2>
-        <p>Unfortunately your cook profile was not approved at this time.</p>
-        <p><strong>Reason:</strong> ${reason || 'Profile information incomplete'}</p>
-        <p>You can update your profile and apply again.</p>
-      `
+    <p class="text">Hi ${cookProfile.userId.name},</p>
+    <p class="text">Unfortunately your cook profile was not approved at this time.</p>
+    <div class="highlight">
+      <div class="highlight-row">
+        <span class="highlight-label">Reason</span>
+        <span class="highlight-value">${reason || 'Profile information incomplete'}</span>
+      </div>
+    </div>
+    <p class="text">You can update your profile and apply again. We'd love to have you on board!</p>
+  `
     )
-
     await CookProfile.findByIdAndDelete(req.params.id)
 
     res.status(200).json({ success: true, message: 'Cook rejected and notified' })
@@ -119,12 +124,15 @@ export const banUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    user.isActive = !user.isActive
-    await user.save()
+    // user.isActive = !user.isActive
+    // await user.save()
+
+    const isActiveStatus = !user.isActive;
+    await User.findByIdAndUpdate(req.params.id, { isActive: isActiveStatus });
 
     res.status(200).json({
       success: true,
-      message: `User ${user.isActive ? 'unbanned' : 'banned'} successfully`
+      message: `User ${isActiveStatus ? 'unbanned' : 'banned'} successfully`
     })
   } catch (error) {
     res.status(500).json({ message: error.message })

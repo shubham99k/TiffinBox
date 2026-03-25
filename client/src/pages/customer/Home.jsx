@@ -1,80 +1,68 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
+import { useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
-import NotificationBell from '../../components/NotificationBell'
-
+import NotificationBell from "../../components/NotificationBell";
+import Navbar from '../../components/Navbar'
+import { Utensils, MapPin, ChefHat, Star, Clock, ArrowRight } from "lucide-react";
 
 function Home() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [cooks, setCooks] = useState([]);
   const [menus, setMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mealType, setMealType] = useState("lunch");
 
   useEffect(() => {
-    fetchData();
+    const fetchMenus = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axiosInstance.get(
+          `/menu/all?mealType=${mealType}`,
+        );
+        setMenus(data.menus);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMenus();
   }, [mealType]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [cooksRes, menusRes] = await Promise.all([
-        axiosInstance.get(`/cook/all?city=${user?.city}`),
-        axiosInstance.get(`/menu/city?city=${user?.city}&mealType=${mealType}`),
-      ]);
-      setCooks(cooksRes.data.cooks);
-      setMenus(menusRes.data.menus);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const getHour = new Date().getHours();
+  const greeting =
+    getHour < 12 ? "Morning" : getHour < 17 ? "Afternoon" : "Evening";
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
+  const getTimeRemaining = (cutoffTime) => {
+    const now = new Date()
+    const [hours, minutes] = cutoffTime.split(':').map(Number)
+    const cutoff = new Date()
+    cutoff.setHours(hours, minutes, 0, 0)
 
-  // Find menu for a cook
-  const getCookMenu = (cookId) => {
-    return menus.find((m) => m.cookId._id === cookId);
-  };
+    const diff = cutoff - now
+    if (diff <= 0) return 'Expired'
+
+    const h = Math.floor(diff / (1000 * 60 * 60))
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+
+    if (h > 0) return `${h}h ${m}m remaining`
+    if (m > 0) return `${m}m remaining`
+    return `few seconds remaining`
+  }
 
   return (
     <div className="dashboard-wrap">
       {/* Navbar */}
-      <div className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">TiffinBox</div>
-        <div className="dashboard-navbar-right">
-            <NotificationBell />  
-          <div className="dashboard-navbar-user">👤 {user?.name}</div>
-          <button className='dashboard-navbar-btn' onClick={() => navigate('/orders/my')}>
-  My Orders
-</button>
-          <button className="dashboard-navbar-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </div>
+      <Navbar />
 
       <div className="dashboard-content">
         {/* Header */}
         <div className="dashboard-title">
-          Good{" "}
-          {new Date().getHours() < 12
-            ? "Morning"
-            : new Date().getHours() < 17
-              ? "Afternoon"
-              : "Evening"}
-          , {user?.name?.split(" ")[0]}! 👋
+          Good {greeting}, <br /> {user?.name?.split(" ")[0]}!
         </div>
         <div className="dashboard-subtitle">
-          Fresh homemade meals in {user?.city} today
+          Fresh homemade meals available today
         </div>
 
         {/* Meal Type Toggle */}
@@ -89,7 +77,7 @@ function Home() {
                 border:
                   mealType === type
                     ? "2px solid var(--brand)"
-                    : "1.5px solid var(--border)",
+                    : "2px solid var(--border)",
                 background:
                   mealType === type ? "var(--brand-light)" : "var(--white)",
                 color: mealType === type ? "var(--brand)" : "var(--subtle)",
@@ -117,10 +105,10 @@ function Home() {
           >
             Loading...
           </div>
-        ) : cooks.length === 0 ? (
+        ) : menus.length === 0 ? (
           <div className="table-card">
             <div style={{ padding: "48px", textAlign: "center" }}>
-              <div style={{ fontSize: "40px", marginBottom: "12px" }}>🍽️</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: "12px", color: "var(--ink)" }}><Utensils size={40} /></div>
               <div
                 style={{
                   fontSize: "16px",
@@ -129,7 +117,7 @@ function Home() {
                   marginBottom: "6px",
                 }}
               >
-                No cooks available in {user?.city}
+                No {mealType} menus available right now
               </div>
               <div style={{ fontSize: "13px", color: "var(--subtle)" }}>
                 Check back later or try switching meal type
@@ -138,146 +126,156 @@ function Home() {
           </div>
         ) : (
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gap: "20px",
-            }}
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
           >
-            {cooks.map((cook) => {
-              const menu = getCookMenu(cook._id);
-              return (
+            {menus.map((menu) => (
+              <div key={menu._id} className="table-card">
+                {/* Cook Info Header */}
                 <div
-                  key={cook._id}
-                  className="cook-card"
-                  onClick={() => navigate(`/cook/${cook._id}`)}
+                  style={{
+                    padding: "16px 20px",
+                    borderBottom: "1px solid var(--border)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  {/* Cook Photo */}
-                  {cook.photo ? (
-                    <img
-                      src={cook.photo}
-                      alt={cook.userId?.name}
-                      className="cook-card-image"
-                    />
-                  ) : (
-                    <div className="cook-card-image">👩‍🍳</div>
-                  )}
-
-                  <div className="cook-card-body">
-                    <div className="cook-card-name">{cook.userId?.name}</div>
-                    <div className="cook-card-meta">
-                      📍 {cook.city} · ⭐ {cook.rating || 0} (
-                      {cook.totalReviews || 0} reviews)
-                    </div>
-
-                    {/* Cuisine Tags */}
-                    <div className="cook-card-meta" style={{fontSize: "11px",
-                            fontWeight: 600,
-                            color: "var(--subtle)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                            marginBottom: "6px",}}>
-                      &nbsp;Cusine Type:
-                      </div>
-                      <div
-                        className="cook-card-tags"
-                        style={{ marginBottom: "12px" }}
-                      >
-                        {cook.cuisineType?.map((c, i) => (
-                          <span key={i} className="cook-tag">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-
-                    {/* Menu Preview */}
-                    {menu ? (
-                      <div
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                    }}
+                  >
+                    {menu.cookId?.photo ? (
+                      <img
+                        src={menu.cookId.photo}
+                        alt="cook"
                         style={{
-                          borderTop: "1px solid var(--border)",
-                          paddingTop: "10px",
+                          width: "44px",
+                          height: "44px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
                         }}
-                      >
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            fontWeight: 600,
-                            color: "var(--subtle)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                            marginBottom: "6px",
-                          }}
-                        >
-                          Today's {mealType} menu
-                        </div>
-                        {menu.dishes?.slice(0, 2).map((dish, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              marginBottom: "4px",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontSize: "13px",
-                                color: "var(--ink)",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {dish.name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: "13px",
-                                color: "var(--brand)",
-                                fontWeight: 700,
-                              }}
-                            >
-                              ₹{dish.price}
-                            </div>
-                          </div>
-                        ))}
-                        {menu.dishes?.length > 2 && (
-                          <div
-                            style={{
-                              fontSize: "11px",
-                              color: "var(--subtle)",
-                              marginTop: "4px",
-                            }}
-                          >
-                            +{menu.dishes.length - 2} more dishes
-                          </div>
-                        )}
-                        <div
-                          style={{
-                            fontSize: "11px",
-                            color: "#D97706",
-                            fontWeight: 600,
-                            marginTop: "6px",
-                          }}
-                        >
-                          ⏰ Order before {menu.cutoffTime}
-                        </div>
-                      </div>
+                      />
                     ) : (
                       <div
                         style={{
-                          borderTop: "1px solid var(--border)",
-                          paddingTop: "10px",
-                          fontSize: "12px",
-                          color: "var(--subtle)",
+                          width: "44px",
+                          height: "44px",
+                          borderRadius: "10px",
+                          background: "var(--brand-light)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "20px",
                         }}
                       >
-                        No {mealType} menu posted yet
+                        <ChefHat size={20} />
                       </div>
                     )}
+                    <div>
+                      <div
+                        style={{
+                          fontSize: "15px",
+                          fontWeight: 700,
+                          color: "var(--ink)",
+                        }}
+                      >
+                        {menu.cookId?.userId?.name}
+                      </div>
+                      <div style={{ fontSize: "12px", color: "var(--subtle)" }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Star size={12} fill="#D97706" color="#D97706" /> {menu.cookId?.rating || 0}</span>&nbsp;&nbsp;&nbsp;<span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {menu.cookId?.city}</span>&nbsp;&nbsp;&nbsp;<span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: "#D97706" }}><Clock size={12} />Order before {menu.cutoffTime}&nbsp;({getTimeRemaining(menu.cutoffTime)})</span>
+                      </div>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => navigate(`/cook/${menu.cookId?._id}`)}
+                    style={{
+                      fontSize: "12px",
+                      color: "var(--brand)",
+                      fontWeight: 600,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontFamily: "var(--font-body)",
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>View Profile <ArrowRight size={14} /></span>
+                  </button>
                 </div>
-              );
-            })}
+
+                {/* Dishes */}
+                <div
+                  style={{
+                    padding: "16px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                  }}
+                >
+                  {menu.dishes?.map((dish, i) => (
+                    <div key={i} className="menu-dish-card">
+                      {dish.photo && (
+                        <img
+                          src={dish.photo}
+                          alt={dish.name}
+                          className="menu-dish-image"
+                        />
+                      )}
+                      <div className="menu-dish-body">
+                        <div className="menu-dish-name">{dish.name}</div>
+                        {dish.description && (
+                          <div className="menu-dish-desc">
+                            {dish.description}
+                          </div>
+                        )}
+                        <div className="menu-dish-footer">
+                          <div className="menu-dish-price">₹{dish.price}</div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <div className="menu-dish-portions">
+                              {dish.portionsLeft} left
+                            </div>
+                            {dish.portionsLeft > 0 && (
+                              <button
+                                onClick={() =>
+                                  navigate("/orders/place", {
+                                    state: {
+                                      menuId: menu._id,
+                                      dishIndex: i,
+                                      dish,
+                                    },
+                                  })
+                                }
+                                style={{
+                                  background: "var(--brand)",
+                                  color: "#fff",
+                                  border: "none",
+                                  borderRadius: "8px",
+                                  padding: "6px 14px",
+                                  fontSize: "12px",
+                                  fontWeight: 600,
+                                  cursor: "pointer",
+                                  fontFamily: "var(--font-body)",
+                                }}
+                              >
+                                Order
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

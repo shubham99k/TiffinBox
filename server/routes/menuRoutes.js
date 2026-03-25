@@ -5,7 +5,7 @@ import {
   getMyMenus,
   updateMenu,
   deleteMenu,
-  getMenusByCity
+  getAllMenus
 } from '../controllers/menuController.js'
 import { protect } from '../middleware/authMiddleware.js'
 import { authorizeRoles } from '../middleware/roleMiddleware.js'
@@ -13,7 +13,7 @@ import { authorizeRoles } from '../middleware/roleMiddleware.js'
 const router = express.Router()
 
 // Public routes
-router.get('/city', getMenusByCity)
+router.get('/all', getAllMenus)
 router.get('/today/:cookId', getTodayMenu)
 
 // Cook only routes

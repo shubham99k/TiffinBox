@@ -23,18 +23,19 @@ export const register = async (req, res) => {
       verifyOTPExpiry: otpExpiry
     })
 
-    await sendEmail(
-      email,
-      'Verify your TiffinBox account',
-      `
-        <h2>Welcome to TiffinBox! 🍱</h2>
-        <p>Hi ${name},</p>
-        <p>Your verification OTP is:</p>
-        <h1 style="color: #E07B2A; letter-spacing: 5px;">${otp}</h1>
-        <p>This OTP expires in <b>10 minutes.</b></p>
-        <p>If you did not register, please ignore this email.</p>
-      `
-    )
+  await sendEmail(
+  email,
+  'Verify your TiffinBox account',
+  'Welcome to TiffinBox! 👋',
+  `
+    <p class="text">Hi ${name}, thanks for joining TiffinBox!</p>
+    <p class="text">Your verification OTP is:</p>
+    <div class="highlight" style="text-align:center;">
+      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+    </div>
+    <p class="text">This OTP expires in <strong>10 minutes</strong>. If you didn't register, ignore this email.</p>
+  `
+)
 
     res.status(201).json({
       success: true,
@@ -66,6 +67,14 @@ export const login = async (req, res) => {
       })
     }
 
+    if (!user.isActive) {
+      return res.status(401).json({
+        message: 'Your account has been suspended by an administrator. Please contact support to appeal this decision.',
+        isActive: false,
+        email
+      })
+    }
+
     const isMatch = await user.matchPassword(password)
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' })
@@ -78,7 +87,8 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        city: user.city
+        city: user.city,
+        isActive: user.isActive
       }
     })
   } catch (error) {

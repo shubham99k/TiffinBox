@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../redux/slices/authSlice'
+import { Link } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import Navbar from '../../components/Navbar'
+import Alert from '../../components/Alert'
+import ConfirmDialog from '../../components/ConfirmDialog'
 
 function AdminDashboard() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
   const [stats, setStats] = useState(null)
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+  const [confirmBanId, setConfirmBanId] = useState(null)
 
   useEffect(() => {
     fetchData()
@@ -31,31 +31,26 @@ function AdminDashboard() {
     }
   }
 
-  const handleBan = async (id) => {
+  const handleBan = async () => {
     try {
-      await axiosInstance.put(`/admin/users/${id}/ban`)
+      await axiosInstance.put(`/admin/users/${confirmBanId}/ban`)
       setUsers(users.map(u =>
-        u._id === id ? { ...u, isActive: !u.isActive } : u
+        u._id === confirmBanId ? { ...u, isActive: !u.isActive } : u
       ))
+      setConfirmBanId(null)
     } catch (err) {
       console.log(err)
     }
   }
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm('Are you sure you want to delete this user? This cannot be undone.')
-    if (!confirm) return
+  const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/admin/users/${id}`)
-      setUsers(users.filter(u => u._id !== id))
+      await axiosInstance.delete(`/admin/users/${confirmDeleteId}`)
+      setUsers(prev => prev.filter(u => u._id !== confirmDeleteId))
+      setConfirmDeleteId(null)
     } catch (err) {
       console.log(err)
     }
-  }
-
-  const handleLogout = () => {
-    dispatch(logout())
-    navigate('/login')
   }
 
   if (loading) return (
@@ -64,18 +59,13 @@ function AdminDashboard() {
     </div>
   )
 
+  // Find the user being banned to show correct action in dialog
+  const banTargetUser = users.find(u => u._id === confirmBanId)
+
   return (
     <div className='dashboard-wrap'>
 
-      {/* ── Navbar ── */}
-      <div className='dashboard-navbar'>
-        <div className='dashboard-navbar-brand'>TiffinBox Admin</div>
-        <div className='dashboard-navbar-right'>
-          <div className='dashboard-navbar-user'>👤 {user?.name}</div>
-          <button className='dashboard-navbar-btn' onClick={handleLogout}>Logout</button>
-        </div>
-      </div>
-
+      <Navbar />
       <div className='dashboard-content'>
         <div className='dashboard-title'>Admin Dashboard</div>
         <div className='dashboard-subtitle'>Platform overview and management</div>
@@ -84,15 +74,15 @@ function AdminDashboard() {
         <div className='stats-grid'>
           <div className='stat-card'>
             <div className='stat-card-label'>Total Customers</div>
-            <div className='stat-card-value purple'>{stats?.totalUsers || 0}</div>
+            <div className='stat-card-value'>{stats?.totalUsers || 0}</div>
           </div>
           <div className='stat-card'>
-            <div className='stat-card-label'>Verified Cooks</div>
-            <div className='stat-card-value green'>{stats?.totalCooks || 0}</div>
+            <div className='stat-card-label'>Total Verified Cooks</div>
+            <div className='stat-card-value'>{stats?.totalCooks || 0}</div>
           </div>
           <div className='stat-card'>
             <div className='stat-card-label'>Pending Approvals</div>
-            <div className='stat-card-value amber'>{stats?.pendingCooks || 0}</div>
+            <div className='stat-card-value'>{stats?.pendingCooks || 0}</div>
           </div>
         </div>
 
@@ -147,12 +137,12 @@ function AdminDashboard() {
                         <button
                           className={u.isActive ? 'btn-reject' : 'btn-approve'}
                           style={{ marginLeft: 0 }}
-                          onClick={() => handleBan(u._id)}
+                          onClick={() => setConfirmBanId(u._id)}
                         >
                           {u.isActive ? 'Ban' : 'Unban'}
                         </button>
                         <button
-                          onClick={() => handleDelete(u._id)}
+                          onClick={() => setConfirmDeleteId(u._id)}
                           style={{
                             background: '#FEE2E2',
                             color: '#DC2626',
@@ -178,6 +168,33 @@ function AdminDashboard() {
         </div>
 
       </div>
+
+      {/* ── Confirm Ban/Unban Dialog ── */}
+      {confirmBanId && (
+        <ConfirmDialog
+          message={
+            banTargetUser?.isActive
+              ? `Are you sure you want to ban '${banTargetUser?.name}' ?`
+              : `Are you sure you want to unban ${banTargetUser?.name}?`
+          }
+          confirmLabel={banTargetUser?.isActive ? 'Ban' : 'Unban'}
+          confirmColor={banTargetUser?.isActive ? '#DC2626' : '#16A34A'}
+          onConfirm={handleBan}
+          onCancel={() => setConfirmBanId(null)}
+        />
+      )}
+
+      {/* ── Confirm Delete Dialog ── */}
+      {confirmDeleteId && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this user? This cannot be undone."
+          confirmLabel="Delete"
+          confirmColor="#DC2626"
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmDeleteId(null)}
+        />
+      )}
+
     </div>
   )
 }

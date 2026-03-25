@@ -15,13 +15,35 @@ const isCutoffPassed = (cutoffTime) => {
   return now > cutoff
 }
 
+// Helper — check if cutoff time is in the past
+const isCutoffInPast = (cutoffTime) => {
+  const now = new Date()
+  const [hours, minutes] = cutoffTime.split(':').map(Number)
+  const cutoff = new Date()
+  cutoff.setHours(hours, minutes, 0, 0)
+  return cutoff <= now
+}
+
+// Helper — validate cutoff time based on meal type
+const validateCutoffTime = (mealType, cutoffTime) => {
+  const [hours, minutes] = cutoffTime.split(':').map(Number)
+  const totalMinutes = hours * 60 + minutes
+
+  if (mealType === 'lunch' && totalMinutes > 13 * 60) {
+    return 'Lunch cutoff time cannot be after 1:00 PM'
+  }
+  if (mealType === 'dinner' && totalMinutes > 20 * 60) {
+    return 'Dinner cutoff time cannot be after 8:00 PM'
+  }
+  return null
+}
+
 // @desc    Cook posts today's menu
 // @route   POST /api/menu
 export const createMenu = async (req, res) => {
   try {
     const { mealType, dishes, cutoffTime } = req.body
 
-    // Get cook profile
     const cookProfile = await CookProfile.findOne({ userId: req.user.id })
     if (!cookProfile) {
       return res.status(404).json({ message: 'Cook profile not found' })
@@ -31,22 +53,17 @@ export const createMenu = async (req, res) => {
       return res.status(403).json({ message: 'Your profile is not verified yet' })
     }
 
-    const today = getTodayDate()
-
-    // Check if menu already exists for today + mealType
-    const existingMenu = await Menu.findOne({
-      cookId: cookProfile._id,
-      date: today,
-      mealType
-    })
-
-    if (existingMenu) {
-      return res.status(400).json({
-        message: `You already posted a ${mealType} menu for today`
-      })
+    const cutoffError = validateCutoffTime(mealType, cutoffTime)
+    if (cutoffError) {
+      return res.status(400).json({ message: cutoffError })
     }
 
-    // Set portionsLeft = maxPortions for each dish
+    if (isCutoffInPast(cutoffTime)) {
+      return res.status(400).json({ message: 'Cutoff time cannot be in the past' })
+    }
+
+    const today = getTodayDate()
+
     const formattedDishes = dishes.map(dish => ({
       ...dish,
       portionsLeft: dish.maxPortions
@@ -72,15 +89,12 @@ export const createMenu = async (req, res) => {
 export const getTodayMenu = async (req, res) => {
   try {
     const today = getTodayDate()
-
     const menus = await Menu.find({
       cookId: req.params.cookId,
       date: today,
       isActive: true
     })
-
     res.status(200).json({ success: true, menus })
-
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -94,16 +108,12 @@ export const getMyMenus = async (req, res) => {
     if (!cookProfile) {
       return res.status(404).json({ message: 'Cook profile not found' })
     }
-
     const today = getTodayDate()
-
     const menus = await Menu.find({
       cookId: cookProfile._id,
       date: today
     })
-
     res.status(200).json({ success: true, menus })
-
   } catch (error) {
     res.status(500).json({ message: error.message })
   }
@@ -120,14 +130,25 @@ export const updateMenu = async (req, res) => {
 
     const { dishes, cutoffTime } = req.body
 
+    if (cutoffTime) {
+      const cutoffError = validateCutoffTime(menu.mealType, cutoffTime)
+      if (cutoffError) {
+        return res.status(400).json({ message: cutoffError })
+      }
+
+      if (isCutoffInPast(cutoffTime)) {
+        return res.status(400).json({ message: 'Cutoff time cannot be in the past' })
+      }
+
+      menu.cutoffTime = cutoffTime
+    }
+
     if (dishes) {
       menu.dishes = dishes.map(dish => ({
         ...dish,
         portionsLeft: dish.portionsLeft ?? dish.maxPortions
       }))
     }
-
-    if (cutoffTime) menu.cutoffTime = cutoffTime
 
     await menu.save()
 
@@ -156,23 +177,20 @@ export const deleteMenu = async (req, res) => {
   }
 }
 
-// @desc    Get all active menus in a city
-// @route   GET /api/menu/city?city=Surat&mealType=lunch
-export const getMenusByCity = async (req, res) => {
+// @desc    Get all active menus
+// @route   GET /api/menu/all?mealType=lunch
+export const getAllMenus = async (req, res) => {
   try {
-    const { city, mealType } = req.query
+    const { mealType } = req.query
     const today = getTodayDate()
 
-    // Get all verified cooks in the city
     const cooks = await CookProfile.find({
-      city: { $regex: city, $options: 'i' },
       isVerified: true,
       isAvailable: true
     }).populate('userId', 'name')
 
     const cookIds = cooks.map(c => c._id)
 
-    // Get today's active menus for those cooks
     const menus = await Menu.find({
       cookId: { $in: cookIds },
       date: today,
@@ -183,7 +201,6 @@ export const getMenusByCity = async (req, res) => {
       populate: { path: 'userId', select: 'name' }
     })
 
-    // Filter out menus where cutoff time has passed
     const activeMenus = menus.filter(menu => !isCutoffPassed(menu.cutoffTime))
 
     res.status(200).json({ success: true, menus: activeMenus })

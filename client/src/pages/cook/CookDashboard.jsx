@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../redux/slices/authSlice'
 import axiosInstance from '../../utils/axiosInstance'
 import NotificationBell from '../../components/NotificationBell'
+import Alert from '../../components/Alert'
+import { ListOrdered, Hourglass, ChefHat, Star, BadgeCheck, PlusCircle, LogOut } from 'lucide-react'
 
 
 function CookDashboard() {
@@ -20,24 +22,25 @@ function CookDashboard() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  useEffect(() => { fetchProfile() }, [])
-
-  const fetchProfile = async () => {
-    try {
-      const { data } = await axiosInstance.get('/cook/profile/me')
-      setCookProfile(data.cookProfile)
-      setFormData({
-        bio: data.cookProfile.bio,
-        cuisineType: data.cookProfile.cuisineType?.join(', '),
-        city: data.cookProfile.city,
-        address: data.cookProfile.address
-      })
-    } catch (err) {
-      if (err.response?.status === 404) navigate('/cook/setup')
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const { data } = await axiosInstance.get('/cook/profile/me')
+        setCookProfile(data.cookProfile)
+        setFormData({
+          bio: data.cookProfile.bio,
+          cuisineType: data.cookProfile.cuisineType?.join(', '),
+          city: data.cookProfile.city,
+          address: data.cookProfile.address
+        })
+      } catch (err) {
+        if (err.response?.status === 404) navigate('/cook/setup')
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+    fetchProfile()
+  }, [navigate])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -91,7 +94,9 @@ function CookDashboard() {
   if (cookProfile && !cookProfile.isVerified) return (
     <div className='pending-wrap'>
       <div className='pending-card'>
-        <div className='pending-icon'>⏳</div>
+        <div className='pending-icon'>
+          <Hourglass size={48} strokeWidth={1.5} color="var(--brand)" />
+        </div>
         <div className='pending-title'>Profile under review</div>
         <div className='pending-desc'>
           Your cook profile has been submitted and is currently being reviewed
@@ -114,35 +119,41 @@ function CookDashboard() {
       <div className='dashboard-navbar'>
         <div className='dashboard-navbar-brand'>TiffinBox</div>
         <div className='dashboard-navbar-right'>
-            <NotificationBell />
-          <div className='dashboard-navbar-user'>👩‍🍳 {user?.name}</div>
-          <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/post-menu')}>
-            + Post Menu
+          <NotificationBell />
+          <div className='dashboard-navbar-user' style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <ChefHat size={18} /> {user?.name}
+          </div>
+          <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/post-menu')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <PlusCircle size={16} /> Post Menu
           </button>
-          <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/orders')}>
-  📦 Orders
-</button>
-          <button className='dashboard-navbar-btn' onClick={handleLogout}>Logout</button>
+          <button className='dashboard-navbar-btn' onClick={() => navigate('/cook/orders')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ListOrdered size={16} /> Orders
+          </button>
+          <button className='dashboard-navbar-btn' onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <LogOut size={16} /> Logout
+          </button>
         </div>
       </div>
 
       <div className='dashboard-content'>
-        <div className='dashboard-title'>Welcome back, {user?.name?.split(' ')[0]}! 👋</div>
+        <div className='dashboard-title'>Welcome back,<br /> {user?.name?.split(' ')[0]}!</div>
         <div className='dashboard-subtitle'>Here's your cook dashboard</div>
 
         {/* Stats */}
         <div className='stats-grid'>
           <div className='stat-card'>
             <div className='stat-card-label'>Total Earnings</div>
-            <div className='stat-card-value purple'>₹{cookProfile?.earnings?.total || 0}</div>
+            <div className='stat-card-value'>₹{cookProfile?.earnings?.total || 0}</div>
           </div>
           <div className='stat-card'>
             <div className='stat-card-label'>This Week</div>
-            <div className='stat-card-value green'>₹{cookProfile?.earnings?.thisWeek || 0}</div>
+            <div className='stat-card-value'>₹{cookProfile?.earnings?.thisWeek || 0}</div>
           </div>
           <div className='stat-card'>
             <div className='stat-card-label'>Rating</div>
-            <div className='stat-card-value amber'>{cookProfile?.rating || 0} ★</div>
+            <div className='stat-card-value' style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {cookProfile?.rating || 0} <Star size={20} fill="currentColor" />
+            </div>
           </div>
           <div className='stat-card'>
             <div className='stat-card-label'>Total Reviews</div>
@@ -155,7 +166,9 @@ function CookDashboard() {
           <div className='table-card-header'>
             <div className='table-card-title'>Your Profile</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span className='badge badge-verified'>✓ Verified</span>
+              <span className='badge badge-verified' style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <BadgeCheck size={14} /> Verified
+              </span>
               <button
                 className='dashboard-navbar-btn'
                 onClick={() => { setEditing(!editing); setSuccess(''); setError('') }}
@@ -166,8 +179,8 @@ function CookDashboard() {
           </div>
 
           {/* Success / Error */}
-          {success && <div className='success-box' style={{ margin: '16px 24px 0' }}>{success}</div>}
-          {error && <div className='error-box' style={{ margin: '16px 24px 0' }}>{error}</div>}
+          {success && <Alert type="success" message={success} onClose={() => setSuccess('')} />}
+          {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
           {editing ? (
             /* Edit Form */
@@ -179,14 +192,14 @@ function CookDashboard() {
                 <label htmlFor='edit-photo' style={{ cursor: 'pointer' }}>
                   {preview || cookProfile?.photo
                     ? <img
-                        src={preview || cookProfile?.photo}
-                        alt='preview'
-                        className='photo-upload-preview'
-                      />
+                      src={preview || cookProfile?.photo}
+                      alt='preview'
+                      className='photo-upload-preview'
+                    />
                     : <div className='photo-upload'>
-                        <div className='photo-upload-text'>Click to upload photo</div>
-                        <div className='photo-upload-hint'>JPG, PNG up to 5MB</div>
-                      </div>
+                      <div className='photo-upload-text'>Click to upload photo</div>
+                      <div className='photo-upload-hint'>JPG, PNG up to 5MB</div>
+                    </div>
                   }
                 </label>
                 <input id='edit-photo' type='file' accept='image/*'

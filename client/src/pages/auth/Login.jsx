@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../redux/slices/authSlice";
 import axiosInstance from "../../utils/axiosInstance";
+import { validateLogin } from "../../utils/validate";
+import { Star } from "lucide-react";
 
 function Login() {
   const navigate = useNavigate();
@@ -17,6 +19,8 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationError = validateLogin(formData);
+    if (validationError) return setError(validationError);
     setLoading(true);
     setError("");
     try {
@@ -50,7 +54,7 @@ function Login() {
             <span className="auth-brand-dot" />
             TiffinBox
           </div>
-
+          
           <div className="auth-page-title">
             Welcome
             <br />
@@ -61,7 +65,7 @@ function Login() {
 
           {error && <div className="error-box">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit}>
             <div className="inp-wrap">
               <div className="inp-label">Email Address</div>
               <input
@@ -130,7 +134,7 @@ function Login() {
             {[
               ["2K+", "Home Cooks"],
               ["50K+", "Meals Served"],
-              ["4.8★", "Avg Rating"],
+              [<span key="rating" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>4.8<Star size={24} fill="currentColor" /></span>, "Avg Rating"],
             ].map(([num, label], i) => (
               <div key={i}>
                 <div className="auth-stat-num">{num}</div>

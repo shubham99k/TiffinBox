@@ -44,7 +44,8 @@ export const verifyOTP = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        city: user.city
+        city: user.city,
+        isActive: user.isActive
       }
     })
 
@@ -74,15 +75,17 @@ export const resendOTP = async (req, res) => {
     await user.save()
 
     await sendEmail(
-      email,
-      'Your new TiffinBox OTP',
-      `
-        <h2>TiffinBox OTP 🍱</h2>
-        <p>Your new verification OTP is:</p>
-        <h1 style="color: #E07B2A; letter-spacing: 5px;">${otp}</h1>
-        <p>This OTP expires in <b>10 minutes.</b></p>
-      `
-    )
+  email,
+  'Your new TiffinBox OTP',
+  'New Verification OTP',
+  `
+    <p class="text">Your new verification OTP is:</p>
+    <div class="highlight" style="text-align:center;">
+      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+    </div>
+    <p class="text">This OTP expires in <strong>10 minutes</strong>.</p>
+  `
+)
 
     res.status(200).json({
       success: true,
@@ -112,18 +115,19 @@ export const forgotPassword = async (req, res) => {
     await user.save()
 
     // Send email
-    await sendEmail(
-      email,
-      'Reset your TiffinBox password',
-      `
-        <h2>TiffinBox Password Reset 🍱</h2>
-        <p>Hi ${user.name},</p>
-        <p>Your password reset OTP is:</p>
-        <h1 style="color: #E07B2A; letter-spacing: 5px;">${otp}</h1>
-        <p>This OTP expires in <b>10 minutes.</b></p>
-        <p>If you did not request this, please ignore this email.</p>
-      `
-    )
+  await sendEmail(
+  email,
+  'Reset your TiffinBox password',
+  'Password Reset OTP',
+  `
+    <p class="text">Hi ${user.name}, we received a request to reset your password.</p>
+    <p class="text">Your password reset OTP is:</p>
+    <div class="highlight" style="text-align:center;">
+      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+    </div>
+    <p class="text">This OTP expires in <strong>10 minutes</strong>. If you didn't request this, ignore this email.</p>
+  `
+)
 
     res.status(200).json({
       success: true,

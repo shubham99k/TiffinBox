@@ -4,7 +4,6 @@ import CookProfile from '../models/CookProfile.js'
 import sendEmail from '../utils/sendEmail.js'
 import Notification from '../models/Notification.js'
 
-
 // Helper — check if cutoff time has passed
 const isCutoffPassed = (cutoffTime) => {
   const now = new Date()
@@ -20,20 +19,16 @@ export const placeOrder = async (req, res) => {
   try {
     const { menuId, dishIndex, quantity, deliveryAddress } = req.body
 
-    // Get menu
     const menu = await Menu.findById(menuId)
     if (!menu) return res.status(404).json({ message: 'Menu not found' })
 
-    // Check cutoff time
     if (isCutoffPassed(menu.cutoffTime)) {
       return res.status(400).json({ message: 'Order cutoff time has passed' })
     }
 
-    // Get dish
     const dish = menu.dishes[dishIndex]
     if (!dish) return res.status(404).json({ message: 'Dish not found' })
 
-    // Check portions
     if (dish.portionsLeft < quantity) {
       return res.status(400).json({
         message: `Only ${dish.portionsLeft} portions left`
@@ -42,16 +37,13 @@ export const placeOrder = async (req, res) => {
 
     const totalAmount = dish.price * quantity
 
-    // Decrease portions
     menu.dishes[dishIndex].portionsLeft -= quantity
 
-    // Auto close menu if all portions finished
     const allDishesEmpty = menu.dishes.every(d => d.portionsLeft <= 0)
     if (allDishesEmpty) menu.isActive = false
 
     await menu.save()
 
-    // Create order
     const order = await Order.create({
       customerId: req.user.id,
       cookId: menu.cookId,
@@ -68,29 +60,32 @@ export const placeOrder = async (req, res) => {
       paymentStatus: 'pending'
     })
 
-    await Notification.create({
-    userId: cookProfile.userId._id,
-    message: `New order received for ${dish.name}!`,
-    type: 'order_placed'
-  })
-
-    // Notify cook via email
-    const cookProfile = await CookProfile.findById(menu.cookId)
+    // Get cook data FIRST then use it
+    const cookData = await CookProfile.findById(menu.cookId)
       .populate('userId', 'name email')
 
+    // Now create notification using cookData
+    await Notification.create({
+      userId: cookData.userId._id,
+      message: `New order received for ${dish.name}!`,
+      type: 'order_placed'
+    })
+
+    // Send email to cook
     await sendEmail(
-      cookProfile.userId.email,
-      'New order received! 🍱',
+      cookData.userId.email,
+      'New order received! ',
+      'You have a new order!',
       `
-        <h2>New Order from TiffinBox!</h2>
-        <p>Hi ${cookProfile.userId.name},</p>
-        <p>You have a new order:</p>
-        <p><strong>Dish:</strong> ${dish.name}</p>
-        <p><strong>Quantity:</strong> ${quantity}</p>
-        <p><strong>Amount:</strong> ₹${totalAmount} (Cash on Delivery)</p>
-        <p><strong>Delivery Address:</strong> ${deliveryAddress}</p>
-        <p>Please prepare the order on time!</p>
-      `
+    <p class="text">Hi ${cookData.userId.name}, you have a new order on TiffinBox!</p>
+    <div class="highlight">
+      <div class="highlight-row"><span class="highlight-label">Dish:&nbsp;</span><span class="highlight-value">${dish.name}</span></div>
+      <div class="highlight-row"><span class="highlight-label">Quantity:&nbsp;</span><span class="highlight-value">${quantity}</span></div>
+      <div class="highlight-row"><span class="highlight-label">Amount:&nbsp;</span><span class="highlight-value">₹${totalAmount} (COD)</span></div>
+      <div class="highlight-row"><span class="highlight-label">Delivery Address:&nbsp;</span><span class="highlight-value">${deliveryAddress}</span></div>
+    </div>
+    <p class="text">Please prepare the order on time.</p>
+  `
     )
 
     res.status(201).json({
@@ -153,25 +148,58 @@ export const updateOrderStatus = async (req, res) => {
     order.status = status
     await order.save()
 
-    await Notification.create({
-    userId: order.customerId._id,
-    message: `Your order for ${order.dish.name} is now ${status}!`,
-    type: `order_${status}`
-  })
+    // Update cook earnings when delivered
+    if (status === 'delivered') {
+      const now = new Date()
+      const startOfWeek = new Date(now)
+      startOfWeek.setDate(now.getDate() - now.getDay())
+      startOfWeek.setHours(0, 0, 0, 0)
 
-    // Notify customer via email
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+      const allDelivered = await Order.find({
+        cookId: order.cookId,
+        status: 'delivered'
+      })
+
+      const thisWeekOrders = allDelivered.filter(o => new Date(o.createdAt) >= startOfWeek)
+      const thisMonthOrders = allDelivered.filter(o => new Date(o.createdAt) >= startOfMonth)
+
+      const totalEarnings = allDelivered.reduce((sum, o) => sum + o.totalAmount, 0)
+      const weekEarnings = thisWeekOrders.reduce((sum, o) => sum + o.totalAmount, 0)
+      const monthEarnings = thisMonthOrders.reduce((sum, o) => sum + o.totalAmount, 0)
+
+      await CookProfile.findByIdAndUpdate(order.cookId, {
+        'earnings.total': totalEarnings,
+        'earnings.thisWeek': weekEarnings,
+        'earnings.thisMonth': monthEarnings
+      })
+    }
+
+    // Create notification for customer
+    await Notification.create({
+      userId: order.customerId._id,
+      message: `Your order for ${order.dish.name} is now ${status}!`,
+      type: `order_${status}`
+    })
+
+    // Send email to customer
     await sendEmail(
       order.customerId.email,
-      `Your TiffinBox order is ${status}! 🍱`,
+      `Your TiffinBox order is ${status}!`,
+      `Order ${status.charAt(0).toUpperCase() + status.slice(1)}!`,
       `
-        <h2>Order Update</h2>
-        <p>Hi ${order.customerId.name},</p>
-        <p>Your order for <strong>${order.dish.name}</strong> is now <strong>${status}</strong>.</p>
-        ${status === 'delivered'
-          ? '<p>Enjoy your meal! Don\'t forget to leave a review. 😊</p>'
-          : '<p>We\'ll keep you updated!</p>'
-        }
-      `
+    <p class="text">Hi ${order.customerId.name},</p>
+    <div class="highlight">
+      <div class="highlight-row"><span class="highlight-label">Dish:&nbsp;</span><span class="highlight-value">${order.dish.name}</span></div>
+      <div class="highlight-row"><span class="highlight-label">Status:&nbsp;</span><span class="highlight-value" style="color:#7C3AED;">${status.toUpperCase()}</span></div>
+      <div class="highlight-row"><span class="highlight-label">Amount:&nbsp;</span><span class="highlight-value">₹${order.totalAmount}</span></div>
+    </div>
+    ${status === 'delivered'
+        ? '<p class="text">Enjoy your meal! Don\'t forget to leave a review. 😊</p>'
+        : '<p class="text">We\'ll keep you updated as your order progresses!</p>'
+      }
+  `
     )
 
     res.status(200).json({ success: true, order })

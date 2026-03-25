@@ -1,23 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
+import { ArrowLeft } from "lucide-react";
 
 function ForgotPassword() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setSuccess('')
     try {
       await axiosInstance.post('/auth/forgot-password', { email })
       localStorage.setItem('resetEmail', email)
-      setSuccess('OTP sent! Check your email.')
       navigate('/reset-password')
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong')
@@ -33,8 +31,8 @@ function ForgotPassword() {
       <div className='auth-left'>
         <div className='auth-left-inner'>
 
-          <span className='auth-back' onClick={() => navigate('/login')}>
-            ← Back to login
+          <span className='auth-back' onClick={() => navigate('/login')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ArrowLeft size={16} /> Back to login
           </span>
 
           <div className='auth-page-title'>

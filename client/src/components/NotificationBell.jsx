@@ -1,13 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import axiosInstance from '../utils/axiosInstance'
+import { Bell } from 'lucide-react'
 
 function NotificationBell() {
   const [notifications, setNotifications] = useState([])
   const [open, setOpen] = useState(false)
+  const bellRef = useRef(null)
 
   useEffect(() => {
-    fetchNotifications()
-  }, [])
+    const handleClickOutside = (event) => {
+      if (bellRef.current && !bellRef.current.contains(event.target) && open) {
+        setNotifications(notifications => notifications.map(n => ({ ...n, isRead: true })))
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
 
   const fetchNotifications = async () => {
     try {
@@ -18,23 +27,32 @@ function NotificationBell() {
     }
   }
 
+  useEffect(() => {
+    // eslint-disable-next-line
+    fetchNotifications()
+  }, [])
+
   const handleOpen = async () => {
-    setOpen(!open)
     if (!open) {
-      // Mark all as read when opening
+      // Mark as read in API, but keep local state unchanged 
+      // so they still render with the unread color while the dropdown is open.
       try {
         await axiosInstance.put('/notifications/read')
-        setNotifications(notifications.map(n => ({ ...n, isRead: true })))
       } catch (err) {
         console.log(err)
       }
+    } else {
+      // On close, update local state so they become read.
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })))
     }
+    setOpen(!open)
   }
 
-  const unreadCount = notifications.filter(n => !n.isRead).length
+  // Hide badge if dropdown is open
+  const unreadCount = open ? 0 : notifications.filter(n => !n.isRead).length
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div ref={bellRef} style={{ position: 'relative' }}>
 
       {/* Bell Button */}
       <button
@@ -42,10 +60,11 @@ function NotificationBell() {
         style={{
           position: 'relative', background: 'var(--brand-light)',
           border: 'none', borderRadius: '8px', padding: '7px 12px',
-          cursor: 'pointer', fontSize: '16px', fontFamily: 'var(--font-body)'
+          cursor: 'pointer', fontSize: '16px', fontFamily: 'var(--font-body)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
         }}
       >
-        🔔
+        <Bell size={20} color="var(--ink)" />
         {unreadCount > 0 && (
           <span style={{
             position: 'absolute', top: '-4px', right: '-4px',
@@ -87,7 +106,7 @@ function NotificationBell() {
                   <div style={{ fontSize: '13px', color: 'var(--ink)', fontWeight: n.isRead ? 400 : 600 }}>
                     {n.message}
                   </div>
-                  <div style={{ fontSize: '11px', color: 'var(--subtle)', marginTop: '3px' }}>
+                  <div style={{ fontSize: '11px', color: n.isRead ? 'var(--subtle)' : 'var(--ink)', fontWeight: n.isRead ? 200 : 400, marginTop: '3px' }}>
                     {new Date(n.createdAt).toLocaleDateString()} at {new Date(n.createdAt).toLocaleTimeString()}
                   </div>
                 </div>

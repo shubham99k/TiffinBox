@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import { validateRegister } from "../../utils/validate";
+import { ArrowLeft, ShoppingBag, ChefHat, Star } from "lucide-react";
 
 function Register() {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationError = validateRegister(formData);
+    if (validationError) return setError(validationError);
     setLoading(true);
     setError("");
     try {
@@ -40,8 +44,8 @@ function Register() {
       {/* ── LEFT ── */}
       <div className="auth-left">
         <div className="auth-left-inner">
-          <span className="auth-back" onClick={() => navigate("/")}>
-            ← Back to website
+          <span className="auth-back" onClick={() => navigate("/")} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ArrowLeft size={16} /> Back to website
           </span>
 
           <div className="auth-page-title">
@@ -64,7 +68,7 @@ function Register() {
                 className={`role-card ${formData.role === "customer" ? "active" : ""}`}
                 onClick={() => setFormData({ ...formData, role: "customer" })}
               >
-                <div className="role-card-icon customer">🛍️</div>
+                <div className="role-card-icon customer"><ShoppingBag size={24} /></div>
                 <div className="role-card-text">
                   <div className="role-card-title">Order Food</div>
                   <div className="role-card-desc">
@@ -83,7 +87,7 @@ function Register() {
                 className={`role-card ${formData.role === "cook" ? "active" : ""}`}
                 onClick={() => setFormData({ ...formData, role: "cook" })}
               >
-                <div className="role-card-icon cook">👩‍🍳</div>
+                <div className="role-card-icon cook"><ChefHat size={24} /></div>
                 <div className="role-card-text">
                   <div className="role-card-title">Sell Food</div>
                   <div className="role-card-desc">
@@ -101,7 +105,7 @@ function Register() {
 
           {error && <div className="error-box">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit}>
             <div className="inp-row">
               <div className="inp-wrap">
                 <div className="inp-label">Full Name</div>
@@ -123,7 +127,7 @@ function Register() {
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  placeholder="Surat"
+                  placeholder="Vadodara"
                   required
                 />
               </div>
@@ -281,7 +285,7 @@ function Register() {
             {[
               ["2K+", "Home Cooks"],
               ["50K+", "Meals Served"],
-              ["4.8★", "Avg Rating"],
+              [<span key="rating" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>4.8<Star size={24} fill="currentColor" /></span>, "Avg Rating"],
             ].map(([num, label], i) => (
               <div key={i}>
                 <div className="auth-stat-num">{num}</div>

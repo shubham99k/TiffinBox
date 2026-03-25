@@ -4,7 +4,9 @@ const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
   token: localStorage.getItem('token') || null,
   loading: false,
-  error: null
+  error: null,
+  resetSession: false,
+  isBanned: false
 }
 
 const authSlice = createSlice({
@@ -23,14 +25,26 @@ const authSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload
     },
+    // For password reset flow
+    startResetFlow: (state) => {
+      state.resetSession = true
+    },
+    // Clear reset flow after completion or cancellation
+    clearResetFlow: (state) => {
+      state.resetSession = false
+    },
+    setBanned: (state) => {
+      state.isBanned = true
+    },
     logout: (state) => {
       state.user = null
       state.token = null
+      state.isBanned = false
       localStorage.removeItem('token')
       localStorage.removeItem('user')
     }
   }
 })
 
-export const { setCredentials, setLoading, setError, logout } = authSlice.actions
+export const { setCredentials, setLoading, setError, startResetFlow, clearResetFlow, logout, setBanned } = authSlice.actions
 export default authSlice.reducer

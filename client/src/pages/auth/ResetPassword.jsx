@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
 import OTPInput from '../../components/OTPInput'
+import { ArrowLeft } from "lucide-react";
 
 function ResetPassword() {
   const navigate = useNavigate()
@@ -45,8 +46,8 @@ function ResetPassword() {
       <div className='auth-left'>
         <div className='auth-left-inner'>
 
-          <span className='auth-back' onClick={() => navigate('/forgot-password')}>
-            ← Back
+          <span className='auth-back' onClick={() => navigate('/forgot-password')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <ArrowLeft size={16} /> Back
           </span>
 
           <div className='auth-page-title'>
