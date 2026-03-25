@@ -31,30 +31,31 @@ function ForgotPassword() {
       <div className='auth-left'>
         <div className='auth-left-inner'>
 
-          <span className='auth-back' onClick={() => navigate('/login')} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <ArrowLeft size={16} /> Back to login
+          <span className='auth-back' onClick={() => navigate('/login')}>
+            <ArrowLeft size={14} /> Back to login
           </span>
 
-          <div className='auth-page-title'>
-            Forgot your<br />password?
-          </div>
-
+          <div className='auth-page-title'>Forgot your password?</div>
           <p className='auth-page-sub'>
-            No worries! Enter your email and we'll send you a reset OTP.
+            No worries. Enter your email and we'll send you a reset OTP within minutes.
           </p>
 
           {error && <div className='error-box'>{error}</div>}
-          {/* {success && <div className='success-box'>{success}</div>} */}
 
           <form onSubmit={handleSubmit}>
-            <div className='inp-wrap'>
-              <div className='inp-label'>Email Address</div>
-              <input
-                className='inp-field' type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder='you@gmail.com' required
-              />
+            <div className='inp-group'>
+              <label className='inp-label'>Email Address</label>
+              <div className='inp-icon-wrap'>
+                <span className='material-symbols-outlined inp-icon'>mail</span>
+                <input
+                  className='inp-field'
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder='you@example.com'
+                  required
+                />
+              </div>
             </div>
 
             <button type='submit' className='auth-btn' disabled={loading}>
@@ -62,26 +63,38 @@ function ForgotPassword() {
             </button>
           </form>
 
+          <div className='auth-switch'>
+            Remembered it?&nbsp;
+            <span onClick={() => navigate('/login')}>Back to Login</span>
+          </div>
+
         </div>
       </div>
 
       {/* ── RIGHT ── */}
       <div className='auth-right'>
-        <div className='auth-right-noise' />
+        <img
+          className='auth-right-photo'
+          src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=900&auto=format&fit=crop'
+          alt='Fresh food'
+        />
         <div className='auth-right-content'>
-          <div className='auth-right-brand'>
-            <div className='auth-right-brand-text'>
-              <span className='auth-right-brand-name'>TiffinBox</span>
-            </div>
-          </div>
+          <div className='auth-right-brand'>TiffinBox</div>
 
           <div>
             <div className='auth-right-headline'>
-              We got<br />your<br /><span className='accent'>back.</span>
+              We got<br />your<br />
+              <span className='accent'>back.</span>
             </div>
             <p className='auth-right-body'>
               Enter your email and we'll send you an OTP to reset your password instantly.
             </p>
+          </div>
+
+          <div className='auth-accent-bar'>
+            <div className='auth-accent-bar-item long' />
+            <div className='auth-accent-bar-item short' />
+            <div className='auth-accent-bar-item short' />
           </div>
 
           <div className='auth-right-note'>Reset OTP is valid for 10 minutes only.</div>

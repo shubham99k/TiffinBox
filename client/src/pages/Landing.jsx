@@ -1,772 +1,190 @@
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Search, ShoppingCart, Utensils, ClipboardList, Wallet, Clock, Star } from "lucide-react";
+import { Star, ArrowRight, ShieldCheck, Users, Utensils } from "lucide-react";
 
 function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{
-        fontFamily: "Geist, sans-serif",
-        background: "#fff",
-        minHeight: "100vh",
-      }}
-    >
-      {/* ── Navbar ── */}
-      <nav
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          background: "rgba(255,255,255,0.9)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid #F3F4F6",
-          padding: "0 40px",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "25px",
-            fontWeight: 800,
-            color: "#000000ff",
-            letterSpacing: "-1px",
-            lineHeight: "1.0",
-            fontFamily: "Geist"
-          }}
-        >
-          TiffinBox
+    <div className="dashboard-wrap bg-background">
+      {/* ── Top Navigation Bar ── */}
+      <nav className="dashboard-navbar">
+        <div className="dashboard-navbar-brand">
+          TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
         </div>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <button
-            onClick={() => navigate("/login")}
-            style={{
-              padding: "8px 20px",
-              borderRadius: "8px",
-              border: "1.5px solid #E5E7EB",
-              background: "#fff",
-              fontSize: "14px",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "Geist, sans-serif",
-              color: "#0d0d0d",
-            }}
-          >
+        <div className="hidden md:flex items-center gap-8 font-['Manrope'] font-semibold">
+          <span onClick={() => navigate("/")} style={{ cursor: 'pointer', opacity: 0.7, color: 'var(--primary-container)', textDecoration: 'underline', textUnderlineOffset: '8px'}}>Home</span>
+          <span onClick={() => navigate("/how-it-works")} style={{ cursor: 'pointer', opacity: 0.7 }}>How it works</span>
+          <span onClick={() => navigate("/register")} style={{ cursor: 'pointer', opacity: 0.7 }}>Join as Cook</span>
+        </div>
+        <div className="dashboard-navbar-right">
+          <button onClick={() => navigate("/login")} className="dashboard-navbar-user" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
             Login
           </button>
-          <button
-            onClick={() => navigate("/register")}
-            style={{
-              padding: "8px 20px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#7C3AED",
-              fontSize: "14px",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: "Geist, sans-serif",
-              color: "#fff",
-            }}
-          >
-            Get Started
+          <button onClick={() => navigate("/register")} className="dashboard-navbar-btn">
+            Sign Up
           </button>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section
-        style={{
-          padding: "80px 40px",
-          maxWidth: "1100px",
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          gap: "60px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ flex: 1, minWidth: "300px" }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "#F5F3FF",
-              border: "1px solid #DDD6FE",
-              borderRadius: "99px",
-              padding: "6px 14px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "#7C3AED",
-              marginBottom: "24px",
-            }}
-          >
-            <CheckCircle2 size={14} /> Now live across India
-          </div>
-          <h1
-            style={{
-              fontSize: "64px",
-              fontWeight: 900,
-              color: "#0d0d0d",
-              letterSpacing: "-3px",
-              lineHeight: 1.0,
-              marginBottom: "20px",
-            }}
-          >
-            Taste the
-            <br />
-            home you
-            <br />
-            <span style={{ color: "#7C3AED" }}>miss.</span>
-          </h1>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "#6B7280",
-              lineHeight: 1.8,
-              marginBottom: "32px",
-              maxWidth: "440px",
-            }}
-          >
-            Pre-order fresh homemade meals from verified home cooks near you.
-            Skip the mess, eat like home — every single day.
-          </p>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <button
-              onClick={() => navigate("/register")}
-              style={{
-                padding: "14px 32px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#7C3AED",
-                fontSize: "15px",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Geist, sans-serif",
-                color: "#fff",
-              }}
-            >
-              Order Food Now
-            </button>
-            <button
-              onClick={() => navigate("/register")}
-              style={{
-                padding: "14px 32px",
-                borderRadius: "10px",
-                border: "1.5px solid #E5E7EB",
-                background: "#fff",
-                fontSize: "15px",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Geist, sans-serif",
-                color: "#0d0d0d",
-              }}
-            >
-              Start Selling Food →
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div
-            style={{
-              display: "flex",
-              gap: "32px",
-              marginTop: "48px",
-              flexWrap: "wrap",
-            }}
-          >
-            {[
-              ["2K+", "Home Cooks"],
-              ["50K+", "Meals Served"],
-              [<span key="rating" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>4.8<Star size={24} fill="currentColor" /></span>, "Avg Rating"],
-            ].map(([num, label]) => (
-              <div key={label}>
-                <div
-                  style={{
-                    fontSize: "28px",
-                    fontWeight: 900,
-                    color: "#0d0d0d",
-                    letterSpacing: "-1px",
-                  }}
-                >
-                  {num}
-                </div>
-                <div
-                  style={{
-                    fontSize: "13px",
-                    color: "#9CA3AF",
-                    marginTop: "2px",
-                  }}
-                >
-                  {label}
-                </div>
+      <main>
+        {/* ── Hero Section ── */}
+        <section className="dashboard-content relative flex items-center overflow-hidden" style={{ minHeight: '90vh', padding: '0 40px' }}>
+          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative z-20">
+              <span className="inline-block py-1 px-3 bg-secondary-fixed text-on-secondary-fixed text-xs font-bold tracking-widest uppercase mb-6 rounded-sm">
+                Crafted for Excellence
+              </span>
+              <h1 className="auth-right-headline" style={{ color: "var(--on-surface)", fontSize: "clamp(3rem, 8vw, 5rem)", lineHeight: 1.05 }}>
+                Mastery in <br />
+                Every <span className="accent" style={{ color: "var(--primary)" }}>Meal.</span>
+              </h1>
+              <p className="auth-page-sub" style={{ fontSize: '1.25rem', marginTop: '24px', maxWidth: '500px' }}>
+                Connect with local alchemists crafting fresh, home-cooked dishes delivered to your door. Purely homemade, exceptionally mastered.
+              </p>
+              <div className="flex flex-wrap gap-4 mt-10">
+                <button onClick={() => navigate("/register")} className="auth-btn" style={{ width: 'auto', padding: '18px 36px' }}>
+                  Explore Marketplace
+                </button>
+                <button onClick={() => navigate("/how-it-works")} className="auth-btn" style={{ padding: '18px 36px', width: 'auto', background: 'var(--surface-container-low)', color: 'var(--on-surface)' }}>
+                  How it Works
+                </button>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Hero Visual */}
-        <div
-          style={{
-            flex: 1,
-            minWidth: "280px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "340px",
-              background: "#F5F3FF",
-              borderRadius: "24px",
-              padding: "24px",
-              border: "1px solid #DDD6FE",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "13px",
-                fontWeight: 700,
-                color: "#7C3AED",
-                marginBottom: "16px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Today's Menu
             </div>
-            {[
-              {
-                name: "Dal Tadka + Rice",
-                price: 80,
-                portions: 8,
-                cook: "Rekha Ben",
-              },
-              {
-                name: "Paneer Butter Masala",
-                price: 120,
-                portions: 5,
-                cook: "Sunita Devi",
-              },
-              {
-                name: "Chole Bhature",
-                price: 90,
-                portions: 3,
-                cook: "Priya Shah",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                style={{
-                  background: "#fff",
-                  borderRadius: "12px",
-                  padding: "14px 16px",
-                  marginBottom: "10px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  border: "1px solid #E5E7EB",
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 700,
-                      color: "#0d0d0d",
-                    }}
-                  >
-                    {item.name}
+
+            {/* Featured Cook Mockup from HTML */}
+            <div className="relative">
+              <div className="stat-card" style={{ padding: '0', overflow: 'hidden', position: 'relative' }}>
+                <img
+                  src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG9tZSUyMGNoZWZ8ZW58MHx8MHx8fDA%3D"
+                  alt="Chef"
+                  style={{ width: '100%', height: '400px', objectFit: 'cover' }}
+                />
+                <div style={{ padding: '20px', background: 'var(--surface-container-lowest)' }}>
+                  <div className="flex justify-between items-center">
+                    <h4 className="auth-page-title" style={{ fontSize: '1.25rem', marginBottom: 0 }}>Marco Rossi</h4>
+                    <div className="badge badge-verified"><Star size={12} fill="currentColor" /> 4.9</div>
                   </div>
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "#9CA3AF",
-                      marginTop: "2px",
-                    }}
-                  >
-                    by {item.cook} · {item.portions} left
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    gap: "6px",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 800,
-                      color: "#7C3AED",
-                    }}
-                  >
-                    ₹{item.price}
-                  </div>
-                  <div
-                    style={{
-                      background: "#7C3AED",
-                      color: "#fff",
-                      borderRadius: "6px",
-                      padding: "3px 10px",
-                      fontSize: "11px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Order
-                  </div>
+                  <p className="auth-right-note" style={{ color: 'var(--primary)', marginTop: '4px' }}>Specialty: Handmade Tuscan Pasta</p>
                 </div>
               </div>
-            ))}
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "12px",
-                color: "#9CA3AF",
-                marginTop: "8px",
-              }}
-            >
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={12} /> Order before 10:00 AM for lunch</span>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── How it works ── */}
-      <section style={{ background: "#F9FAFB", padding: "80px 40px" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <h2
-              style={{
-                fontSize: "40px",
-                fontWeight: 900,
-                color: "#0d0d0d",
-                letterSpacing: "-1.5px",
-                marginBottom: "12px",
-              }}
-            >
-              How it works
-            </h2>
-            <p
-              style={{
-                fontSize: "15px",
-                color: "#6B7280",
-                maxWidth: "400px",
-                margin: "0 auto",
-              }}
-            >
-              Fresh homemade food in 3 simple steps
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: "24px",
-            }}
-          >
-            {[
-              {
-                step: "01",
-                icon: <Search size={36} color="#7C3AED" />,
-                title: "Browse home cooks",
-                desc: "Discover verified home cooks near you and explore their daily menus",
-              },
-              {
-                step: "02",
-                icon: <ShoppingCart size={36} color="#7C3AED" />,
-                title: "Pre-order your meal",
-                desc: "Select your dish and place your order 2-3 hours before mealtime",
-              },
-              {
-                step: "03",
-                icon: <Utensils size={36} color="#7C3AED" />,
-                title: "Enjoy fresh food",
-                desc: "Get fresh homemade food delivered to your door — pay on delivery",
-              },
-            ].map((item) => (
-              <div
-                key={item.step}
-                style={{
-                  background: "#fff",
-                  borderRadius: "16px",
-                  padding: "28px 24px",
-                  border: "1px solid #E5E7EB",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    color: "#7C3AED",
-                    letterSpacing: "1px",
-                    marginBottom: "12px",
-                  }}
-                >
-                  STEP {item.step}
+        {/* ── Why Section (Bento Grid Style) ── */}
+        <section style={{ padding: '80px 40px', background: 'var(--surface-container-low)'}}>
+          <div className="dashboard-content max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* Feature 1 */}
+              <div className="md:col-span-8 stat-card" style={{ background: 'var(--surface-container-lowest)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ width: '64px', height: '64px', background: 'var(--primary-fixed)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+                  <Star className="text-primary" size={32} />
                 </div>
-                <div style={{ fontSize: "36px", marginBottom: "12px" }}>
-                  {item.icon}
-                </div>
-                <div
-                  style={{
-                    fontSize: "17px",
-                    fontWeight: 800,
-                    color: "#0d0d0d",
-                    letterSpacing: "-0.3px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {item.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    color: "#6B7280",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {item.desc}
-                </div>
+                <h3 className="auth-page-title" style={{ fontSize: '2rem' }}>Unmatched Quality</h3>
+                <p className="auth-page-sub" style={{ maxWidth: '450px' }}>Every dish is a masterpiece, prepared by vetted home chefs who prioritize fresh ingredients and authentic techniques.</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── For Cooks ── */}
-      <section style={{ padding: "80px 40px", background: "#7C3AED" }}>
-        <div
-          style={{
-            maxWidth: "1100px",
-            margin: "0 auto",
-            display: "flex",
-            gap: "60px",
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ flex: 1, minWidth: "280px" }}>
-            <div
-              style={{
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "rgba(255,255,255,0.6)",
-                letterSpacing: "1px",
-                marginBottom: "16px",
-                textTransform: "uppercase",
-              }}
-            >
-              For Home Cooks
+              {/* Feature 2 */}
+              <div className="md:col-span-4 stat-card" style={{ background: 'var(--primary-container)', color: '#fff' }}>
+                <ShieldCheck size={48} style={{ color: 'var(--secondary-fixed)', marginBottom: '24px' }} />
+                <h3 className="auth-page-title" style={{ color: '#fff' }}>Absolute Trust</h3>
+                <p className="auth-right-body">Vigorously vetted alchemists and transparent kitchens ensure your peace of mind.</p>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="md:col-span-4 stat-card">
+                <Users size={48} style={{ color: 'var(--primary)', marginBottom: '24px' }} />
+                <h3 className="auth-page-title">Strong Community</h3>
+                <p className="auth-page-sub">A network of food lovers supporting local talent and preserving culinary heritage.</p>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="md:col-span-8 stat-card" style={{ background: 'var(--on-surface)', color: 'var(--surface-bright)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ maxWidth: '400px' }}>
+                  <h3 className="auth-page-title" style={{ color: '#fff', fontSize: '2rem' }}>Purely Homemade.</h3>
+                  <p className="auth-right-body">No industrial kitchens. No hidden additives. Just the magic of real cooking from real homes.</p>
+                </div>
+                <Utensils size={80} style={{ opacity: 0.1 }} />
+              </div>
             </div>
-            <h2
-              style={{
-                fontSize: "44px",
-                fontWeight: 900,
-                color: "#fff",
-                letterSpacing: "-2px",
-                lineHeight: 1.1,
-                marginBottom: "16px",
-              }}
-            >
-              Turn your kitchen
-              <br />
-              into <span style={{ color: "#FCD34D" }}>income.</span>
-            </h2>
-            <p
-              style={{
-                fontSize: "15px",
-                color: "rgba(255,255,255,0.7)",
-                lineHeight: 1.8,
-                marginBottom: "28px",
-              }}
-            >
-              Cook what you already cook — just make a few extra portions. Post
-              your daily menu, accept orders and earn from the comfort of your
-              home.
-            </p>
-            <button
-              onClick={() => navigate("/register")}
-              style={{
-                padding: "14px 32px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#FCD34D",
-                fontSize: "15px",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Geist, sans-serif",
-                color: "#0d0d0d",
-              }}
-            >
-              Start Cooking for Others
-            </button>
           </div>
+        </section>
 
-          <div
-            style={{
-              flex: 1,
-              minWidth: "280px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {[
-              {
-                icon: <ClipboardList size={24} color="#FCD34D" />,
-                title: "Post daily menu",
-                desc: "Takes less than 2 minutes every morning",
-              },
-              {
-                icon: <Wallet size={24} color="#FCD34D" />,
-                title: "Earn daily income",
-                desc: "Get paid for every meal you deliver",
-              },
-              {
-                icon: <Clock size={24} color="#FCD34D" />,
-                title: "You control the schedule",
-                desc: "Set your own cutoff time and portion limits",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                style={{
-                  background: "rgba(255,255,255,0.1)",
-                  borderRadius: "14px",
-                  padding: "18px 20px",
-                  display: "flex",
-                  gap: "14px",
-                  alignItems: "flex-start",
-                  border: "1px solid rgba(255,255,255,0.15)",
-                }}
-              >
-                <div style={{ fontSize: "24px", flexShrink: 0 }}>
-                  {item.icon}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 700,
-                      color: "#fff",
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                  <div
-                    style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}
-                  >
-                    {item.desc}
-                  </div>
-                </div>
+        {/* ── Join the Network ── */}
+        <section style={{ padding: '100px 40px' }}>
+          <div className="dashboard-content max-w-7xl mx-auto" style={{ background: 'var(--primary-fixed)', borderRadius: '32px', overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 500px', padding: '60px' }}>
+              <h2 className="auth-right-headline" style={{ color: 'var(--primary-container)', fontSize: '3rem' }}>
+                Turn your kitchen into a sanctuary of craft.
+              </h2>
+              <p className="auth-page-sub" style={{ color: 'var(--on-surface-variant)', fontSize: '1.15rem' }}>
+                Join our network of elite home cooks. We provide the platform, the audience, and the tools—you provide the magic.
+              </p>
+              <div className="flex flex-wrap gap-4 mt-8">
+                <button onClick={() => navigate("/register")} className="auth-btn" style={{ width: '  30rem' }}>
+                  Join as a Cook
+                </button>
+                <button onClick={() => navigate("/how-it-works")} className="auth-back" style={{ marginLeft: '0.5rem' }}>
+                  Learn about our vetting <ArrowRight size={16} />
+                </button>
               </div>
-            ))}
+            </div>
+            <div style={{ flex: '1 1 400px', minHeight: '400px' }}>
+              <img
+                src="https://images.unsplash.com/photo-1556911261-6bd341186b2f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNvb2tpbmd8ZW58MHx8MHx8fDA%3D"
+                alt="Cooking"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section style={{ padding: "80px 40px", background: "#fff" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "52px" }}>
-            <h2
-              style={{
-                fontSize: "40px",
-                fontWeight: 900,
-                color: "#0d0d0d",
-                letterSpacing: "-1.5px",
-                marginBottom: "12px",
-              }}
-            >
-              What people say
-            </h2>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "20px",
-            }}
-          >
-            {[
-              {
-                name: "Rahul Mehta",
-                role: "Software Engineer, Pune",
-                review:
-                  "Finally found ghar ka khana in Pune! The dal tadka from Rekha Ben tastes exactly like my mom makes it. Order every single day now.",
-                rating: 5,
-              },
-              {
-                name: "Priya Sharma",
-                role: "Home Cook, Surat",
-                review:
-                  "I was skeptical at first but TiffinBox changed my life. I earn ₹8,000 extra every month just by cooking a few extra portions!",
-                rating: 5,
-              },
-              {
-                name: "Arjun Patel",
-                role: "College Student, Ahmedabad",
-                review:
-                  "Way better than mess food and way cheaper than Zomato. Fresh homemade food for ₹80 is unbeatable. Highly recommend!",
-                rating: 5,
-              },
-            ].map((item) => (
-              <div
-                key={item.name}
-                style={{
-                  background: "#F9FAFB",
-                  borderRadius: "16px",
-                  padding: "24px",
-                  border: "1px solid #E5E7EB",
-                }}
-              >
-                <div style={{ display: "flex", gap: "2px", marginBottom: "16px" }}>
-                  {Array.from({ length: item.rating }).map((_, i) => (
-                    <Star key={i} size={16} color="#FCD34D" fill="#FCD34D" />
-                  ))}
-                </div>
-                <p
-                  style={{
-                    fontSize: "14px",
-                    color: "#374151",
-                    lineHeight: 1.7,
-                    marginBottom: "16px",
-                    fontStyle: "italic",
-                  }}
-                >
-                  "{item.review}"
-                </p>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 700,
-                      color: "#0d0d0d",
-                    }}
-                  >
-                    {item.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "12px",
-                      color: "#9CA3AF",
-                      marginTop: "2px",
-                    }}
-                  >
-                    {item.role}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section
-        style={{
-          padding: "80px 40px",
-          background: "#F5F3FF",
-          textAlign: "center",
-        }}
-      >
-        <div style={{ maxWidth: "600px", margin: "0 auto" }}>
-          <h2
-            style={{
-              fontSize: "44px",
-              fontWeight: 900,
-              color: "#0d0d0d",
-              letterSpacing: "-2px",
-              marginBottom: "16px",
-            }}
-          >
-            Ready to eat like
-            <br />
-            <span style={{ color: "#7C3AED" }}>home?</span>
-          </h2>
-          <p
-            style={{
-              fontSize: "15px",
-              color: "#6B7280",
-              marginBottom: "32px",
-              lineHeight: 1.7,
-            }}
-          >
-            Join thousands of food lovers and home cooks already on TiffinBox.
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <button
-              onClick={() => navigate("/register")}
-              style={{
-                padding: "14px 36px",
-                borderRadius: "10px",
-                border: "none",
-                background: "#7C3AED",
-                fontSize: "15px",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Geist, sans-serif",
-                color: "#fff",
-              }}
-            >
-              Get Started Free
-            </button>
-            <button
-              onClick={() => navigate("/login")}
-              style={{
-                padding: "14px 36px",
-                borderRadius: "10px",
-                border: "1.5px solid #DDD6FE",
-                background: "#fff",
-                fontSize: "15px",
-                fontWeight: 700,
-                cursor: "pointer",
-                fontFamily: "Geist, sans-serif",
-                color: "#7C3AED",
-              }}
-            >
-              Login
-            </button>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* ── Footer ── */}
-      <footer
+          <footer
         style={{
-          background: "#0d0d0d",
-          padding: "32px 40px",
-          textAlign: "center",
+          background: 'var(--surface-container-low)',
+          padding: 'var(--space-lg) 40px',
+          borderTop: '1px solid var(--outline-variant)',
+          width: '100%',
         }}
       >
         <div
           style={{
-            fontSize: "18px",
-            fontWeight: 900,
-            color: "#7C3AED",
-            marginBottom: "8px",
+            maxWidth: '1100px',
+            margin: '0 auto',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '24px',
           }}
         >
-          TiffinBox
-        </div>
-        <div style={{ fontSize: "13px", color: "#6B7280" }}>
-          © 2026 TiffinBox · Taste the home you miss.
+          {/* Left: Brand */}
+          <div className="dashboard-navbar-brand" style={{ margin: 0 }}>
+            TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
+          </div>
+
+          {/* Center: Links */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '2rem',
+              color: 'var(--on-surface-variant)',
+              textTransform: 'uppercase',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Privacy</a>
+            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Terms</a>
+            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Support</a>
+          </div>
+
+          {/* Right: Copyright */}
+          <div className="auth-right-note" style={{ color: 'var(--outline)', margin: 0 }}>
+            © 2026 TiffinBox. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>

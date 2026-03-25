@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
-
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
 import GuestRoute from './components/GuestRoute'
 import Landing from './pages/Landing'
 import ResetRoute from './components/ResetRoute'
 import BannedPage from './pages/BannedPage'
+import HowItWorks from './pages/misc/HowItWorks'
+import HelpCenter from './pages/misc/HelpCenter'
 
 
 // Auth Pages
@@ -36,13 +37,12 @@ import PendingCooks from './pages/admin/PendingCooks'
 import NotFound from './pages/NotFound'
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
-
-
         <Route path='/' element={<Landing />} />
+        <Route path='/how-it-works' element={<HowItWorks />} />
+        <Route path='/help-center' element={<HelpCenter />} />
 
         {/* ── Banned Route ── */}
         <Route path='/banned' element={<BannedPage />} />

@@ -2,25 +2,19 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { validateRegister } from "../../utils/validate";
-import { ArrowLeft, ShoppingBag, ChefHat, Star } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "customer",
-    city: "",
-    phone: "",
+    name: "", email: "", password: "", role: "customer", city: "", phone: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,190 +35,108 @@ function Register() {
 
   return (
     <div className="auth-wrap">
+
       {/* ── LEFT ── */}
       <div className="auth-left">
         <div className="auth-left-inner">
-          <span className="auth-back" onClick={() => navigate("/")} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <ArrowLeft size={16} /> Back to website
+
+          <span className="auth-back" onClick={() => navigate("/")}>
+            <ArrowLeft size={14} /> Back to website
           </span>
 
-          <div className="auth-page-title">
-            Create your
-            <br />
-            <span>TiffinBox</span>
-            <br />
-            account.
-          </div>
+          <div className="auth-page-title">Create your account</div>
           <p className="auth-page-sub">Join thousands of food lovers today.</p>
 
-          {/* Role Selector */}
-          <div style={{ marginBottom: "20px" }}>
-            <div className="inp-label" style={{ marginBottom: "10px" }}>
-              I want to
-            </div>
-            <div className="role-cards">
-              {/* Customer */}
-              <div
-                className={`role-card ${formData.role === "customer" ? "active" : ""}`}
-                onClick={() => setFormData({ ...formData, role: "customer" })}
-              >
-                <div className="role-card-icon customer"><ShoppingBag size={24} /></div>
-                <div className="role-card-text">
-                  <div className="role-card-title">Order Food</div>
-                  <div className="role-card-desc">
-                    Browse home cooks and pre-order fresh meals.
-                  </div>
-                </div>
-                <div className="role-card-radio">
-                  {formData.role === "customer" && (
-                    <div className="role-card-radio-dot" />
-                  )}
-                </div>
-              </div>
-
-              {/* Cook */}
-              <div
-                className={`role-card ${formData.role === "cook" ? "active" : ""}`}
-                onClick={() => setFormData({ ...formData, role: "cook" })}
-              >
-                <div className="role-card-icon cook"><ChefHat size={24} /></div>
-                <div className="role-card-text">
-                  <div className="role-card-title">Sell Food</div>
-                  <div className="role-card-desc">
-                    Post your daily menu and earn from your kitchen.
-                  </div>
-                </div>
-                <div className="role-card-radio">
-                  {formData.role === "cook" && (
-                    <div className="role-card-radio-dot" />
-                  )}
-                </div>
-              </div>
-            </div>
+          {/* Role Toggle */}
+          <div className="role-toggle">
+            <button
+              type="button"
+              className={`role-toggle-btn${formData.role === "customer" ? " active" : ""}`}
+              onClick={() => setFormData({ ...formData, role: "customer" })}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>shopping_bag</span>
+              Order Food
+            </button>
+            <button
+              type="button"
+              className={`role-toggle-btn${formData.role === "cook" ? " active" : ""}`}
+              onClick={() => setFormData({ ...formData, role: "cook" })}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>restaurant</span>
+              Sell Food
+            </button>
           </div>
 
           {error && <div className="error-box">{error}</div>}
 
           <form noValidate onSubmit={handleSubmit}>
+
             <div className="inp-row">
-              <div className="inp-wrap">
-                <div className="inp-label">Full Name</div>
-                <input
-                  className="inp-field"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  required
-                />
+              <div className="inp-group">
+                <label className="inp-label">Full Name</label>
+                <div className="inp-icon-wrap">
+                  <span className="material-symbols-outlined inp-icon">person</span>
+                  <input className="inp-field" type="text" name="name"
+                    value={formData.name} onChange={handleChange}
+                    placeholder="John Doe" required />
+                </div>
               </div>
-              <div className="inp-wrap">
-                <div className="inp-label">City</div>
-                <input
-                  className="inp-field"
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="Vadodara"
-                  required
-                />
+              <div className="inp-group">
+                <label className="inp-label">City</label>
+                <div className="inp-icon-wrap">
+                  <span className="material-symbols-outlined inp-icon">location_on</span>
+                  <input className="inp-field" type="text" name="city"
+                    value={formData.city} onChange={handleChange}
+                    placeholder="Surat" required />
+                </div>
               </div>
             </div>
 
-            <div className="inp-wrap">
-              <div className="inp-label">Email Address</div>
-              <input
-                className="inp-field"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@gmail.com"
-                required
-              />
+            <div className="inp-group">
+              <label className="inp-label">Email Address</label>
+              <div className="inp-icon-wrap">
+                <span className="material-symbols-outlined inp-icon">mail</span>
+                <input className="inp-field" type="email" name="email"
+                  value={formData.email} onChange={handleChange}
+                  placeholder="you@example.com" required />
+              </div>
             </div>
 
-            <div className="inp-wrap" style={{ position: "relative" }}>
-              <div className="inp-label">Password</div>
-              <input
-                className="inp-field"
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Min 6 characters"
-                required
-                style={{ paddingRight: "36px" }}
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: "absolute",
-                  right: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                  color: "#9CA3AF",
-                  userSelect: "none",
-                }}
-              >
-                {showPassword ? (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                )}
-              </span>
+            <div className="inp-group">
+              <label className="inp-label">Password</label>
+              <div className="inp-icon-wrap">
+                <span className="material-symbols-outlined inp-icon">lock</span>
+                <input
+                  className="inp-field"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Min 6 characters"
+                  required
+                  style={{ paddingRight: "44px" }}
+                />
+                <button type="button" className="inp-eye" onClick={() => setShowPassword(!showPassword)}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
+                    {showPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              </div>
             </div>
 
-            <div className="inp-wrap">
-              <div className="inp-label">
+            <div className="inp-group">
+              <label className="inp-label">
                 Mobile Number{" "}
-                <span
-                  style={{
-                    fontWeight: 400,
-                    textTransform: "none",
-                    fontSize: "10px",
-                  }}
-                >
+                <span style={{ fontWeight: 400, textTransform: "none", fontSize: "10px", letterSpacing: 0 }}>
                   (optional)
                 </span>
+              </label>
+              <div className="inp-icon-wrap">
+                <span className="material-symbols-outlined inp-icon">phone</span>
+                <input className="inp-field" type="text" name="phone"
+                  value={formData.phone} onChange={handleChange}
+                  placeholder="0123456789" />
               </div>
-              <input
-                className="inp-field"
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="0123456789"
-              />
             </div>
 
             <button type="submit" className="auth-btn" disabled={loading}>
@@ -232,34 +144,31 @@ function Register() {
             </button>
           </form>
 
-          <div className="auth-switch">
-            Already have an account? <Link to="/login">Login here</Link>
-          </div>
-
           <div className="auth-terms">
             By creating an account you confirm you have read and accepted
-            TiffinBox's <span>Terms of Service</span> and{" "}
-            <span>Privacy Policy</span>.
+            TiffinBox's <span>Terms of Service</span> and <span>Privacy Policy</span>.
           </div>
+
+          <div className="auth-switch">
+            Already have an account?&nbsp;<Link to="/login">Login here</Link>
+          </div>
+
         </div>
       </div>
 
       {/* ── RIGHT ── */}
       <div className="auth-right">
-        <div className="auth-right-noise" />
+        <img
+          className="auth-right-photo"
+          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&auto=format&fit=crop"
+          alt="Homemade food spread"
+        />
         <div className="auth-right-content">
-          <div className="auth-right-brand">
-            <div className="auth-right-brand-text">
-              <span className="auth-right-brand-name">TiffinBox</span>
-            </div>
-          </div>
+          <div className="auth-right-brand">TiffinBox</div>
 
           <div>
             <div className="auth-right-headline">
-              Miss mom's
-              <br />
-              cooking?
-              <br />
+              Miss mom's<br />cooking?<br />
               <span className="accent">We got you.</span>
             </div>
             <p className="auth-right-body">
@@ -281,11 +190,17 @@ function Register() {
             ))}
           </div>
 
+          <div className="auth-accent-bar">
+            <div className="auth-accent-bar-item long" />
+            <div className="auth-accent-bar-item short" />
+            <div className="auth-accent-bar-item short" />
+          </div>
+
           <div className="auth-stats">
             {[
               ["2K+", "Home Cooks"],
               ["50K+", "Meals Served"],
-              [<span key="rating" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>4.8<Star size={24} fill="currentColor" /></span>, "Avg Rating"],
+              ["4.8★", "Avg Rating"],
             ].map(([num, label], i) => (
               <div key={i}>
                 <div className="auth-stat-num">{num}</div>
@@ -295,6 +210,7 @@ function Register() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }
