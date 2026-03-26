@@ -1,5 +1,5 @@
 import React from 'react'
-import { logout } from '../redux/slices/authSlice'
+import { logout } from '../../redux/slices/authSlice'
 import { Hourglass } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'

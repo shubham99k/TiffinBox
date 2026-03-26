@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../../redux/slices/authSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { validateLogin } from "../../utils/validate";
+import { ArrowLeft } from "lucide-react";
 
 function Login() {
   const navigate = useNavigate();
@@ -46,6 +47,9 @@ function Login() {
       <div className="auth-left">
         <div className="auth-left-inner">
 
+          <span className="auth-back" onClick={() => navigate("/")}>
+            <ArrowLeft size={14} /> Back to Home page
+          </span>
           <div className="auth-brand">
             <span className="auth-brand-dot" />
             TiffinBox

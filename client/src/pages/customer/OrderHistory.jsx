@@ -300,7 +300,7 @@ function OrderHistory() {
                                 transition: "opacity 0.15s",
                               }}
                             >
-                              <Star size={24} fill="currentColor" />
+                              <Star size={24} fill="#D97706" stroke="#D97706" />
                             </span>
                           ))}
                         </div>

@@ -7,7 +7,7 @@ function NotFound() {
   const { user } = useSelector((state) => state.auth)
 
   const handleGoHome = () => {
-    if (!user) navigate('/login')
+    if (!user) navigate('/home')
     else if (user.role === 'cook') navigate('/cook/dashboard')
     else if (user.role === 'admin') navigate('/admin/dashboard')
     else navigate('/home')

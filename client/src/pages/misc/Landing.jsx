@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Star, ArrowRight, ShieldCheck, Users, Utensils } from "lucide-react";
+import Footer from "../../components/Footer";
 
 function Landing() {
   const navigate = useNavigate();
@@ -8,11 +9,13 @@ function Landing() {
     <div className="dashboard-wrap bg-background">
       {/* ── Top Navigation Bar ── */}
       <nav className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">
+        <div className="dashboard-navbar-brand"
+        style={{ cursor: 'pointer'}}
+        onClick={() => navigate("/")}>
           TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
         </div>
         <div className="hidden md:flex items-center gap-8 font-['Manrope'] font-semibold">
-          <span onClick={() => navigate("/")} style={{ cursor: 'pointer', opacity: 0.7, color: 'var(--primary-container)', textDecoration: 'underline', textUnderlineOffset: '8px'}}>Home</span>
+          <span onClick={() => navigate("/")} style={{ cursor: 'pointer', opacity: 0.7, color: 'var(--primary-container)', textDecoration: 'underline', textUnderlineOffset: '8px' }}>Home</span>
           <span onClick={() => navigate("/how-it-works")} style={{ cursor: 'pointer', opacity: 0.7 }}>How it works</span>
           <span onClick={() => navigate("/register")} style={{ cursor: 'pointer', opacity: 0.7 }}>Join as Cook</span>
         </div>
@@ -72,7 +75,7 @@ function Landing() {
         </section>
 
         {/* ── Why Section (Bento Grid Style) ── */}
-        <section style={{ padding: '80px 40px', background: 'var(--surface-container-low)'}}>
+        <section style={{ padding: '80px 40px', background: 'var(--surface-container-low)' }}>
           <div className="dashboard-content max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               {/* Feature 1 */}
@@ -141,52 +144,7 @@ function Landing() {
       </main>
 
       {/* ── Footer ── */}
-          <footer
-        style={{
-          background: 'var(--surface-container-low)',
-          padding: 'var(--space-lg) 40px',
-          borderTop: '1px solid var(--outline-variant)',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1100px',
-            margin: '0 auto',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '24px',
-          }}
-        >
-          {/* Left: Brand */}
-          <div className="dashboard-navbar-brand" style={{ margin: 0 }}>
-            TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
-          </div>
-
-          {/* Center: Links */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '2rem',
-              color: 'var(--on-surface-variant)',
-              textTransform: 'uppercase',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Privacy</a>
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Terms</a>
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Support</a>
-          </div>
-
-          {/* Right: Copyright */}
-          <div className="auth-right-note" style={{ color: 'var(--outline)', margin: 0 }}>
-            © 2026 TiffinBox. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

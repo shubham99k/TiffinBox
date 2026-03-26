@@ -3,12 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
 import GuestRoute from './components/GuestRoute'
-import Landing from './pages/Landing'
+import Landing from './pages/misc/Landing'
 import ResetRoute from './components/ResetRoute'
-import BannedPage from './pages/BannedPage'
+import BannedPage from './pages/misc/BannedPage'
 import HowItWorks from './pages/misc/HowItWorks'
 import HelpCenter from './pages/misc/HelpCenter'
-
+import Footer from './components/Footer'
+import Policy from './pages/misc/Policy'
+import TermsAndConditions from './pages/misc/TermsAndConditions'
 
 // Auth Pages
 import Login from './pages/auth/Login'
@@ -34,7 +36,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import PendingCooks from './pages/admin/PendingCooks'
 
 // 404
-import NotFound from './pages/NotFound'
+import NotFound from './pages/misc/NotFound'
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
         <Route path='/' element={<Landing />} />
         <Route path='/how-it-works' element={<HowItWorks />} />
         <Route path='/help-center' element={<HelpCenter />} />
+        <Route path='/policy' element={<Policy />} />
+        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
 
         {/* ── Banned Route ── */}
         <Route path='/banned' element={<BannedPage />} />

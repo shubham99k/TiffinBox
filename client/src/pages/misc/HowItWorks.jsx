@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer';
 import {
   Search,
   ShoppingCart,
@@ -19,7 +20,9 @@ const HowItWorks = () => {
 
       {/* ── Top Navigation Bar ── */}
       <nav className="dashboard-navbar">
-        <div className="dashboard-navbar-brand">
+        <div className="dashboard-navbar-brand"
+        style={{ cursor: 'pointer'}}
+        onClick={() => navigate("/")}>
           TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
         </div>
         <div className="hidden md:flex items-center gap-8 font-['Manrope'] font-semibold">
@@ -439,52 +442,7 @@ const HowItWorks = () => {
       </main>
 
       {/* ── Footer ── */}
-      <footer
-        style={{
-          background: 'var(--surface-container-low)',
-          padding: 'var(--space-lg) 40px',
-          borderTop: '1px solid var(--outline-variant)',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1100px',
-            margin: '0 auto',
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '24px',
-          }}
-        >
-          {/* Left: Brand */}
-          <div className="dashboard-navbar-brand" style={{ margin: 0 }}>
-            TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
-          </div>
-
-          {/* Center: Links */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '2rem',
-              color: 'var(--on-surface-variant)',
-              textTransform: 'uppercase',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Privacy</a>
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Terms</a>
-            <a href="#" className="auth-back" style={{ textDecoration: 'none', margin: 0, fontSize: '0.75rem' }}>Support</a>
-          </div>
-
-          {/* Right: Copyright */}
-          <div className="auth-right-note" style={{ color: 'var(--outline)', margin: 0 }}>
-            © 2026 TiffinBox. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

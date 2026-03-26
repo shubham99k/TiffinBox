@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer';
+import Navbar from '../../components/Navbar';
 
 const HelpCenter = () => {
   const navigate = useNavigate();
@@ -54,114 +56,24 @@ const HelpCenter = () => {
     <div className="dashboard-wrap">
 
       {/* ── Top Navigation Bar ── */}
+     {/* ── Top Navigation Bar ── */}
       <nav className="dashboard-navbar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <span className="dashboard-navbar-brand">Digital Alchemist</span>
-
-          <div
-            style={{
-              display: 'none', /* show via media query or JS */
-              gap: '1.5rem',
-              alignItems: 'center',
-            }}
-            className="md-nav-links"
-          >
-            <a
-              href="#"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-                color: 'var(--on-surface-variant)',
-                textDecoration: 'none',
-                transition: 'color 0.15s',
-              }}
-            >
-              Home
-            </a>
-            <a
-              href="#"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-                color: 'var(--on-surface-variant)',
-                textDecoration: 'none',
-                transition: 'color 0.15s',
-              }}
-            >
-              Marketplace
-            </a>
-            <a
-              href="#"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-                color: 'var(--primary)',
-                borderBottom: '2px solid var(--primary-container)',
-                paddingBottom: '4px',
-                textDecoration: 'none',
-              }}
-            >
-              Help Center
-            </a>
-          </div>
+        <div className="dashboard-navbar-brand" 
+        style={{ cursor: 'pointer'}}
+        onClick={() => navigate("/")}>
+          TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>
         </div>
-
+        <div className="hidden md:flex items-center gap-8 font-['Manrope'] font-semibold">
+          <span onClick={() => navigate("/")} style={{ cursor: 'pointer', opacity: 0.7 }}>Home</span>
+          <span onClick={() => navigate("/how-it-works")} style={{ cursor: 'pointer', opacity: 0.7 }}>How it works</span>
+          <span onClick={() => navigate("/register")} style={{ cursor: 'pointer', opacity: 0.7 }}>Join as Cook</span>
+        </div>
         <div className="dashboard-navbar-right">
-          {/* Search */}
-          <div style={{ position: 'relative' }}>
-            <span
-              className="material-symbols-outlined"
-              style={{
-                position: 'absolute',
-                left: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                color: 'var(--outline)',
-                pointerEvents: 'none',
-              }}
-            >
-              search
-            </span>
-            <input
-              className="inp-field"
-              style={{ paddingLeft: '2.5rem', width: '16rem', marginTop: 0 }}
-              placeholder="Search resources..."
-              type="text"
-            />
-          </div>
-
-          <button
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--on-surface-variant)',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '8px',
-              transition: 'color 0.15s',
-            }}
-          >
-            <span className="material-symbols-outlined">notifications</span>
+          <button onClick={() => navigate("/login")} className="dashboard-navbar-user" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            Login
           </button>
-
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--on-surface-variant)',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '8px',
-              transition: 'color 0.15s',
-            }}
-          >
-            <span className="material-symbols-outlined">account_circle</span>
+          <button onClick={() => navigate("/register")} className="dashboard-navbar-btn">
+            Sign Up
           </button>
         </div>
       </nav>
@@ -583,7 +495,7 @@ const HelpCenter = () => {
                   GUIDE
                 </span>
                 <h3 className="auth-right-headline" style={{ fontSize: '1.75rem', marginBottom: '1rem' }}>
-                  Mastering the Digital Alchemist Kitchen
+                  Mastering the TiffinBox Kitchen
                 </h3>
                 <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: '36rem', fontSize: '0.9375rem' }}>
                   Everything you need to know about setting up your workspace and meeting global
@@ -678,127 +590,7 @@ const HelpCenter = () => {
           </div>
         </section>
       </main>
-
-      {/* ── Footer ── */}
-      <footer
-        style={{
-          background: 'var(--primary-container)',
-          color: 'var(--on-primary)',
-          padding: '4rem 1.5rem',
-          marginTop: '4rem',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1100px',
-            margin: '0 auto',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '3rem',
-          }}
-        >
-          {/* Brand + tagline */}
-          <div style={{ gridColumn: 'span 2' }}>
-            <span
-              className="dashboard-navbar-brand"
-              style={{ color: '#fff', display: 'block', marginBottom: '1.5rem' }}
-            >
-              Digital Alchemist
-            </span>
-            <p
-              className="auth-right-body"
-              style={{ color: 'var(--surface-dim)', maxWidth: '24rem', marginBottom: '2rem' }}
-            >
-              Empowering the next generation of culinary creators through decentralized kitchen
-              networks and community-driven commerce.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              {['public', 'chat_bubble'].map((icon) => (
-                <div
-                  key={icon}
-                  style={{
-                    width: '2.5rem',
-                    height: '2.5rem',
-                    borderRadius: '50%',
-                    border: '1px solid rgba(255,255,255,0.25)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s',
-                  }}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>{icon}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Platform links */}
-          <div>
-            <h5
-              className="table-card-title"
-              style={{ color: 'var(--primary-fixed)', marginBottom: '1.5rem' }}
-            >
-              Platform
-            </h5>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {['How it Works', 'For Cooks', 'For Foodies', 'Marketplace'].map((l) => (
-                <li
-                  key={l}
-                  style={{
-                    fontSize: '0.875rem',
-                    color: 'var(--surface-dim)',
-                    cursor: 'pointer',
-                    transition: 'color 0.15s',
-                  }}
-                >
-                  {l}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support links */}
-          <div>
-            <h5
-              className="table-card-title"
-              style={{ color: 'var(--primary-fixed)', marginBottom: '1.5rem' }}
-            >
-              Support
-            </h5>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {['Help Center', 'Terms of Service', 'Privacy Policy', 'Contact Us'].map((l) => (
-                <li
-                  key={l}
-                  style={{
-                    fontSize: '0.875rem',
-                    color: 'var(--surface-dim)',
-                    cursor: 'pointer',
-                    transition: 'color 0.15s',
-                  }}
-                >
-                  {l}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div
-          style={{
-            maxWidth: '1100px',
-            margin: '4rem auto 0',
-            paddingTop: '2rem',
-            borderTop: '1px solid rgba(255,255,255,0.1)',
-            textAlign: 'center',
-            fontSize: '0.75rem',
-            color: 'var(--outline)',
-          }}
-        >
-          © 2024 Digital Alchemist Global. All rights reserved. Made with magic.
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

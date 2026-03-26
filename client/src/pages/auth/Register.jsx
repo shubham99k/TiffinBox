@@ -41,8 +41,13 @@ function Register() {
         <div className="auth-left-inner">
 
           <span className="auth-back" onClick={() => navigate("/")}>
-            <ArrowLeft size={14} /> Back to website
+            <ArrowLeft size={14} /> Back to Home page
           </span>
+          
+          <div className="auth-brand">
+            <span className="auth-brand-dot" />
+            TiffinBox
+          </div>
 
           <div className="auth-page-title">Create your account</div>
           <p className="auth-page-sub">Join thousands of food lovers today.</p>
@@ -144,9 +149,40 @@ function Register() {
             </button>
           </form>
 
-          <div className="auth-terms">
-            By creating an account you confirm you have read and accepted
-            TiffinBox's <span>Terms of Service</span> and <span>Privacy Policy</span>.
+          <div className="auth-terms" style={{ fontSize: "0.8125rem", color: "var(--on-surface-variant)" }}>
+            By creating an account you confirm you have read and accepted TiffinBox's
+
+            <Link
+              to="/terms-and-conditions"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "var(--primary)",
+                textDecoration: "none",
+                fontWeight: 600,
+                display: "inline", // Ensures it doesn't behave like a block
+                margin: "0 4px"
+              }}
+            >
+              Terms of Service
+            </Link>
+
+            and
+
+            <Link
+              to="/policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "var(--primary)",
+                textDecoration: "none",
+                fontWeight: 600,
+                display: "inline",
+                marginLeft: "4px"
+              }}
+            >
+              Privacy Policy
+            </Link>.
           </div>
 
           <div className="auth-switch">
