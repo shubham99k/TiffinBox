@@ -5,7 +5,8 @@ import {
   rejectCook,
   getAllUsers,
   getStats,
-  banUser
+  banUser,
+  getUserDetails
 } from '../controllers/adminController.js'
 import { protect } from '../middleware/authMiddleware.js'
 import { authorizeRoles } from '../middleware/roleMiddleware.js'
@@ -24,6 +25,7 @@ router.get('/users', getAllUsers)
 router.get('/stats', getStats)
 router.put('/users/:id/ban', banUser)
 router.delete('/users/:id', deleteUser)
+router.get('/users/:id', getUserDetails)
 
 
 export default router

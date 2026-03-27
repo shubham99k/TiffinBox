@@ -99,7 +99,7 @@ function CookProfileSetup() {
         minHeight: "100vh",
         color: "var(--on-surface)",
       }}>
-      {/* ── SIMPLIFIED ONBOARDING HEADER ── */}
+      {/* ── Navbar ── */}
       <nav className='dashboard-navbar'>
         <div
           className='dashboard-navbar-brand'

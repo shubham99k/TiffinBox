@@ -31,7 +31,7 @@ export const register = async (req, res) => {
     <p class="text">Hi ${name}, thanks for joining TiffinBox!</p>
     <p class="text">Your verification OTP is:</p>
     <div class="highlight" style="text-align:center;">
-      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+      <div style="font-size: 36px; font-weight: 900; color: #047857; letter-spacing: 8px;">${otp}</div>
     </div>
     <p class="text">This OTP expires in <strong>10 minutes</strong>. If you didn't register, ignore this email.</p>
   `

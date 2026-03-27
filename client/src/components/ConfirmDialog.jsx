@@ -1,96 +1,158 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel = 'Confirm', confirmColor = '#DC2626' }) {
-  const [loading, setLoading] = useState(false)
+function ConfirmDialog({
+  message,
+  onConfirm,
+  onCancel,
+  confirmLabel = "Confirm",
+  confirmColor = "#DC2626",
+}) {
+  const [loading, setLoading] = useState(false);
 
-  if (!message) return null
+  if (!message) return null;
 
   const handleConfirm = async () => {
-    setLoading(true)
-    await onConfirm()
-    setLoading(false)
-  }
+    setLoading(true);
+    await onConfirm();
+    setLoading(false);
+  };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(0,0,0,0.3)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        background: '#fff',
-        borderRadius: '12px',
-        padding: '28px 24px',
-        maxWidth: '380px',
-        width: '90%',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-        fontFamily: 'var(--font-body)',
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(20,27,43,0.4)",
+        backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "16px",
       }}>
-        <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink)', marginBottom: '20px' }}>
-          {message}
+      <div
+        style={{
+          background: "var(--surface-container-lowest)",
+          borderRadius: "var(--radius-lg)",
+          padding: "32px 28px",
+          maxWidth: "400px",
+          width: "100%",
+          boxShadow: "0 16px 48px rgba(20,27,43,0.18)",
+          fontFamily: "var(--font-body)",
+        }}>
+        {/* Icon */}
+        <div
+          style={{
+            width: "48px",
+            height: "48px",
+            borderRadius: "50%",
+            background:
+              confirmColor === "#DC2626" ? "#fee2e2" : "var(--primary-fixed)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}>
+          <span
+            className='material-symbols-outlined'
+            style={{
+              fontSize: "22px",
+              color:
+                confirmColor === "#DC2626"
+                  ? "#991b1b"
+                  : "var(--primary-container)",
+            }}>
+            {confirmColor === "#DC2626" ? "warning" : "check_circle"}
+          </span>
         </div>
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+
+        {/* Message */}
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1rem",
+            color: "var(--on-surface)",
+            letterSpacing: "-0.02em",
+            lineHeight: 1.5,
+            marginBottom: "28px",
+          }}>
+          {message}
+        </p>
+
+        {/* Actions */}
+        <div
+          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <button
             onClick={onCancel}
             disabled={loading}
             style={{
-              padding: '8px 18px',
-              borderRadius: '8px',
-              border: '1px solid var(--border)',
-              background: '#fff',
-              color: 'var(--ink)',
-              fontSize: '13px',
-              fontWeight: 500,
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.5 : 1
+              padding: "10px 20px",
+              borderRadius: "var(--radius-lg)",
+              border: "1px solid var(--surface-container-high)",
+              background: "var(--surface-container-low)",
+              color: "var(--on-surface-variant)",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              fontFamily: "var(--font-display)",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.5 : 1,
+              transition: "background 0.15s",
             }}
-          >
+            onMouseEnter={(e) => {
+              if (!loading)
+                e.currentTarget.style.background =
+                  "var(--surface-container-high)";
+            }}
+            onMouseLeave={(e) => {
+              if (!loading)
+                e.currentTarget.style.background =
+                  "var(--surface-container-low)";
+            }}>
             Cancel
           </button>
+
           <button
             onClick={handleConfirm}
             disabled={loading}
             style={{
-              padding: '8px 18px',
-              borderRadius: '8px',
-              border: 'none',
+              padding: "10px 20px",
+              borderRadius: "var(--radius-lg)",
+              border: "none",
               background: confirmColor,
-              color: '#fff',
-              fontSize: '13px',
-              fontWeight: 500,
-              cursor: loading ? 'not-allowed' : 'pointer',
+              color: "#fff",
+              fontSize: "0.875rem",
+              fontWeight: 700,
+              fontFamily: "var(--font-display)",
+              cursor: loading ? "not-allowed" : "pointer",
               opacity: loading ? 0.8 : 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              transition: "opacity 0.15s",
+            }}>
             {loading && (
-              <div style={{
-                width: '13px',
-                height: '13px',
-                border: '2px solid rgba(255,255,255,0.4)',
-                borderTop: '2px solid #fff',
-                borderRadius: '50%',
-                animation: 'spin 0.7s linear infinite'
-              }} />
+              <div
+                style={{
+                  width: "13px",
+                  height: "13px",
+                  border: "2px solid rgba(255,255,255,0.35)",
+                  borderTopColor: "#fff",
+                  borderRadius: "50%",
+                  animation: "spin 0.7s linear infinite",
+                  flexShrink: 0,
+                }}
+              />
             )}
-            {loading ? 'Please wait...' : confirmLabel}
+            {loading ? "Please wait…" : confirmLabel}
           </button>
         </div>
       </div>
 
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
-  )
+  );
 }
 
-export default ConfirmDialog
+export default ConfirmDialog;

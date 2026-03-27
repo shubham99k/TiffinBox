@@ -2,7 +2,17 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import NotificationBell from "./NotificationBell";
-import { ArrowLeft, ClipboardList, PlusCircle, ListOrdered, Users, ChefHat, Key, User as UserIcon, LogOut } from "lucide-react";
+import {
+  ArrowLeft,
+  ClipboardList,
+  PlusCircle,
+  ListOrdered,
+  Users,
+  ChefHat,
+  Key,
+  User as UserIcon,
+  LogOut,
+} from "lucide-react";
 
 function Navbar({ showBack, backPath, backLabel }) {
   const navigate = useNavigate();
@@ -21,93 +31,166 @@ function Navbar({ showBack, backPath, backLabel }) {
   };
 
   return (
-    <div className="dashboard-navbar">
-      <div
-        className="dashboard-navbar-brand"
+    <nav
+      style={{
+        background: "rgba(249,249,255,0.85)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        borderBottom: "1px solid rgba(20,27,43,0.06)",
+        padding: "0 40px",
+        height: "64px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+        fontFamily: "var(--font-body)",
+      }}>
+      {/* Brand */}
+      <span
         onClick={() => navigate(getHomePath())}
-        style={{ cursor: "pointer" }}
-      >
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 900,
+          fontSize: "1.15rem",
+          color: "var(--on-surface)",
+          letterSpacing: "-0.02em",
+          cursor: "pointer",
+          userSelect: "none",
+        }}>
         TiffinBox
-      </div>
-      <div className="dashboard-navbar-right">
+      </span>
+
+      {/* Right side */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          flexWrap: "wrap",
+        }}>
+        {/* Back button */}
         {showBack && (
-          <button
-            className="dashboard-navbar-btn"
+          <NavBtn
+            icon={<ArrowLeft size={14} />}
+            label={backLabel || "Back"}
             onClick={() => navigate(backPath || -1)}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
-          >
-            <ArrowLeft size={16} /> {backLabel || "Back"}
-          </button>
+          />
         )}
 
-        {/* Customer Links */}
+        {/* Customer links */}
         {user?.role === "customer" && (
-          <button
-            className="dashboard-navbar-btn"
+          <NavBtn
+            icon={<ClipboardList size={14} />}
+            label='My Orders'
             onClick={() => navigate("/orders/my")}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
-          >
-            <ClipboardList size={16} /> My Orders
-          </button>
+          />
         )}
 
-        {/* Cook Links */}
+        {/* Cook links */}
         {user?.role === "cook" && (
           <>
-            <button
-              className="dashboard-navbar-btn"
+            <NavBtn
+              icon={<PlusCircle size={14} />}
+              label='Post Menu'
               onClick={() => navigate("/cook/post-menu")}
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              <PlusCircle size={16} /> Post Menu
-            </button>
-            <button
-              className="dashboard-navbar-btn"
+            />
+            <NavBtn
+              icon={<ListOrdered size={14} />}
+              label='Orders'
               onClick={() => navigate("/cook/orders")}
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-              <ListOrdered size={16} /> Orders
-            </button>
+            />
           </>
         )}
 
-        {/* Admin Links */}
+        {/* Admin links */}
         {user?.role === "admin" && (
-          <button
-            className="dashboard-navbar-btn"
+          <NavBtn
+            icon={<Users size={14} />}
+            label='Pending Cooks'
             onClick={() => navigate("/admin/pending-cooks")}
-            style={{ display: "flex", alignItems: "center", gap: "6px" }}
-          >
-            <Users size={16} /> Pending Cooks
-          </button>
+          />
         )}
 
         <NotificationBell />
 
+        {/* User chip */}
         <div
-          className="dashboard-navbar-user"
-          style={{ display: "flex", alignItems: "center", gap: "6px" }}
-        >
-          <span style={{ display: "flex", alignItems: "center" }}>
-            {user?.role === "cook"
-              ? <ChefHat size={18} />
-              : user?.role === "admin"
-                ? <Key size={18} />
-                : <UserIcon size={18} />}
-          </span>
-          <span>{user?.name?.split(" ")[0]}</span>
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            padding: "6px 12px",
+            borderRadius: "var(--radius-pill)",
+            background: "var(--surface-container-high)",
+            fontSize: "0.8125rem",
+            fontWeight: 600,
+            color: "var(--on-surface-variant)",
+            userSelect: "none",
+          }}>
+          {user?.role === "cook" ? (
+            <ChefHat size={14} />
+          ) : user?.role === "admin" ? (
+            <Key size={14} />
+          ) : (
+            <UserIcon size={14} />
+          )}
+          {user?.name?.split(" ")[0]}
         </div>
 
-        <button 
-          className="dashboard-navbar-btn" 
+        {/* Logout */}
+        <NavBtn
+          icon={<LogOut size={14} />}
+          label='Logout'
           onClick={handleLogout}
-          style={{ display: "flex", alignItems: "center", gap: "6px" }}
-        >
-          <LogOut size={16} /> Logout
-        </button>
+          danger
+        />
       </div>
-    </div>
+    </nav>
   );
 }
+
+/* ── Small reusable nav button ── */
+function NavBtn({ icon, label, onClick, danger }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "6px",
+        padding: "7px 13px",
+        borderRadius: "var(--radius-lg)",
+        border: "none",
+        cursor: "pointer",
+        fontFamily: "var(--font-display)",
+        fontWeight: 700,
+        fontSize: "0.8125rem",
+        transition: "all 0.15s",
+        background: danger
+          ? hovered
+            ? "#fee2e2"
+            : "transparent"
+          : hovered
+            ? "var(--primary-fixed-dim)"
+            : "var(--primary-fixed)",
+        color: danger
+          ? hovered
+            ? "#991b1b"
+            : "var(--on-surface-variant)"
+          : "var(--primary-container)",
+      }}>
+      {icon} {label}
+    </button>
+  );
+}
+
+// useState needed for NavBtn hover
+import { useState } from "react";
 
 export default Navbar;

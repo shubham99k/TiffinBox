@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
-import Navbar from '../../components/Navbar';
 
 const HelpCenter = () => {
   const navigate = useNavigate();
@@ -58,7 +57,7 @@ const HelpCenter = () => {
       {/* ── Top Navigation Bar ── */}
      {/* ── Top Navigation Bar ── */}
       <nav className="dashboard-navbar">
-        <div className="dashboard-navbar-brand" 
+        <div className="dashboard-navbar-brand"
         style={{ cursor: 'pointer'}}
         onClick={() => navigate("/")}>
           TiffinBox <span className="auth-brand-dot" style={{ display: 'inline-block' }}></span>

@@ -10,12 +10,11 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
     setProgress(100);
     setVisible(false);
 
-    // Slight delay to trigger enter animation
     const enterTimeout = setTimeout(() => setVisible(true), 10);
 
     const timer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onClose, 300); // wait for exit animation before removing
+      setTimeout(onClose, 300);
     }, duration);
 
     const interval = setInterval(() => {
@@ -36,28 +35,32 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
 
   const styles = {
     error: {
-      bg: "#FEF2F2",
-      color: "#DC2626",
-      border: "#FECACA",
-      bar: "#DC2626",
+      bg: "var(--error-bg)",
+      color: "var(--error)",
+      border: "var(--error-border)",
+      bar: "var(--error)",
+      icon: "error",
     },
     success: {
-      bg: "#F0FDF4",
-      color: "#16A34A",
-      border: "#BBF7D0",
-      bar: "#16A34A",
+      bg: "var(--success-bg)",
+      color: "var(--success)",
+      border: "var(--success-border)",
+      bar: "var(--primary)",
+      icon: "check_circle",
     },
     warning: {
-      bg: "#FFFBEB",
-      color: "#D97706",
-      border: "#FDE68A",
-      bar: "#D97706",
+      bg: "#fffbeb",
+      color: "#b45309",
+      border: "rgba(180,83,9,0.2)",
+      bar: "#b45309",
+      icon: "warning",
     },
     info: {
-      bg: "#EFF6FF",
-      color: "#2563EB",
-      border: "#BFDBFE",
-      bar: "#2563EB",
+      bg: "var(--primary-fixed)",
+      color: "var(--primary-container)",
+      border: "rgba(6,78,59,0.15)",
+      bar: "var(--primary)",
+      icon: "info",
     },
   };
 
@@ -70,52 +73,75 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
         top: "80px",
         right: "24px",
         zIndex: 9999,
-        minWidth: "280px",
-        maxWidth: "380px",
+        minWidth: "288px",
+        maxWidth: "400px",
         background: s.bg,
         color: s.color,
         border: `1px solid ${s.border}`,
-        borderRadius: "10px",
-        fontSize: "13px",
-        fontWeight: 500,
+        borderRadius: "var(--radius-lg)",
         fontFamily: "var(--font-body)",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+        boxShadow: "0 8px 32px rgba(20,27,43,0.1)",
         overflow: "hidden",
-        // Animation
         opacity: visible ? 1 : 0,
         transform: visible ? "translateX(0)" : "translateX(110%)",
         transition: "opacity 0.3s ease, transform 0.3s ease",
-      }}
-    >
+      }}>
       {/* Content */}
       <div
         style={{
-          padding: "12px 16px",
+          padding: "13px 16px",
           display: "flex",
           alignItems: "center",
+          gap: "10px",
           justifyContent: "space-between",
-        }}
-      >
-        <span>{message}</span>
-        {onClose && (
+        }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span
+            className='material-symbols-outlined'
+            style={{ fontSize: "18px", color: s.color, flexShrink: 0 }}>
+            {s.icon}
+          </span>
+          <span
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 500,
+              lineHeight: 1.5,
+              color: s.color,
+            }}>
+            {message}
+          </span>
+        </div>
+
+        {onClose && (
+          <button
             onClick={() => {
               setVisible(false);
               setTimeout(onClose, 300);
             }}
             style={{
+              background: "none",
+              border: "none",
               cursor: "pointer",
-              fontSize: "16px",
-              marginLeft: "12px",
-              opacity: 0.6,
+              color: s.color,
+              opacity: 0.55,
+              padding: "0",
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+              transition: "opacity 0.15s",
             }}
-          >
-            ×
-          </span>
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.55")}>
+            <span
+              className='material-symbols-outlined'
+              style={{ fontSize: "18px" }}>
+              close
+            </span>
+          </button>
         )}
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress bar */}
       <div style={{ height: "3px", background: "rgba(0,0,0,0.06)" }}>
         <div
           style={{

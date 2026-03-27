@@ -1,42 +1,43 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Components
-import ProtectedRoute from './components/ProtectedRoute'
-import GuestRoute from './components/GuestRoute'
-import Landing from './pages/misc/Landing'
-import ResetRoute from './components/ResetRoute'
-import BannedPage from './pages/misc/BannedPage'
-import HowItWorks from './pages/misc/HowItWorks'
-import HelpCenter from './pages/misc/HelpCenter'
-import Footer from './components/Footer'
-import Policy from './pages/misc/Policy'
-import TermsAndConditions from './pages/misc/TermsAndConditions'
+import ProtectedRoute from "./components/ProtectedRoute";
+import GuestRoute from "./components/GuestRoute";
+import Landing from "./pages/misc/Landing";
+import ResetRoute from "./components/ResetRoute";
+import BannedPage from "./pages/misc/BannedPage";
+import HowItWorks from "./pages/misc/HowItWorks";
+import HelpCenter from "./pages/misc/HelpCenter";
+import Footer from "./components/Footer";
+import Policy from "./pages/misc/Policy";
+import TermsAndConditions from "./pages/misc/TermsAndConditions";
 
 // Auth Pages
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import VerifyOTP from './pages/auth/VerifyOTP'
-import ForgotPassword from './pages/auth/ForgotPassword'
-import ResetPassword from './pages/auth/ResetPassword'
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import VerifyOTP from "./pages/auth/VerifyOTP";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 // Customer Pages
-import Home from './pages/customer/Home'
-import CookPublicProfile from './pages/customer/CookPublicProfile'
-import PlaceOrder from './pages/customer/PlaceOrder'
-import OrderHistory from './pages/customer/OrderHistory'
+import Home from "./pages/customer/Home";
+import CookPublicProfile from "./pages/customer/CookPublicProfile";
+import PlaceOrder from "./pages/customer/PlaceOrder";
+import OrderHistory from "./pages/customer/OrderHistory";
 
 // Cook Pages
-import CookProfileSetup from './pages/cook/CookProfileSetup'
-import CookDashboard from './pages/cook/CookDashboard'
-import PostMenu from './pages/cook/PostMenu'
-import CookOrders from './pages/cook/CookOrders'
+import CookProfileSetup from "./pages/cook/CookProfileSetup";
+import CookDashboard from "./pages/cook/CookDashboard";
+import PostMenu from "./pages/cook/PostMenu";
+import CookOrders from "./pages/cook/CookOrders";
 
 // Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard'
-import PendingCooks from './pages/admin/PendingCooks'
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import PendingCooks from "./pages/admin/PendingCooks";
+import UserDetails from "./pages/admin/UserDetails";
 
 // 404
-import NotFound from './pages/misc/NotFound'
+import NotFound from "./pages/misc/NotFound";
 
 function App() {
   return (
@@ -52,75 +53,147 @@ function App() {
         <Route path='/banned' element={<BannedPage />} />
 
         {/* ── Guest Only Routes (redirect if logged in) ── */}
-        <Route path='/login' element={<GuestRoute><Login /></GuestRoute>} />
-        <Route path='/register' element={<GuestRoute><Register /></GuestRoute>} />
-        <Route path='/forgot-password' element={<GuestRoute><ForgotPassword /></GuestRoute>} />
+        <Route
+          path='/login'
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <GuestRoute>
+              <ForgotPassword />
+            </GuestRoute>
+          }
+        />
 
         {/* ── Reset Password Routes (only accessible if reset flow is initiated) ── */}
-        <Route path='/verify-otp' element={<ResetRoute><VerifyOTP /></ResetRoute>} />
-        <Route path='/reset-password' element={<ResetRoute><ResetPassword /></ResetRoute>} />
+        <Route
+          path='/verify-otp'
+          element={
+            <ResetRoute>
+              <VerifyOTP />
+            </ResetRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <ResetRoute>
+              <ResetPassword />
+            </ResetRoute>
+          }
+        />
 
         {/* ── Customer Routes ── */}
-        <Route path='/home' element={
-          <ProtectedRoute roles={['customer']}>
-            <Home /></ProtectedRoute>
-        } />
-        <Route path='/cook/:id' element={
-          <ProtectedRoute roles={['customer']}>
-            <CookPublicProfile />
-          </ProtectedRoute>
-        } />
-        <Route path='/orders/place' element={
-          <ProtectedRoute roles={['customer']}>
-            <PlaceOrder />
-          </ProtectedRoute>
-        } />
-        <Route path='/orders/my' element={
-          <ProtectedRoute roles={['customer']}>
-            <OrderHistory />
-          </ProtectedRoute>
-        } />
+        <Route
+          path='/home'
+          element={
+            <ProtectedRoute roles={["customer"]}>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/cook/:id'
+          element={
+            <ProtectedRoute roles={["customer"]}>
+              <CookPublicProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/orders/place'
+          element={
+            <ProtectedRoute roles={["customer"]}>
+              <PlaceOrder />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/orders/my'
+          element={
+            <ProtectedRoute roles={["customer"]}>
+              <OrderHistory />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ── Cook Routes ── */}
-        <Route path='/cook/setup' element={
-          <ProtectedRoute roles={['cook']}>
-            <CookProfileSetup />
-          </ProtectedRoute>
-        } />
-        <Route path='/cook/dashboard' element={
-          <ProtectedRoute roles={['cook']}>
-            <CookDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path='/cook/post-menu' element={
-          <ProtectedRoute roles={['cook']}>
-            <PostMenu />
-          </ProtectedRoute>
-        } />
-        <Route path='/cook/orders' element={
-          <ProtectedRoute roles={['cook']}>
-            <CookOrders />
-          </ProtectedRoute>
-        } />
+        <Route
+          path='/cook/setup'
+          element={
+            <ProtectedRoute roles={["cook"]}>
+              <CookProfileSetup />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/cook/dashboard'
+          element={
+            <ProtectedRoute roles={["cook"]}>
+              <CookDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/cook/post-menu'
+          element={
+            <ProtectedRoute roles={["cook"]}>
+              <PostMenu />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/cook/orders'
+          element={
+            <ProtectedRoute roles={["cook"]}>
+              <CookOrders />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ── Admin Routes ── */}
-        <Route path='/admin/dashboard' element={
-          <ProtectedRoute roles={['admin']}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path='/admin/pending-cooks' element={
-          <ProtectedRoute roles={['admin']}>
-            <PendingCooks />
-          </ProtectedRoute>
-        } />
-
+        <Route
+          path='/admin/dashboard'
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/admin/pending-cooks'
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <PendingCooks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/admin/users/:id'
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <UserDetails />
+            </ProtectedRoute>
+          }
+        />
         {/* ── 404 ── */}
         <Route path='*' element={<NotFound />} />
-
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

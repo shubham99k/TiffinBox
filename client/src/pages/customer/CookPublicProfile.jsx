@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
-import Navbar from '../../components/Navbar'
+import Navbar from "../../components/Navbar";
 import { ChefHat, MapPin, Star, Utensils, Clock } from "lucide-react";
-
+import Footer from "../../components/Footer";
 
 function CookPublicProfile() {
   const { id } = useParams();
@@ -37,134 +37,176 @@ function CookPublicProfile() {
   const filteredMenus = menus.filter((m) => m.mealType === mealType);
 
   const getTimeRemaining = (cutoffTime) => {
-    const now = new Date()
-    const [hours, minutes] = cutoffTime.split(':').map(Number)
-    const cutoff = new Date()
-    cutoff.setHours(hours, minutes, 0, 0)
-
-    const diff = cutoff - now
-    if (diff <= 0) return 'Expired'
-
-    const h = Math.floor(diff / (1000 * 60 * 60))
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-
-    if (h > 0) return `${h}h ${m}m remaining`
-    if (m > 0) return `${m}m remaining`
-    return `few seconds remaining`
-  }
+    const now = new Date();
+    const [hours, minutes] = cutoffTime.split(":").map(Number);
+    const cutoff = new Date();
+    cutoff.setHours(hours, minutes, 0, 0);
+    const diff = cutoff - now;
+    if (diff <= 0) return "Expired";
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    if (h > 0) return `${h}h ${m}m remaining`;
+    if (m > 0) return `${m}m remaining`;
+    return `few seconds remaining`;
+  };
 
   if (loading)
     return (
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-        }}
-      >
-        <div style={{ fontSize: "14px", color: "var(--muted)" }}>
-          Loading...
+          background: "var(--surface)",
+          gap: "12px",
+        }}>
+        <span
+          style={{
+            width: "22px",
+            height: "22px",
+            border: "2px solid var(--primary-fixed-dim)",
+            borderTopColor: "var(--primary)",
+            borderRadius: "50%",
+            display: "inline-block",
+            animation: "spin 0.7s linear infinite",
+          }}
+        />
+        <div style={{ fontSize: "0.8125rem", color: "var(--outline)" }}>
+          Loading profile…
         </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
 
   return (
-    <div className="dashboard-wrap">
+    <div className='dashboard-wrap'>
       <Navbar showBack backPath='/home' backLabel='Home' />
 
+      <div className='dashboard-content'>
+        {/* ── Cook Profile Card ── */}
+        <div
+          style={{
+            background: "var(--surface-container-lowest)",
+            borderRadius: "var(--radius-lg)",
+            overflow: "hidden",
+            boxShadow: "0 2px 24px rgba(20,27,43,0.05)",
+            marginBottom: "var(--space-md)",
+          }}>
+          {/* Emerald accent header strip */}
+          <div
+            style={{
+              height: "6px",
+              background: "var(--cta-gradient)",
+            }}
+          />
 
-      <div className="dashboard-content">
-        {/* Cook Profile Header */}
-        <div className="table-card" style={{ marginBottom: "24px" }}>
           <div
             style={{
               padding: "28px 24px",
               display: "flex",
-              gap: "20px",
+              gap: "22px",
               alignItems: "flex-start",
-            }}
-          >
+            }}>
             {cook?.photo ? (
               <img
                 src={cook.photo}
-                alt="cook"
+                alt='cook'
                 style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "16px",
+                  width: "108px",
+                  height: "108px",
+                  borderRadius: "var(--radius-lg)",
                   objectFit: "cover",
                   flexShrink: 0,
+                  boxShadow: "0 4px 20px rgba(6,78,59,0.14)",
                 }}
               />
             ) : (
               <div
                 style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "16px",
-                  background: "var(--brand-light)",
+                  width: "108px",
+                  height: "108px",
+                  borderRadius: "var(--radius-lg)",
+                  background: "var(--primary-fixed)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "40px",
+                  color: "var(--primary-container)",
                   flexShrink: 0,
-                }}
-              >
-                <ChefHat size={40} />
+                }}>
+                <ChefHat size={44} />
               </div>
             )}
+
             <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontSize: "22px",
-                  fontWeight: 800,
-                  color: "var(--ink)",
-                  letterSpacing: "-0.5px",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "1.5rem",
+                  fontWeight: 900,
+                  color: "var(--on-surface)",
+                  letterSpacing: "-0.03em",
                   marginBottom: "4px",
-                }}
-              >
+                  lineHeight: 1.15,
+                }}>
                 {cook?.userId?.name}
               </div>
+
               <div
                 style={{
-                  fontSize: "13px",
-                  color: "var(--subtle)",
-                  marginBottom: "8px",
-                }}
-              >
-                <MapPin size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> {cook?.address}, {cook?.city}
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  fontSize: "0.8125rem",
+                  color: "var(--outline)",
+                  marginBottom: "10px",
+                }}>
+                <MapPin size={12} />
+                {cook?.address}, {cook?.city}
               </div>
+
               <div
                 style={{
-                  fontSize: "13px",
-                  color: "var(--muted)",
-                  marginBottom: "12px",
-                  lineHeight: 1.6,
-                }}
-              >
+                  fontSize: "0.875rem",
+                  color: "var(--on-surface-variant)",
+                  lineHeight: 1.65,
+                  marginBottom: "14px",
+                }}>
                 {cook?.bio}
               </div>
+
               <div
                 style={{
                   display: "flex",
-                  gap: "16px",
+                  gap: "14px",
                   alignItems: "center",
                   flexWrap: "wrap",
-                }}
-              >
+                }}>
+                {/* Rating chip */}
                 <div
                   style={{
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "#D97706",
-                  }}
-                >
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Star size={14} fill="currentColor" color="#D97706" /> {cook?.rating || 0} ({cook?.totalReviews || 0} reviews)</span>
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    background: "#FEF3C7",
+                    color: "#92400E",
+                    padding: "4px 10px",
+                    borderRadius: "var(--radius-pill)",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
+                  }}>
+                  <Star size={13} fill='#D97706' color='#D97706' />
+                  {cook?.rating || 0}
+                  <span style={{ fontWeight: 500, opacity: 0.75 }}>
+                    ({cook?.totalReviews || 0} reviews)
+                  </span>
                 </div>
-                <div className="cook-card-tags">
+
+                {/* Cuisine tags — Emerald Insight Chips */}
+                <div className='cook-card-tags'>
                   {cook?.cuisineType?.map((c, i) => (
-                    <span key={i} className="cook-tag">
+                    <span key={i} className='cook-tag'>
                       {c}
                     </span>
                   ))}
@@ -174,117 +216,165 @@ function CookPublicProfile() {
           </div>
         </div>
 
-        {/* Meal Type Toggle */}
-        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        {/* ── Meal Type Toggle ── */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginBottom: "var(--space-md)",
+          }}>
           {["lunch", "dinner"].map((type) => (
             <button
               key={type}
               onClick={() => setMealType(type)}
               style={{
-                padding: "10px 24px",
-                borderRadius: "10px",
+                padding: "10px 28px",
+                borderRadius: "var(--radius-lg)",
                 border:
                   mealType === type
-                    ? "2px solid var(--brand)"
-                    : "2px solid var(--border)",
+                    ? "none"
+                    : "1.5px solid var(--outline-variant)",
                 background:
-                  mealType === type ? "var(--brand-light)" : "var(--white)",
-                color: mealType === type ? "var(--brand)" : "var(--subtle)",
-                fontWeight: 600,
-                fontSize: "14px",
+                  mealType === type
+                    ? "var(--cta-gradient)"
+                    : "var(--surface-container-lowest)",
+                color:
+                  mealType === type ? "var(--on-primary)" : "var(--outline)",
+                fontWeight: 700,
+                fontSize: "0.8125rem",
                 cursor: "pointer",
-                fontFamily: "var(--font-body)",
+                fontFamily: "var(--font-display)",
                 textTransform: "capitalize",
+                letterSpacing: "0.03em",
                 transition: "all 0.2s",
-              }}
-            >
-              {type === "lunch" ? "Lunch" : "Dinner"}
+                boxShadow:
+                  mealType === type ? "0 4px 16px rgba(6,78,59,0.25)" : "none",
+              }}>
+              {type === "lunch" ? "☀ Lunch" : "🌙 Dinner"}
             </button>
           ))}
         </div>
 
-        {/* Today's Menu */}
+        {/* ── Today's Menu ── */}
         {filteredMenus.length === 0 ? (
-          <div className="table-card" style={{ marginBottom: "24px" }}>
-            <div style={{ padding: "48px", textAlign: "center" }}>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: "12px", color: "var(--ink)" }}><Utensils size={32} /></div>
-              <div
-                style={{
-                  fontSize: "15px",
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  marginBottom: "6px",
-                }}
-              >
-                No {mealType} menu today
-              </div>
-              <div style={{ fontSize: "13px", color: "var(--subtle)" }}>
-                Check back later or try dinner menu
-              </div>
+          <div
+            style={{
+              background: "var(--surface-container-lowest)",
+              borderRadius: "var(--radius-lg)",
+              padding: "56px 24px",
+              textAlign: "center",
+              boxShadow: "0 2px 24px rgba(20,27,43,0.04)",
+              marginBottom: "var(--space-md)",
+            }}>
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "var(--radius-lg)",
+                background: "var(--primary-fixed)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 18px",
+                color: "var(--primary-container)",
+              }}>
+              <Utensils size={24} />
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1rem",
+                fontWeight: 800,
+                color: "var(--on-surface)",
+                letterSpacing: "-0.02em",
+                marginBottom: "6px",
+              }}>
+              No {mealType} menu today
+            </div>
+            <div style={{ fontSize: "0.8125rem", color: "var(--outline)" }}>
+              Check back later or try the dinner menu
             </div>
           </div>
         ) : (
           filteredMenus.map((menu) => (
-            <div key={menu._id} style={{ marginBottom: "24px" }}>
+            <div
+              key={menu._id}
+              style={{
+                background: "var(--surface-container-lowest)",
+                borderRadius: "var(--radius-lg)",
+                overflow: "hidden",
+                boxShadow: "0 2px 24px rgba(20,27,43,0.05)",
+                marginBottom: "var(--space-md)",
+              }}>
+              {/* Menu header */}
               <div
                 style={{
+                  padding: "14px 22px",
+                  background: "var(--surface-container-low)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  marginBottom: "14px",
-                }}
-              >
+                }}>
                 <div
                   style={{
-                    fontSize: "15px",
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                  }}
-                >
+                    fontFamily: "var(--font-display)",
+                    fontSize: "0.9375rem",
+                    fontWeight: 800,
+                    color: "var(--on-surface)",
+                    letterSpacing: "-0.02em",
+                    textTransform: "capitalize",
+                  }}>
                   Today's {mealType} menu
                 </div>
-                <div
+                <span
                   style={{
-                    fontSize: "12px",
-                    color: "#D97706",
-                    fontWeight: 600,
-                  }}
-                >
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={12} /> Order before {menu.cutoffTime}&nbsp;({getTimeRemaining(menu.cutoffTime)})</span>
-                </div>
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    background: "#FEF3C7",
+                    color: "#92400E",
+                    padding: "3px 10px",
+                    borderRadius: "var(--radius-pill)",
+                    fontSize: "0.6875rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.02em",
+                  }}>
+                  <Clock size={11} />
+                  By {menu.cutoffTime} · {getTimeRemaining(menu.cutoffTime)}
+                </span>
               </div>
 
+              {/* Dishes */}
               <div
                 style={{
+                  padding: "16px 22px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "12px",
-                }}
-              >
+                }}>
                 {menu.dishes?.map((dish, i) => (
-                  <div key={i} className="menu-dish-card">
+                  <div key={i} className='menu-dish-card'>
                     {dish.photo && (
                       <img
                         src={dish.photo}
                         alt={dish.name}
-                        className="menu-dish-image"
+                        className='menu-dish-image'
                       />
                     )}
-                    <div className="menu-dish-body">
-                      <div className="menu-dish-name">{dish.name}</div>
+                    <div className='menu-dish-body'>
+                      <div className='menu-dish-name'>{dish.name}</div>
                       {dish.description && (
-                        <div className="menu-dish-desc">{dish.description}</div>
+                        <div className='menu-dish-desc'>{dish.description}</div>
                       )}
-                      <div className="menu-dish-footer">
-                        <div className="menu-dish-price">₹{dish.price}</div>
+                      <div className='menu-dish-footer'>
+                        <div className='menu-dish-price'>₹{dish.price}</div>
                         <div
                           style={{
                             display: "flex",
                             alignItems: "center",
                             gap: "10px",
-                          }}
-                        >
-                          <div className="menu-dish-portions">
+                          }}>
+                          <div className='menu-dish-portions'>
                             {dish.portionsLeft} left
                           </div>
                           {dish.portionsLeft > 0 && (
@@ -299,17 +389,19 @@ function CookPublicProfile() {
                                 })
                               }
                               style={{
-                                background: "var(--brand)",
-                                color: "#fff",
+                                background: "var(--cta-gradient)",
+                                color: "var(--on-primary)",
                                 border: "none",
-                                borderRadius: "8px",
-                                padding: "6px 14px",
-                                fontSize: "12px",
-                                fontWeight: 600,
+                                borderRadius: "var(--radius-lg)",
+                                padding: "7px 16px",
+                                fontSize: "0.75rem",
+                                fontWeight: 700,
                                 cursor: "pointer",
-                                fontFamily: "var(--font-body)",
-                              }}
-                            >
+                                fontFamily: "var(--font-display)",
+                                letterSpacing: "0.03em",
+                                boxShadow: "0 2px 10px rgba(6,78,59,0.2)",
+                                transition: "opacity 0.2s",
+                              }}>
                               Order
                             </button>
                           )}
@@ -323,76 +415,98 @@ function CookPublicProfile() {
           ))
         )}
 
-        {/* Reviews Section */}
+        {/* ── Reviews Section ── */}
         {reviews.length > 0 && (
-          <div style={{ marginTop: "24px" }}>
+          <div style={{ marginTop: "var(--space-md)" }}>
             <div
               style={{
-                fontSize: "15px",
-                fontWeight: 700,
-                color: "var(--ink)",
-                marginBottom: "14px",
-              }}
-            >
-              Reviews ({reviews.length})
+                fontFamily: "var(--font-display)",
+                fontSize: "1rem",
+                fontWeight: 800,
+                color: "var(--on-surface)",
+                letterSpacing: "-0.02em",
+                marginBottom: "16px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}>
+              Reviews
+              {/* Count chip */}
+              <span
+                style={{
+                  background: "var(--primary-fixed)",
+                  color: "var(--primary-container)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  padding: "3px 10px",
+                  borderRadius: "var(--radius-pill)",
+                  letterSpacing: "0.04em",
+                }}>
+                {reviews.length}
+              </span>
             </div>
+
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-            >
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {reviews.map((review) => (
-                <div key={review._id} className="table-card">
-                  <div style={{ padding: "16px 20px" }}>
+                <div
+                  key={review._id}
+                  style={{
+                    background: "var(--surface-container-lowest)",
+                    borderRadius: "var(--radius-lg)",
+                    padding: "18px 22px",
+                    boxShadow: "0 2px 16px rgba(20,27,43,0.04)",
+                  }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "8px",
+                    }}>
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "6px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "var(--ink)",
-                        }}
-                      >
-                        {review.customerId?.name}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          color: "#D97706",
-                          fontWeight: 600,
-                        }}
-                      >
-                        <div style={{ display: "flex", gap: "2px" }}>
-                          {Array.from({ length: review.rating }).map((_, i) => (
-                            <Star key={i} size={12} color="#D97706" fill="#D97706" />
-                          ))}
-                        </div>
-                      </div>
+                        fontFamily: "var(--font-display)",
+                        fontSize: "0.9375rem",
+                        fontWeight: 700,
+                        color: "var(--on-surface)",
+                        letterSpacing: "-0.01em",
+                      }}>
+                      {review.customerId?.name}
                     </div>
-                    {review.comment && (
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          color: "var(--muted)",
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {review.comment}
-                      </div>
-                    )}
+                    <div style={{ display: "flex", gap: "3px" }}>
+                      {Array.from({ length: review.rating }).map((_, i) => (
+                        <Star
+                          key={i}
+                          size={13}
+                          color='#D97706'
+                          fill='#D97706'
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {review.comment && (
                     <div
                       style={{
-                        fontSize: "11px",
-                        color: "var(--subtle)",
-                        marginTop: "6px",
-                      }}
-                    >
-                      {new Date(review.createdAt).toLocaleDateString()}
+                        fontSize: "0.875rem",
+                        color: "var(--on-surface-variant)",
+                        lineHeight: 1.65,
+                        marginBottom: "8px",
+                      }}>
+                      {review.comment}
                     </div>
+                  )}
+
+                  <div
+                    style={{
+                      fontSize: "0.6875rem",
+                      color: "var(--outline)",
+                      fontWeight: 600,
+                      letterSpacing: "0.04em",
+                      textTransform: "uppercase",
+                    }}>
+                    {new Date(review.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               ))}
@@ -400,6 +514,8 @@ function CookPublicProfile() {
           </div>
         )}
       </div>
+      <Footer/>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

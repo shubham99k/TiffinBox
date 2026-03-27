@@ -7,9 +7,9 @@ const emailTemplate = (title, body) => `
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin: 0; padding: 0; background: #f7f6f3; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    body { margin: 0; padding: 0; background: #f7f6f3; font-family: system-ui, sans-serif; }
     .container { max-width: 560px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E5E7EB; }
-    .header { background: #7C3AED; padding: 32px 40px; text-align: center; }
+    .header { background: #047857; padding: 32px 40px; text-align: center; }
     .header-logo { font-size: 28px; font-weight: 900; color: #ffffff; letter-spacing: -1px; }
     .header-tagline { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
     .body { padding: 36px 40px; }

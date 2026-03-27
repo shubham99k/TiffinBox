@@ -1,6 +1,11 @@
 import User from '../models/User.js'
 import CookProfile from '../models/CookProfile.js'
 import sendEmail from '../utils/sendEmail.js'
+import Order from '../models/Order.js'
+import Menu from '../models/Menu.js'
+import Review from '../models/Review.js'
+import mongoose from 'mongoose'
+import Notification from '../models/Notification.js'
 
 // @desc    Get all pending cooks
 // @route   GET /api/admin/cooks/pending
@@ -162,3 +167,103 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
+// @desc    Get user details (admin)
+// @route   GET /api/admin/users/:id
+export const getUserDetails = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // 1. Get user
+    const user = await User.findById(userId).select("-password -verifyOTP -verifyOTPExpiry -resetOTP -resetOTPExpiry");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // 2. Fetch base data in parallel
+    const [cookProfile, customerOrders, reviews, notifications] = await Promise.all([
+      CookProfile.findOne({ userId }),
+
+      Order.find({ customerId: userId })
+        .populate("menuId", "title mealType date")
+        .populate({
+          path: "cookId",
+          select: "city rating",
+          populate: { path: "userId", select: "name avatar" }
+        })
+        .sort({ createdAt: -1 })
+        .limit(10),
+
+      Review.find({ customerId: userId })
+        .populate({
+          path: "cookId",
+          select: "city photo rating",
+          populate: { path: "userId", select: "name avatar" }
+        })
+        .populate("orderId", "dish totalAmount createdAt")
+        .sort({ createdAt: -1 })
+        .limit(10),
+
+      Notification.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(10),
+    ]);
+
+    let menus = [];
+    let cookOrders = [];
+
+    // 3. If user is cook → fetch menus + orders received
+    if (user.role === "cook" && cookProfile) {
+      const cookId = cookProfile._id;
+
+      const [fetchedMenus, fetchedCookOrders] = await Promise.all([
+        Menu.find({ cookId })
+          .sort({ createdAt: -1 })
+          .limit(10),
+
+        Order.find({ cookId })
+          .populate("customerId", "name avatar city")
+          .populate("menuId", "title mealType date")
+          .sort({ createdAt: -1 })
+          .limit(10),
+      ]);
+
+      menus = fetchedMenus;
+      cookOrders = fetchedCookOrders;
+    }
+
+    // 4. Order stats
+    const totalOrders = customerOrders.length;
+    const deliveredOrders = customerOrders.filter(o => o.status === "delivered").length;
+    const cancelledOrders = customerOrders.filter(o => o.status === "cancelled").length;
+    const pendingOrders = customerOrders.filter(o => o.status === "pending").length;
+
+    // 5. Cook order stats (if cook)
+    const cookOrderStats = user.role === "cook" ? {
+      total: cookOrders.length,
+      delivered: cookOrders.filter(o => o.status === "delivered").length,
+      cancelled: cookOrders.filter(o => o.status === "cancelled").length,
+      pending: cookOrders.filter(o => o.status === "pending").length,
+    } : null;
+
+    res.status(200).json({
+      success: true,
+      data: {
+        user,
+        cookProfile,
+        orders: {
+          recent: customerOrders,
+          stats: { totalOrders, deliveredOrders, cancelledOrders, pendingOrders },
+        },
+        cookData: {
+          menus,
+          orders: cookOrders,
+          stats: cookOrderStats,
+        },
+        reviews,
+        notifications,
+      },
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

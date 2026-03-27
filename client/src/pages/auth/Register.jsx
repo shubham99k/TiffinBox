@@ -43,10 +43,10 @@ function Register() {
           <span className="auth-back" onClick={() => navigate("/")}>
             <ArrowLeft size={14} /> Back to Home page
           </span>
-          
+
           <div className="auth-brand">
-            <span className="auth-brand-dot" />
             TiffinBox
+            <span className="auth-brand-dot" />
           </div>
 
           <div className="auth-page-title">Create your account</div>

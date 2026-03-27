@@ -16,7 +16,7 @@ const menuSchema = new mongoose.Schema({
     required: true
   },
   date: {
-    type: String, // stored as "YYYY-MM-DD"
+    type: String,
     required: true
   },
   mealType: {
@@ -26,7 +26,7 @@ const menuSchema = new mongoose.Schema({
   },
   dishes: [dishSchema],
   cutoffTime: {
-    type: String, // stored as "HH:MM" e.g. "10:00"
+    type: String,
     required: true
   },
   isActive: {

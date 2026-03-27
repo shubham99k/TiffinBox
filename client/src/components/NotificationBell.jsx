@@ -36,52 +36,66 @@ function NotificationBell() {
 
   const handleOpen = async () => {
     if (!open) {
-      // Mark as read in API, but keep local state unchanged
-      // so they still render with the unread color while the dropdown is open.
       try {
         await axiosInstance.put("/notifications/read");
       } catch (err) {
         console.log(err);
       }
     } else {
-      // On close, update local state so they become read.
       setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
     }
     setOpen(!open);
   };
 
-  // Hide badge if dropdown is open
   const unreadCount = open ? 0 : notifications.filter((n) => !n.isRead).length;
 
   return (
     <div ref={bellRef} style={{ position: "relative" }}>
-      {/* Bell Button */}
+      {/* Bell button */}
       <button
         onClick={handleOpen}
         style={{
           position: "relative",
-          background: "var(--brand-light)",
+          background: open
+            ? "var(--primary-fixed)"
+            : "var(--surface-container-high)",
           border: "none",
-          borderRadius: "8px",
-          padding: "7px 12px",
-          cursor: "pointer",
-          fontSize: "16px",
-          fontFamily: "var(--font-body)",
+          borderRadius: "var(--radius-lg)",
+          width: "38px",
+          height: "38px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-        }}>
-        <Bell size={20} color='var(--ink)' />
+          cursor: "pointer",
+          transition: "background 0.2s",
+          flexShrink: 0,
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.background = "var(--primary-fixed)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.background = open
+            ? "var(--primary-fixed)"
+            : "var(--surface-container-high)")
+        }>
+        <Bell
+          size={17}
+          color={
+            open ? "var(--primary-container)" : "var(--on-surface-variant)"
+          }
+        />
+
+        {/* Unread badge */}
         {unreadCount > 0 && (
           <span
             style={{
               position: "absolute",
-              top: "-4px",
-              right: "-4px",
-              background: "#EF4444",
+              top: "-3px",
+              right: "-3px",
+              background: "var(--error)",
               color: "#fff",
-              borderRadius: "99px",
-              fontSize: "10px",
+              borderRadius: "var(--radius-pill)",
+              fontSize: "0.625rem",
               fontWeight: 700,
               minWidth: "16px",
               height: "16px",
@@ -89,6 +103,8 @@ function NotificationBell() {
               alignItems: "center",
               justifyContent: "center",
               padding: "0 4px",
+              fontFamily: "var(--font-body)",
+              border: "2px solid var(--surface-container-lowest)",
             }}>
             {unreadCount}
           </span>
@@ -101,63 +117,140 @@ function NotificationBell() {
           style={{
             position: "absolute",
             right: 0,
-            top: "44px",
-            width: "300px",
-            background: "var(--white)",
-            border: "1px solid var(--border)",
-            borderRadius: "14px",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+            top: "46px",
+            width: "320px",
+            background: "var(--surface-container-lowest)",
+            borderRadius: "var(--radius-lg)",
+            boxShadow: "0 8px 32px rgba(20,27,43,0.12)",
             zIndex: 100,
             overflow: "hidden",
           }}>
+          {/* Header */}
           <div
             style={{
-              padding: "14px 16px",
-              borderBottom: "1px solid var(--border)",
-              fontSize: "14px",
-              fontWeight: 700,
-              color: "var(--ink)",
+              padding: "14px 18px",
+              borderBottom: "1px solid var(--surface-container-high)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}>
-            Notifications
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                fontSize: "0.9375rem",
+                color: "var(--on-surface)",
+                letterSpacing: "-0.02em",
+              }}>
+              Notifications
+            </span>
+            {notifications.filter((n) => !n.isRead).length > 0 && (
+              <span
+                style={{
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  color: "var(--primary-container)",
+                  background: "var(--primary-fixed)",
+                  padding: "2px 8px",
+                  borderRadius: "var(--radius-pill)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}>
+                {notifications.filter((n) => !n.isRead).length} new
+              </span>
+            )}
           </div>
 
+          {/* Body */}
           {notifications.length === 0 ? (
             <div
               style={{
-                padding: "32px",
+                padding: "40px 24px",
                 textAlign: "center",
-                fontSize: "13px",
-                color: "var(--subtle)",
               }}>
-              No notifications yet
+              <div
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  background: "var(--surface-container-high)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 12px",
+                }}>
+                <Bell size={18} color='var(--outline)' />
+              </div>
+              <p
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  color: "var(--on-surface)",
+                  marginBottom: "4px",
+                  fontFamily: "var(--font-display)",
+                }}>
+                All caught up
+              </p>
+              <p
+                style={{
+                  fontSize: "0.8125rem",
+                  color: "var(--on-surface-variant)",
+                }}>
+                No notifications yet
+              </p>
             </div>
           ) : (
-            <div style={{ maxHeight: "320px", overflowY: "auto" }}>
-              {notifications.map((n) => (
+            <div style={{ maxHeight: "340px", overflowY: "auto" }}>
+              {notifications.map((n, i) => (
                 <div
                   key={n._id}
                   style={{
-                    padding: "12px 16px",
-                    borderBottom: "1px solid #f3f4f6",
-                    background: n.isRead ? "var(--white)" : "var(--brand-pale)",
+                    padding: "13px 18px",
+                    background: n.isRead
+                      ? "transparent"
+                      : "var(--primary-fixed)",
+                    borderBottom:
+                      i < notifications.length - 1
+                        ? "1px solid var(--surface-container-high)"
+                        : "none",
+                    transition: "background 0.2s",
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "flex-start",
                   }}>
+                  {/* Unread dot */}
                   <div
                     style={{
-                      fontSize: "13px",
-                      color: "var(--ink)",
-                      fontWeight: n.isRead ? 400 : 600,
-                    }}>
-                    {n.message}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: n.isRead ? "var(--subtle)" : "var(--ink)",
-                      fontWeight: n.isRead ? 200 : 400,
-                      marginTop: "3px",
-                    }}>
-                    {new Date(n.createdAt).toLocaleDateString()} at{" "}
-                    {new Date(n.createdAt).toLocaleTimeString()}
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: n.isRead ? "transparent" : "var(--primary)",
+                      flexShrink: 0,
+                      marginTop: "6px",
+                    }}
+                  />
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--on-surface)",
+                        fontWeight: n.isRead ? 400 : 600,
+                        lineHeight: 1.5,
+                        marginBottom: "3px",
+                        fontFamily: "var(--font-body)",
+                      }}>
+                      {n.message}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "0.75rem",
+                        color: "var(--on-surface-variant)",
+                        fontFamily: "var(--font-body)",
+                      }}>
+                      {new Date(n.createdAt).toLocaleDateString()} at{" "}
+                      {new Date(n.createdAt).toLocaleTimeString()}
+                    </p>
                   </div>
                 </div>
               ))}

@@ -81,7 +81,7 @@ export const resendOTP = async (req, res) => {
   `
     <p class="text">Your new verification OTP is:</p>
     <div class="highlight" style="text-align:center;">
-      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+      <div style="font-size: 36px; font-weight: 900; color: #047857; letter-spacing: 8px;">${otp}</div>
     </div>
     <p class="text">This OTP expires in <strong>10 minutes</strong>.</p>
   `
@@ -123,7 +123,7 @@ export const forgotPassword = async (req, res) => {
     <p class="text">Hi ${user.name}, we received a request to reset your password.</p>
     <p class="text">Your password reset OTP is:</p>
     <div class="highlight" style="text-align:center;">
-      <div style="font-size: 36px; font-weight: 900; color: #7C3AED; letter-spacing: 8px;">${otp}</div>
+      <div style="font-size: 36px; font-weight: 900; color: #047857; letter-spacing: 8px;">${otp}</div>
     </div>
     <p class="text">This OTP expires in <strong>10 minutes</strong>. If you didn't request this, ignore this email.</p>
   `

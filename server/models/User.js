@@ -32,11 +32,12 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     minlength: 0,
-    maxlength: 10
+    maxlength: 10,
+    unique: true,
   },
   avatar: {
     type: String,
-    default: ''
+    default: '' //cloudinary Link
   },
   isActive: {
     type: Boolean,
