@@ -9,10 +9,12 @@ import menuRoutes from './routes/menuRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import reviewRoutes from './routes/reviewRoutes.js'
 import notificationRoutes from './routes/notificationRoutes.js'
+import startCronJobs from './utils/cronJobs.js'
 
 
 dotenv.config()
 connectDB()
+startCronJobs()
 
 const app = express()
 

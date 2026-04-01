@@ -140,6 +140,16 @@ function CookDashboard() {
     gap: "5px",
   };
 
+  // const handleToggleAvailability = async () => {
+  //   try {
+  //     const { data } = await axiosInstance.put("/cook/availability");
+  //     setCookProfile({ ...cookProfile, isAvailable: data.isAvailable });
+  //     setSuccess(data.message);
+  //   } catch (err) {
+  //     setError("Something went wrong");
+  //   }
+  // };
+
   /* ── Loading ── */
   if (loading)
     return (
@@ -479,6 +489,14 @@ function CookDashboard() {
               justifyContent: "space-between",
               borderBottom: "1px solid var(--surface-container-high)",
             }}>
+            {/* <button
+              className={
+                cookProfile?.isAvailable ? "btn-reject" : "btn-approve"
+              }
+              style={{ marginLeft: 0 }}
+              onClick={handleToggleAvailability}>
+              {cookProfile?.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}
+            </button> */}
             <h2
               style={{
                 fontFamily: "var(--font-display)",

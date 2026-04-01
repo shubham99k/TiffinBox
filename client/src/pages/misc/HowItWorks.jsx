@@ -409,6 +409,7 @@ const HowItWorks = () => {
                 }}
               >
                 <button
+                onClick={() => navigate("/login")}
                   className="auth-btn"
                   style={{
                     background: 'var(--surface-container-lowest)', // Level 2 White
@@ -421,6 +422,7 @@ const HowItWorks = () => {
                   Start Browsing
                 </button>
                 <button
+                  onClick={() => navigate("/register")}
                   className="auth-btn"
                   style={{
                     padding: '18px 36px',

@@ -8,6 +8,8 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 import { Pencil, Trash2, X } from "lucide-react";
 import DishForm from "../../components/DishForm";
 import Footer from "../../components/Footer";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function PostMenu() {
   const [mealType, setMealType] = useState("lunch");
@@ -31,6 +33,7 @@ function PostMenu() {
     const now = new Date();
     return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
   };
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMyMenus();
@@ -128,6 +131,8 @@ function PostMenu() {
         })),
       };
       await axiosInstance.put(`/menu/${menuId}`, payload);
+            navigate("/cook/dashboard");
+
       setSuccess("Menu updated successfully!");
       setInlineEditId(null);
       fetchMyMenus();
@@ -169,6 +174,8 @@ function PostMenu() {
         })),
       };
       await axiosInstance.post("/menu", payload);
+      navigate("/cook/dashboard");
+
       setSuccess(`${mealType} menu posted successfully!`);
       fetchMyMenus();
       setDishes([

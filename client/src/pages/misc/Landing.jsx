@@ -42,7 +42,7 @@ function Landing() {
                 Every <span className="accent" style={{ color: "var(--primary)" }}>Meal.</span>
               </h1>
               <p className="auth-page-sub" style={{ fontSize: '1.25rem', marginTop: '24px', maxWidth: '500px' }}>
-                Connect with local alchemists crafting fresh, home-cooked dishes delivered to your door. Purely homemade, exceptionally mastered.
+                Connect with local Home Cooks crafting fresh, home-cooked dishes delivered to your door. Purely homemade, exceptionally mastered.
               </p>
               <div className="flex flex-wrap gap-4 mt-10">
                 <button onClick={() => navigate("/register")} className="auth-btn" style={{ width: 'auto', padding: '18px 36px' }}>
