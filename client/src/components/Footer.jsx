@@ -1,11 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const footerLinks = [
-  { label: "Privacy Policy",    path: "/policy" },
-  { label: "Terms & Conditions",path: "/terms-and-conditions" },
-  { label: "How it works",      path: "/how-it-works" },
-  { label: "Help Center",       path: "/help-center" },
+  { label: "Privacy Policy", path: "/policy" },
+  { label: "Terms & Conditions", path: "/terms-and-conditions" },
+  { label: "How it works", path: "/how-it-works" },
+  // { label: "Help Center", path: "/help-center" },
 ];
 
 // Scroll to top whenever the route changes
@@ -23,36 +23,53 @@ const Footer = () => {
   return (
     <>
       <ScrollToTop />
-      <footer style={{
-        borderTop: "1px solid var(--surface-container-high)",
-        background: "var(--surface-container-low)",
-        padding: "48px 40px",
-      }}>
-        <div style={{
-          maxWidth: "1100px",
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "24px",
+      <footer
+        style={{
+          marginTop: "25vh",
+          borderTop: "1px solid var(--surface-container-high)",
+          background: "var(--surface-container-low)",
+          padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 40px)",
         }}>
+        <div
+          // className='flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center gap-6 sm:gap-8'
+          style={{
+            maxWidth: "1100px",
+            margin: "0 auto",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "clamp(16px, 4vw, 24px)",
+          }}>
           <div>
-            <p style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 800,
-              color: "var(--primary-container)",
-              fontSize: "1.05rem",
-              marginBottom: "4px",
-            }}>
+            <p
+              className='text-base sm:text-lg'
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 800,
+                color: "var(--primary-container)",
+                fontSize: "clamp(0.95rem, 2vw, 1.05rem)",
+                marginBottom: "4px",
+              }}>
               TiffinBox
             </p>
-            <p style={{ fontSize: "0.8125rem", color: "var(--on-surface-variant)" }}>
+            <p
+              className='text-xs sm:text-sm'
+              style={{
+                fontSize: "clamp(0.75rem, 1.5vw, 0.8125rem)",
+                color: "var(--on-surface-variant)",
+              }}>
               © 2026 TiffinBox. All rights reserved.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+          <div
+            className='flex flex-wrap gap-4 sm:gap-6'
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "clamp(12px, 3vw, 24px)",
+            }}>
             {footerLinks.map(({ label, path }) => {
               const isActive = pathname === path;
               return (
@@ -60,18 +77,26 @@ const Footer = () => {
                   key={path}
                   to={path}
                   target='_blank'
+                  className='text-xs sm:text-sm'
                   style={{
-                    fontSize: "0.8125rem",
+                    fontSize: "clamp(0.75rem, 1.5vw, 0.8125rem)",
                     fontFamily: "var(--font-body)",
                     fontWeight: isActive ? 700 : 400,
-                    color: isActive ? "var(--primary)" : "var(--on-surface-variant)",
+                    color: isActive
+                      ? "var(--primary)"
+                      : "var(--on-surface-variant)",
                     textDecoration: "underline",
                     textUnderlineOffset: "3px",
                     transition: "color 0.15s",
                   }}
-                  onMouseEnter={e => e.currentTarget.style.color = "var(--primary)"}
-                  onMouseLeave={e => e.currentTarget.style.color = isActive ? "var(--primary)" : "var(--on-surface-variant)"}
-                >
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "var(--primary)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = isActive
+                      ? "var(--primary)"
+                      : "var(--on-surface-variant)")
+                  }>
                   {label}
                 </Link>
               );

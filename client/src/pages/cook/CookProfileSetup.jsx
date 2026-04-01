@@ -122,15 +122,19 @@ function CookProfileSetup() {
 
       {/* ── MAIN ── */}
       <main
+        className='px-3 sm:px-4 md:px-6'
         style={{
           paddingTop: "96px",
           paddingBottom: "64px",
           maxWidth: "960px",
           margin: "0 auto",
-          padding: "66px 24px 64px",
+          padding: "66px clamp(12px, 4vw, 24px) 64px",
         }}>
-        <div style={{ marginBottom: "48px" }}>
+        <div
+          className='mb-8 sm:mb-10 md:mb-12'
+          style={{ marginBottom: "48px" }}>
           <h1
+            className='text-2xl sm:text-3xl md:text-4xl'
             style={{
               fontFamily: "var(--font-display)",
               fontSize: "1.75rem",
@@ -141,7 +145,7 @@ function CookProfileSetup() {
             }}>
             Add Your Cook Profile
           </h1>
-          <p className='auth-page-sub'>
+          <p className='auth-page-sub text-sm sm:text-base'>
             Start your new journey. Your kitchen, your story, your customers
           </p>
         </div>
@@ -158,7 +162,8 @@ function CookProfileSetup() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "5fr 7fr",
+              gridTemplateColumns:
+                "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
               gap: "28px",
               alignItems: "start",
             }}>
@@ -418,7 +423,8 @@ function CookProfileSetup() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns:
+                      "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
                     gap: "16px",
                     marginBottom: "28px",
                   }}>

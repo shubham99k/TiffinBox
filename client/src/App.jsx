@@ -7,7 +7,7 @@ import Landing from "./pages/misc/Landing";
 import ResetRoute from "./components/ResetRoute";
 import BannedPage from "./pages/misc/BannedPage";
 import HowItWorks from "./pages/misc/HowItWorks";
-import HelpCenter from "./pages/misc/HelpCenter";
+// import HelpCenter from "./pages/misc/HelpCenter";
 import Footer from "./components/Footer";
 import Policy from "./pages/misc/Policy";
 import TermsAndConditions from "./pages/misc/TermsAndConditions";
@@ -45,7 +45,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/how-it-works' element={<HowItWorks />} />
-        <Route path='/help-center' element={<HelpCenter />} />
+        {/* <Route path='/help-center' element={<HelpCenter />} /> */}
         <Route path='/policy' element={<Policy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
 

@@ -7,7 +7,12 @@ import { ArrowLeft } from "lucide-react";
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "", email: "", password: "", role: "customer", city: "", phone: "",
+    name: "",
+    email: "",
+    password: "",
+    role: "customer",
+    city: "",
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -34,219 +39,274 @@ function Register() {
   };
 
   return (
-    <div className="auth-wrap">
-
+    <div className='auth-wrap'>
       {/* ── LEFT ── */}
-      <div className="auth-left">
-        <div className="auth-left-inner">
-
-          <span className="auth-back" onClick={() => navigate("/")}>
+      <div className='auth-left'>
+        <div className='auth-left-inner'>
+          <span className='auth-back' onClick={() => navigate("/")}>
             <ArrowLeft size={14} /> Back to Home page
           </span>
 
-          <div className="auth-brand">
+          <div className='auth-brand'>
             TiffinBox
-            <span className="auth-brand-dot" />
+            <span className='auth-brand-dot' />
           </div>
 
-          <div className="auth-page-title">Create your account</div>
-          <p className="auth-page-sub">Join thousands of food lovers today.</p>
+          <div className='auth-page-title text-2xl sm:text-3xl'>
+            Create your account
+          </div>
+          <p
+            className='auth-page-sub text-sm sm:text-base'
+            style={{
+              fontSize: "clamp(0.875rem, 2.2vw, 1rem)",
+              marginBottom: "clamp(20px, 5vw, 32px)",
+            }}>
+            Join thousands of food lovers today.
+          </p>
 
           {/* Role Toggle */}
-          <div className="role-toggle">
+          <div className='role-toggle'>
             <button
-              type="button"
+              type='button'
               className={`role-toggle-btn${formData.role === "customer" ? " active" : ""}`}
-              onClick={() => setFormData({ ...formData, role: "customer" })}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>shopping_bag</span>
+              onClick={() => setFormData({ ...formData, role: "customer" })}>
+              <span
+                className='material-symbols-outlined'
+                style={{ fontSize: "15px" }}>
+                shopping_bag
+              </span>
               Order Food
             </button>
             <button
-              type="button"
+              type='button'
               className={`role-toggle-btn${formData.role === "cook" ? " active" : ""}`}
-              onClick={() => setFormData({ ...formData, role: "cook" })}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>restaurant</span>
+              onClick={() => setFormData({ ...formData, role: "cook" })}>
+              <span
+                className='material-symbols-outlined'
+                style={{ fontSize: "15px" }}>
+                restaurant
+              </span>
               Sell Food
             </button>
           </div>
 
-          {error && <div className="error-box">{error}</div>}
+          {error && <div className='error-box'>{error}</div>}
 
           <form noValidate onSubmit={handleSubmit}>
-
-            <div className="inp-row">
-              <div className="inp-group">
-                <label className="inp-label">Full Name</label>
-                <div className="inp-icon-wrap">
-                  <span className="material-symbols-outlined inp-icon">person</span>
-                  <input className="inp-field" type="text" name="name"
-                    value={formData.name} onChange={handleChange}
-                    placeholder="John Doe" required />
+            <div className='inp-row'>
+              <div className='inp-group'>
+                <label className='inp-label'>Full Name</label>
+                <div className='inp-icon-wrap'>
+                  <span className='material-symbols-outlined inp-icon'>
+                    person
+                  </span>
+                  <input
+                    className='inp-field'
+                    type='text'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder='John Doe'
+                    required
+                  />
                 </div>
               </div>
-              <div className="inp-group">
-                <label className="inp-label">City</label>
-                <div className="inp-icon-wrap">
-                  <span className="material-symbols-outlined inp-icon">location_on</span>
-                  <input className="inp-field" type="text" name="city"
-                    value={formData.city} onChange={handleChange}
-                    placeholder="Surat" required />
+              <div className='inp-group'>
+                <label className='inp-label'>City</label>
+                <div className='inp-icon-wrap'>
+                  <span className='material-symbols-outlined inp-icon'>
+                    location_on
+                  </span>
+                  <input
+                    className='inp-field'
+                    type='text'
+                    name='city'
+                    value={formData.city}
+                    onChange={handleChange}
+                    placeholder='Surat'
+                    required
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="inp-group">
-              <label className="inp-label">Email Address</label>
-              <div className="inp-icon-wrap">
-                <span className="material-symbols-outlined inp-icon">mail</span>
-                <input className="inp-field" type="email" name="email"
-                  value={formData.email} onChange={handleChange}
-                  placeholder="you@example.com" required />
-              </div>
-            </div>
-
-            <div className="inp-group">
-              <label className="inp-label">Password</label>
-              <div className="inp-icon-wrap">
-                <span className="material-symbols-outlined inp-icon">lock</span>
+            <div className='inp-group'>
+              <label className='inp-label'>Email Address</label>
+              <div className='inp-icon-wrap'>
+                <span className='material-symbols-outlined inp-icon'>mail</span>
                 <input
-                  className="inp-field"
+                  className='inp-field'
+                  type='email'
+                  name='email'
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder='you@example.com'
+                  required
+                />
+              </div>
+            </div>
+
+            <div className='inp-group'>
+              <label className='inp-label'>Password</label>
+              <div className='inp-icon-wrap'>
+                <span className='material-symbols-outlined inp-icon'>lock</span>
+                <input
+                  className='inp-field'
                   type={showPassword ? "text" : "password"}
-                  name="password"
+                  name='password'
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Min 6 characters"
+                  placeholder='Min 6 characters'
                   required
                   style={{ paddingRight: "44px" }}
                 />
-                <button type="button" className="inp-eye" onClick={() => setShowPassword(!showPassword)}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
+                <button
+                  type='button'
+                  className='inp-eye'
+                  onClick={() => setShowPassword(!showPassword)}>
+                  <span
+                    className='material-symbols-outlined'
+                    style={{ fontSize: "clamp(14px, 3.5vw, 18px)" }}>
                     {showPassword ? "visibility_off" : "visibility"}
                   </span>
                 </button>
               </div>
             </div>
 
-            <div className="inp-group">
-              <label className="inp-label">
+            <div className='inp-group'>
+              <label className='inp-label'>
                 Mobile Number{" "}
-                <span style={{ fontWeight: 400, textTransform: "none", fontSize: "10px", letterSpacing: 0 }}>
+                <span
+                  style={{
+                    fontWeight: 400,
+                    textTransform: "none",
+                    fontSize: "10px",
+                    letterSpacing: 0,
+                  }}>
                   (optional)
                 </span>
               </label>
-              <div className="inp-icon-wrap">
-                <span className="material-symbols-outlined inp-icon">phone</span>
-                <input className="inp-field" type="text" name="phone"
-                  value={formData.phone} onChange={handleChange}
-                  placeholder="0123456789" />
+              <div className='inp-icon-wrap'>
+                <span className='material-symbols-outlined inp-icon'>
+                  phone
+                </span>
+                <input
+                  className='inp-field'
+                  type='text'
+                  name='phone'
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder='0123456789'
+                />
               </div>
             </div>
 
-            <button type="submit" className="auth-btn" disabled={loading}>
+            <button type='submit' className='auth-btn' disabled={loading}>
               {loading ? "Creating account…" : "Create Account"}
             </button>
           </form>
 
-          <div className="auth-terms" style={{ fontSize: "0.8125rem", color: "var(--on-surface-variant)" }}>
-            By creating an account you confirm you have read and accepted TiffinBox's
-
+          <div
+            className='auth-terms'
+            style={{
+              fontSize: "clamp(0.72rem, 1.8vw, 0.8125rem)",
+              color: "var(--on-surface-variant)",
+            }}>
+            By creating an account you confirm you have read and accepted
+            TiffinBox's
             <Link
-              to="/terms-and-conditions"
-              target="_blank"
-              rel="noopener noreferrer"
+              to='/terms-and-conditions'
+              target='_blank'
+              rel='noopener noreferrer'
               style={{
                 color: "var(--primary)",
                 textDecoration: "none",
                 fontWeight: 600,
                 display: "inline", // Ensures it doesn't behave like a block
-                margin: "0 4px"
-              }}
-            >
+                margin: "0 4px",
+              }}>
               Terms of Service
             </Link>
-
             and
-
             <Link
-              to="/policy"
-              target="_blank"
-              rel="noopener noreferrer"
+              to='/policy'
+              target='_blank'
+              rel='noopener noreferrer'
               style={{
                 color: "var(--primary)",
                 textDecoration: "none",
                 fontWeight: 600,
                 display: "inline",
-                marginLeft: "4px"
-              }}
-            >
+                marginLeft: "4px",
+              }}>
               Privacy Policy
-            </Link>.
+            </Link>
+            .
           </div>
 
-          <div className="auth-switch">
-            Already have an account?&nbsp;<Link to="/login">Login here</Link>
+          <div className='auth-switch'>
+            Already have an account?&nbsp;<Link to='/login'>Login here</Link>
           </div>
-
         </div>
       </div>
 
       {/* ── RIGHT ── */}
-      <div className="auth-right">
+      <div className='auth-right'>
         <img
-          className="auth-right-photo"
-          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&auto=format&fit=crop"
-          alt="Homemade food spread"
+          className='auth-right-photo'
+          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&auto=format&fit=crop'
+          alt='Homemade food spread'
         />
-        <div className="auth-right-content">
-          <div className="auth-right-brand">TiffinBox</div>
+        <div className='auth-right-content'>
+          <div className='auth-right-brand'>TiffinBox</div>
 
           <div>
-            <div className="auth-right-headline">
-              Miss mom's<br />cooking?<br />
-              <span className="accent">We got you.</span>
+            <div className='auth-right-headline'>
+              Miss mom's
+              <br />
+              cooking?
+              <br />
+              <span className='accent'>We got you.</span>
             </div>
-            <p className="auth-right-body">
+            <p className='auth-right-body'>
               Pre-order fresh homemade meals from verified home cooks in your
               city. Skip the mess, eat like home.
             </p>
           </div>
 
-          <div className="auth-features">
+          <div className='auth-features'>
             {[
               "Order 2–3 hours before mealtime",
               "Fresh food, zero wastage",
               "Home cooks earn from their kitchen",
             ].map((f, i) => (
-              <div key={i} className="auth-feature-item">
-                <div className="auth-feature-dot" />
+              <div key={i} className='auth-feature-item'>
+                <div className='auth-feature-dot' />
                 {f}
               </div>
             ))}
           </div>
 
-          <div className="auth-accent-bar">
-            <div className="auth-accent-bar-item long" />
-            <div className="auth-accent-bar-item short" />
-            <div className="auth-accent-bar-item short" />
+          <div className='auth-accent-bar'>
+            <div className='auth-accent-bar-item long' />
+            <div className='auth-accent-bar-item short' />
+            <div className='auth-accent-bar-item short' />
           </div>
 
-          <div className="auth-stats">
+          <div className='auth-stats'>
             {[
               ["2K+", "Home Cooks"],
               ["50K+", "Meals Served"],
               ["4.8★", "Avg Rating"],
             ].map(([num, label], i) => (
               <div key={i}>
-                <div className="auth-stat-num">{num}</div>
-                <div className="auth-stat-label">{label}</div>
+                <div className='auth-stat-num'>{num}</div>
+                <div className='auth-stat-label'>{label}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
     </div>
   );
 }

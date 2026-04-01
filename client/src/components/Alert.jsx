@@ -70,11 +70,13 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
     <div
       style={{
         position: "fixed",
-        top: "80px",
-        right: "24px",
+        top: "clamp(64px, 12vw, 80px)",
+        right: "clamp(8px, 3vw, 12px)",
+        left: "clamp(8px, 3vw, 12px)",
         zIndex: 9999,
-        minWidth: "288px",
-        maxWidth: "400px",
+        minWidth: 0,
+        maxWidth: "min(420px, calc(100vw - 16px))",
+        width: "100%",
         background: s.bg,
         color: s.color,
         border: `1px solid ${s.border}`,
@@ -83,30 +85,45 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
         boxShadow: "0 8px 32px rgba(20,27,43,0.1)",
         overflow: "hidden",
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateX(0)" : "translateX(110%)",
+        transform: visible ? "translateX(0)" : "translateY(-12px)",
         transition: "opacity 0.3s ease, transform 0.3s ease",
+        marginLeft: "auto",
       }}>
       {/* Content */}
       <div
         style={{
-          padding: "13px 16px",
+          padding: "clamp(11px, 3vw, 13px) clamp(12px, 3.5vw, 16px)",
           display: "flex",
-          alignItems: "center",
-          gap: "10px",
+          alignItems: "flex-start",
+          gap: "clamp(8px, 2.5vw, 10px)",
           justifyContent: "space-between",
         }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "clamp(8px, 2.5vw, 10px)",
+            flex: 1,
+            minWidth: 0,
+          }}>
           <span
             className='material-symbols-outlined'
-            style={{ fontSize: "18px", color: s.color, flexShrink: 0 }}>
+            style={{
+              fontSize: "clamp(16px, 4vw, 18px)",
+              color: s.color,
+              flexShrink: 0,
+              marginTop: "1px",
+            }}>
             {s.icon}
           </span>
           <span
             style={{
-              fontSize: "0.875rem",
+              fontSize: "clamp(0.8rem, 2.8vw, 0.875rem)",
               fontWeight: 500,
               lineHeight: 1.5,
               color: s.color,
+              overflowWrap: "anywhere",
+              wordBreak: "break-word",
             }}>
             {message}
           </span>
@@ -128,13 +145,14 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
               display: "flex",
               alignItems: "center",
               flexShrink: 0,
+              alignSelf: "flex-start",
               transition: "opacity 0.15s",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.55")}>
             <span
               className='material-symbols-outlined'
-              style={{ fontSize: "18px" }}>
+              style={{ fontSize: "clamp(16px, 4vw, 18px)" }}>
               close
             </span>
           </button>

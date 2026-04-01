@@ -1,7 +1,6 @@
 import stockPhotos from "../utils/stockPhotos";
 import { X } from "lucide-react";
 
-
 const DishForm = ({
   dish,
   index,
@@ -17,8 +16,8 @@ const DishForm = ({
       background: "var(--surface-container-lowest)",
       border: "1px solid var(--surface-container-high)",
       borderRadius: "var(--radius-lg)",
-      padding: "20px",
-      marginBottom: "14px",
+      padding: "clamp(14px, 4vw, 20px)",
+      marginBottom: "clamp(10px, 2.5vw, 14px)",
       boxShadow: "0 1px 8px rgba(20,27,43,0.03)",
     }}>
     {/* Card header */}
@@ -27,13 +26,15 @@ const DishForm = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: "18px",
+        marginBottom: "clamp(12px, 3vw, 18px)",
+        gap: "clamp(8px, 2vw, 10px)",
+        flexWrap: "wrap",
       }}>
       <span
         style={{
           fontFamily: "var(--font-display)",
           fontWeight: 800,
-          fontSize: "0.875rem",
+          fontSize: "clamp(0.8rem, 2vw, 0.875rem)",
           color: "var(--on-surface)",
           letterSpacing: "-0.01em",
         }}>
@@ -47,15 +48,16 @@ const DishForm = ({
             display: "flex",
             alignItems: "center",
             gap: "5px",
-            padding: "5px 12px",
+            padding: "clamp(5px, 1.5vw, 6px) clamp(10px, 2.5vw, 12px)",
             borderRadius: "var(--radius-lg)",
             border: "none",
             background: "#fee2e2",
             color: "#991b1b",
-            fontSize: "0.75rem",
+            fontSize: "clamp(0.68rem, 1.8vw, 0.75rem)",
             fontWeight: 700,
             cursor: "pointer",
             fontFamily: "var(--font-body)",
+            whiteSpace: "nowrap",
           }}>
           <X size={12} /> Remove
         </button>
@@ -63,35 +65,46 @@ const DishForm = ({
     </div>
 
     {/* Photo picker */}
-    <div style={{ marginBottom: "16px" }}>
+    <div style={{ marginBottom: "clamp(12px, 3vw, 16px)" }}>
       <label
         className='inp-label'
-        style={{ display: "block", marginBottom: "8px" }}>
+        style={{
+          display: "block",
+          marginBottom: "clamp(6px, 1.5vw, 8px)",
+          fontSize: "clamp(0.72rem, 2vw, 0.8125rem)",
+        }}>
         Photo
       </label>
       {dish.photo ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "clamp(10px, 2.5vw, 14px)",
+            flexWrap: "wrap",
+          }}>
           <img
             src={dish.photo}
             alt='dish'
             style={{
-              width: "72px",
-              height: "72px",
+              width: "clamp(56px, 16vw, 72px)",
+              height: "clamp(56px, 16vw, 72px)",
               borderRadius: "var(--radius-lg)",
               objectFit: "cover",
               border: "2px solid var(--border-light)",
+              flexShrink: 0,
             }}
           />
           <button
             type='button'
             onClick={() => setPhotoPicker(photoPicker === index ? null : index)}
             style={{
-              fontSize: "0.8125rem",
+              fontSize: "clamp(0.72rem, 2vw, 0.8125rem)",
               fontWeight: 700,
               color: "var(--primary)",
               background: "var(--primary-fixed)",
               border: "none",
-              padding: "6px 14px",
+              padding: "clamp(5px, 1.5vw, 6px) clamp(10px, 2.5vw, 14px)",
               borderRadius: "var(--radius-lg)",
               cursor: "pointer",
               fontFamily: "var(--font-body)",
@@ -106,17 +119,19 @@ const DishForm = ({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            padding: "10px 18px",
+            justifyContent: "center",
+            gap: "clamp(6px, 1.5vw, 8px)",
+            padding: "clamp(8px, 2.2vw, 10px) clamp(12px, 3vw, 18px)",
             borderRadius: "var(--radius-lg)",
             border: "2px dashed var(--border-light)",
             background: "var(--surface-container-high)",
             color: "var(--on-surface-variant)",
-            fontSize: "0.8125rem",
+            fontSize: "clamp(0.72rem, 2vw, 0.8125rem)",
             fontWeight: 600,
             cursor: "pointer",
             fontFamily: "var(--font-body)",
             transition: "all 0.2s",
+            width: "100%",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = "var(--primary)";
@@ -128,10 +143,10 @@ const DishForm = ({
           }}>
           <span
             className='material-symbols-outlined'
-            style={{ fontSize: "16px" }}>
+            style={{ fontSize: "clamp(14px, 3.5vw, 16px)" }}>
             add_a_photo
           </span>
-          Pick a photo
+          <span style={{ whiteSpace: "nowrap" }}>Pick a photo</span>
         </button>
       )}
 
@@ -139,8 +154,8 @@ const DishForm = ({
       {photoPicker === index && (
         <div
           style={{
-            marginTop: "14px",
-            padding: "16px",
+            marginTop: "clamp(10px, 2.5vw, 14px)",
+            padding: "clamp(12px, 3vw, 16px)",
             background: "var(--surface-container-low)",
             borderRadius: "var(--radius-lg)",
           }}>
@@ -203,7 +218,13 @@ const DishForm = ({
     </div>
 
     {/* Price + Portions */}
-    <div className='inp-row'>
+    <div
+      className='inp-row'
+      style={{
+        display: "flex",
+        gap: "clamp(12px, 3vw, 16px)",
+        flexWrap: "wrap",
+      }}>
       <div className='inp-group'>
         <label className='inp-label'>Price (₹)</label>
         <div className='inp-icon-wrap'>

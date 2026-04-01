@@ -5,7 +5,16 @@ import { Bell } from "lucide-react";
 function NotificationBell() {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 640 : false,
+  );
   const bellRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileView(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,8 +70,8 @@ function NotificationBell() {
             : "var(--surface-container-high)",
           border: "none",
           borderRadius: "var(--radius-lg)",
-          width: "38px",
-          height: "38px",
+          width: "clamp(32px, 7vw, 36px)",
+          height: "clamp(32px, 7vw, 36px)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -79,7 +88,7 @@ function NotificationBell() {
             : "var(--surface-container-high)")
         }>
         <Bell
-          size={17}
+          size={isMobileView ? 14 : 15}
           color={
             open ? "var(--primary-container)" : "var(--on-surface-variant)"
           }
@@ -90,15 +99,15 @@ function NotificationBell() {
           <span
             style={{
               position: "absolute",
-              top: "-3px",
-              right: "-3px",
+              top: "-2px",
+              right: "-2px",
               background: "var(--error)",
               color: "#fff",
               borderRadius: "var(--radius-pill)",
-              fontSize: "0.625rem",
+              fontSize: "clamp(0.56rem, 1.8vw, 0.625rem)",
               fontWeight: 700,
-              minWidth: "16px",
-              height: "16px",
+              minWidth: "clamp(13px, 3.8vw, 15px)",
+              height: "clamp(13px, 3.8vw, 15px)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -115,10 +124,12 @@ function NotificationBell() {
       {open && (
         <div
           style={{
-            position: "absolute",
-            right: 0,
-            top: "46px",
-            width: "320px",
+            position: isMobileView ? "fixed" : "absolute",
+            right: isMobileView ? "12px" : "0",
+            left: isMobileView ? "12px" : "auto",
+            top: isMobileView ? "64px" : "46px",
+            width: isMobileView ? "auto" : "min(320px, calc(100vw - 24px))",
+            maxHeight: isMobileView ? "min(70vh, 520px)" : "none",
             background: "var(--surface-container-lowest)",
             borderRadius: "var(--radius-lg)",
             boxShadow: "0 8px 32px rgba(20,27,43,0.12)",
@@ -128,17 +139,18 @@ function NotificationBell() {
           {/* Header */}
           <div
             style={{
-              padding: "14px 18px",
+              padding: "clamp(12px, 2.5vw, 14px) clamp(14px, 3vw, 18px)",
               borderBottom: "1px solid var(--surface-container-high)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              gap: "10px",
             }}>
             <span
               style={{
                 fontFamily: "var(--font-display)",
                 fontWeight: 800,
-                fontSize: "0.9375rem",
+                fontSize: "clamp(0.8125rem, 2.8vw, 0.9375rem)",
                 color: "var(--on-surface)",
                 letterSpacing: "-0.02em",
               }}>
@@ -147,7 +159,7 @@ function NotificationBell() {
             {notifications.filter((n) => !n.isRead).length > 0 && (
               <span
                 style={{
-                  fontSize: "0.6875rem",
+                  fontSize: "clamp(0.625rem, 2vw, 0.6875rem)",
                   fontWeight: 700,
                   color: "var(--primary-container)",
                   background: "var(--primary-fixed)",
@@ -165,7 +177,7 @@ function NotificationBell() {
           {notifications.length === 0 ? (
             <div
               style={{
-                padding: "40px 24px",
+                padding: "clamp(28px, 7vw, 40px) clamp(16px, 4vw, 24px)",
                 textAlign: "center",
               }}>
               <div
@@ -183,7 +195,7 @@ function NotificationBell() {
               </div>
               <p
                 style={{
-                  fontSize: "0.875rem",
+                  fontSize: "clamp(0.8125rem, 2.4vw, 0.875rem)",
                   fontWeight: 600,
                   color: "var(--on-surface)",
                   marginBottom: "4px",
@@ -193,19 +205,23 @@ function NotificationBell() {
               </p>
               <p
                 style={{
-                  fontSize: "0.8125rem",
+                  fontSize: "clamp(0.75rem, 2.2vw, 0.8125rem)",
                   color: "var(--on-surface-variant)",
                 }}>
                 No notifications yet
               </p>
             </div>
           ) : (
-            <div style={{ maxHeight: "340px", overflowY: "auto" }}>
+            <div
+              style={{
+                maxHeight: isMobileView ? "min(54vh, 420px)" : "340px",
+                overflowY: "auto",
+              }}>
               {notifications.map((n, i) => (
                 <div
                   key={n._id}
                   style={{
-                    padding: "13px 18px",
+                    padding: "clamp(10px, 2.8vw, 13px) clamp(12px, 3vw, 18px)",
                     background: n.isRead
                       ? "transparent"
                       : "var(--primary-fixed)",
@@ -233,7 +249,7 @@ function NotificationBell() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p
                       style={{
-                        fontSize: "0.875rem",
+                        fontSize: "clamp(0.8125rem, 2.2vw, 0.875rem)",
                         color: "var(--on-surface)",
                         fontWeight: n.isRead ? 400 : 600,
                         lineHeight: 1.5,
@@ -244,7 +260,7 @@ function NotificationBell() {
                     </p>
                     <p
                       style={{
-                        fontSize: "0.75rem",
+                        fontSize: "clamp(0.6875rem, 1.9vw, 0.75rem)",
                         color: "var(--on-surface-variant)",
                         fontFamily: "var(--font-body)",
                       }}>

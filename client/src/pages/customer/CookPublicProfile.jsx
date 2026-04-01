@@ -87,6 +87,7 @@ function CookPublicProfile() {
       <div className='dashboard-content'>
         {/* ── Cook Profile Card ── */}
         <div
+          className='mb-4 sm:mb-5 md:mb-6'
           style={{
             background: "var(--surface-container-lowest)",
             borderRadius: "var(--radius-lg)",
@@ -104,18 +105,19 @@ function CookPublicProfile() {
 
           <div
             style={{
-              padding: "28px 24px",
+              padding: "clamp(16px, 4vw, 28px) clamp(12px, 3vw, 24px)",
               display: "flex",
-              gap: "22px",
+              gap: "clamp(12px, 3vw, 22px)",
               alignItems: "flex-start",
+              flexWrap: "wrap",
             }}>
             {cook?.photo ? (
               <img
                 src={cook.photo}
                 alt='cook'
                 style={{
-                  width: "108px",
-                  height: "108px",
+                  width: "clamp(80px, 24vw, 108px)",
+                  height: "clamp(80px, 24vw, 108px)",
                   borderRadius: "var(--radius-lg)",
                   objectFit: "cover",
                   flexShrink: 0,
@@ -125,8 +127,8 @@ function CookPublicProfile() {
             ) : (
               <div
                 style={{
-                  width: "108px",
-                  height: "108px",
+                  width: "clamp(80px, 24vw, 108px)",
+                  height: "clamp(80px, 24vw, 108px)",
                   borderRadius: "var(--radius-lg)",
                   background: "var(--primary-fixed)",
                   display: "flex",
@@ -139,11 +141,11 @@ function CookPublicProfile() {
               </div>
             )}
 
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "1.5rem",
+                  fontSize: "clamp(1.1rem, 4.8vw, 1.5rem)",
                   fontWeight: 900,
                   color: "var(--on-surface)",
                   letterSpacing: "-0.03em",
@@ -158,9 +160,10 @@ function CookPublicProfile() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "5px",
-                  fontSize: "0.8125rem",
+                  fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
                   color: "var(--outline)",
                   marginBottom: "10px",
+                  flexWrap: "wrap",
                 }}>
                 <MapPin size={12} />
                 {cook?.address}, {cook?.city}
@@ -168,10 +171,12 @@ function CookPublicProfile() {
 
               <div
                 style={{
-                  fontSize: "0.875rem",
+                  fontSize: "clamp(0.78rem, 2.3vw, 0.875rem)",
                   color: "var(--on-surface-variant)",
                   lineHeight: 1.65,
                   marginBottom: "14px",
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
                 }}>
                 {cook?.bio}
               </div>
@@ -191,9 +196,9 @@ function CookPublicProfile() {
                     gap: "5px",
                     background: "#FEF3C7",
                     color: "#92400E",
-                    padding: "4px 10px",
+                    padding: "clamp(3px, 1vw, 4px) clamp(8px, 2.4vw, 10px)",
                     borderRadius: "var(--radius-pill)",
-                    fontSize: "0.75rem",
+                    fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
                     fontWeight: 700,
                   }}>
                   <Star size={13} fill='#D97706' color='#D97706' />
@@ -220,15 +225,17 @@ function CookPublicProfile() {
         <div
           style={{
             display: "flex",
-            gap: "10px",
+            gap: "clamp(8px, 2vw, 10px)",
             marginBottom: "var(--space-md)",
+            flexWrap: "wrap",
           }}>
           {["lunch", "dinner"].map((type) => (
             <button
               key={type}
               onClick={() => setMealType(type)}
+              className='text-xs sm:text-sm'
               style={{
-                padding: "10px 28px",
+                padding: "clamp(8px, 2vw, 10px) clamp(12px, 4vw, 28px)",
                 borderRadius: "var(--radius-lg)",
                 border:
                   mealType === type
@@ -241,7 +248,7 @@ function CookPublicProfile() {
                 color:
                   mealType === type ? "var(--on-primary)" : "var(--outline)",
                 fontWeight: 700,
-                fontSize: "0.8125rem",
+                fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
                 cursor: "pointer",
                 fontFamily: "var(--font-display)",
                 textTransform: "capitalize",
@@ -249,6 +256,7 @@ function CookPublicProfile() {
                 transition: "all 0.2s",
                 boxShadow:
                   mealType === type ? "0 4px 16px rgba(6,78,59,0.25)" : "none",
+                flex: "1 1 min(100%, 140px)",
               }}>
               {type === "lunch" ? "☀ Lunch" : "🌙 Dinner"}
             </button>
@@ -261,15 +269,15 @@ function CookPublicProfile() {
             style={{
               background: "var(--surface-container-lowest)",
               borderRadius: "var(--radius-lg)",
-              padding: "56px 24px",
+              padding: "clamp(44px, 12vw, 56px) clamp(14px, 4vw, 24px)",
               textAlign: "center",
               boxShadow: "0 2px 24px rgba(20,27,43,0.04)",
               marginBottom: "var(--space-md)",
             }}>
             <div
               style={{
-                width: "56px",
-                height: "56px",
+                width: "clamp(44px, 12vw, 56px)",
+                height: "clamp(44px, 12vw, 56px)",
                 borderRadius: "var(--radius-lg)",
                 background: "var(--primary-fixed)",
                 display: "flex",
@@ -283,7 +291,7 @@ function CookPublicProfile() {
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "1rem",
+                fontSize: "clamp(0.875rem, 2.5vw, 1rem)",
                 fontWeight: 800,
                 color: "var(--on-surface)",
                 letterSpacing: "-0.02em",
@@ -291,7 +299,11 @@ function CookPublicProfile() {
               }}>
               No {mealType} menu today
             </div>
-            <div style={{ fontSize: "0.8125rem", color: "var(--outline)" }}>
+            <div
+              style={{
+                fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
+                color: "var(--outline)",
+              }}>
               Check back later or try the dinner menu
             </div>
           </div>
@@ -309,16 +321,18 @@ function CookPublicProfile() {
               {/* Menu header */}
               <div
                 style={{
-                  padding: "14px 22px",
+                  padding: "clamp(12px, 3vw, 14px) clamp(14px, 4vw, 22px)",
                   background: "var(--surface-container-low)",
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   justifyContent: "space-between",
+                  gap: "clamp(8px, 2vw, 10px)",
+                  flexWrap: "wrap",
                 }}>
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "0.9375rem",
+                    fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
                     fontWeight: 800,
                     color: "var(--on-surface)",
                     letterSpacing: "-0.02em",
@@ -333,9 +347,9 @@ function CookPublicProfile() {
                     gap: "5px",
                     background: "#FEF3C7",
                     color: "#92400E",
-                    padding: "3px 10px",
+                    padding: "clamp(3px, 1vw, 4px) clamp(8px, 2.4vw, 10px)",
                     borderRadius: "var(--radius-pill)",
-                    fontSize: "0.6875rem",
+                    fontSize: "clamp(0.62rem, 1.8vw, 0.6875rem)",
                     fontWeight: 700,
                     letterSpacing: "0.02em",
                   }}>
@@ -347,10 +361,10 @@ function CookPublicProfile() {
               {/* Dishes */}
               <div
                 style={{
-                  padding: "16px 22px",
+                  padding: "clamp(12px, 3vw, 16px) clamp(14px, 4vw, 22px)",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "12px",
+                  gap: "clamp(10px, 2vw, 12px)",
                 }}>
                 {menu.dishes?.map((dish, i) => (
                   <div key={i} className='menu-dish-card'>
@@ -372,7 +386,9 @@ function CookPublicProfile() {
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: "10px",
+                            gap: "clamp(8px, 2vw, 10px)",
+                            flexWrap: "wrap",
+                            justifyContent: "flex-end",
                           }}>
                           <div className='menu-dish-portions'>
                             {dish.portionsLeft} left
@@ -393,8 +409,9 @@ function CookPublicProfile() {
                                 color: "var(--on-primary)",
                                 border: "none",
                                 borderRadius: "var(--radius-lg)",
-                                padding: "7px 16px",
-                                fontSize: "0.75rem",
+                                padding:
+                                  "clamp(6px, 1.7vw, 7px) clamp(12px, 3.2vw, 16px)",
+                                fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
                                 fontWeight: 700,
                                 cursor: "pointer",
                                 fontFamily: "var(--font-display)",
@@ -421,14 +438,15 @@ function CookPublicProfile() {
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "1rem",
+                fontSize: "clamp(0.875rem, 2.5vw, 1rem)",
                 fontWeight: 800,
                 color: "var(--on-surface)",
                 letterSpacing: "-0.02em",
                 marginBottom: "16px",
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
+                gap: "clamp(8px, 2vw, 10px)",
+                flexWrap: "wrap",
               }}>
               Reviews
               {/* Count chip */}
@@ -436,9 +454,9 @@ function CookPublicProfile() {
                 style={{
                   background: "var(--primary-fixed)",
                   color: "var(--primary-container)",
-                  fontSize: "0.6875rem",
+                  fontSize: "clamp(0.62rem, 1.8vw, 0.6875rem)",
                   fontWeight: 700,
-                  padding: "3px 10px",
+                  padding: "clamp(3px, 1vw, 4px) clamp(8px, 2.4vw, 10px)",
                   borderRadius: "var(--radius-pill)",
                   letterSpacing: "0.04em",
                 }}>
@@ -447,27 +465,33 @@ function CookPublicProfile() {
             </div>
 
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "clamp(8px, 2vw, 10px)",
+              }}>
               {reviews.map((review) => (
                 <div
                   key={review._id}
                   style={{
                     background: "var(--surface-container-lowest)",
                     borderRadius: "var(--radius-lg)",
-                    padding: "18px 22px",
+                    padding: "clamp(14px, 3.5vw, 18px) clamp(14px, 4vw, 22px)",
                     boxShadow: "0 2px 16px rgba(20,27,43,0.04)",
                   }}>
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      alignItems: "center",
+                      alignItems: "flex-start",
+                      gap: "8px",
+                      flexWrap: "wrap",
                       marginBottom: "8px",
                     }}>
                     <div
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: "0.9375rem",
+                        fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
                         fontWeight: 700,
                         color: "var(--on-surface)",
                         letterSpacing: "-0.01em",
@@ -489,7 +513,7 @@ function CookPublicProfile() {
                   {review.comment && (
                     <div
                       style={{
-                        fontSize: "0.875rem",
+                        fontSize: "clamp(0.78rem, 2.3vw, 0.875rem)",
                         color: "var(--on-surface-variant)",
                         lineHeight: 1.65,
                         marginBottom: "8px",
@@ -500,7 +524,7 @@ function CookPublicProfile() {
 
                   <div
                     style={{
-                      fontSize: "0.6875rem",
+                      fontSize: "clamp(0.62rem, 1.8vw, 0.6875rem)",
                       color: "var(--outline)",
                       fontWeight: 600,
                       letterSpacing: "0.04em",
@@ -514,7 +538,7 @@ function CookPublicProfile() {
           </div>
         )}
       </div>
-      <Footer/>
+      <Footer />
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );

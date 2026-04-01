@@ -15,6 +15,8 @@ import {
   LogOut,
   Clock,
   UtensilsCrossed,
+  Menu,
+  X,
 } from "lucide-react";
 import { validateCookProfile } from "../../utils/validate";
 import Footer from "../../components/Footer";
@@ -38,6 +40,7 @@ function CookDashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [todayMenus, setTodayMenus] = useState([]);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const getTimeRemaining = (cutoffTime) => {
     const now = new Date();
@@ -75,6 +78,14 @@ function CookDashboard() {
     };
     fetchProfile();
   }, [navigate]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) setMobileNavOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -304,32 +315,47 @@ function CookDashboard() {
       }}>
       {/* ── NAVBAR ── */}
       <nav
+        className='px-3 sm:px-4 md:px-6'
         style={{
           background: "rgba(249,249,255,0.85)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           borderBottom: "1px solid rgba(20,27,43,0.06)",
-          padding: "0 40px",
-          height: "64px",
+          padding: "clamp(8px, 2vw, 10px) clamp(12px, 4vw, 40px)",
+          minHeight: "56px",
+          height: "auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: "clamp(8px, 2vw, 10px)",
+          flexWrap: "wrap",
           position: "sticky",
           top: 0,
           zIndex: 10,
         }}>
         <span
+        onClick={()=> navigate("/cook/dashboard")}
+          className='text-lg sm:text-xl'
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 900,
-            fontSize: "1.15rem",
+            fontSize: "clamp(1rem, 3vw, 1.15rem)",
             color: "var(--on-surface)",
             letterSpacing: "-0.02em",
+            whiteSpace: "nowrap",
           }}>
           TiffinBox
         </span>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div
+          className='hidden sm:flex flex-wrap gap-2 sm:gap-3'
+          style={{
+            alignItems: "center",
+            gap: "clamp(8px, 1.5vw, 10px)",
+            flexWrap: "wrap",
+            marginLeft: "auto",
+            justifyContent: "flex-end",
+          }}>
           <NotificationBell />
 
           <NavBtn
@@ -344,18 +370,21 @@ function CookDashboard() {
           />
           {/* User chip */}
           <div
+            className='px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-xs flex'
             style={{
-              display: "flex",
               alignItems: "center",
-              gap: "6px",
-              padding: "6px 12px",
+              gap: "clamp(4px, 1vw, 6px)",
+              padding: "clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px)",
               borderRadius: "var(--radius-pill)",
               background: "var(--surface-container-high)",
-              fontSize: "0.8125rem",
+              fontSize: "clamp(0.7rem, 1.5vw, 0.8125rem)",
               fontWeight: 600,
               color: "var(--on-surface-variant)",
             }}>
-            <ChefHat size={15} /> {user?.name}
+            <span className='hidden sm:inline-flex'>
+              <ChefHat size={14} />
+            </span>
+            <span>{user?.name}</span>
           </div>
           <NavBtn
             icon={<LogOut size={14} />}
@@ -364,18 +393,129 @@ function CookDashboard() {
             danger
           />
         </div>
+
+        <div
+          className='flex sm:hidden items-center gap-2'
+          style={{ marginLeft: "auto" }}>
+          <NotificationBell />
+          <button
+            onClick={() => setMobileNavOpen((prev) => !prev)}
+            aria-label='Toggle navigation menu'
+            style={{
+              width: "clamp(32px, 7vw, 36px)",
+              height: "clamp(32px, 7vw, 36px)",
+              borderRadius: "var(--radius-lg)",
+              border: "none",
+              background: mobileNavOpen
+                ? "var(--primary-fixed)"
+                : "var(--surface-container-high)",
+              color: mobileNavOpen
+                ? "var(--primary-container)"
+                : "var(--on-surface-variant)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}>
+            {mobileNavOpen ? <X size={14} /> : <Menu size={14} />}
+          </button>
+        </div>
+
+        {mobileNavOpen && (
+          <div
+            className='sm:hidden'
+            style={{
+              width: "100%",
+              marginTop: "10px",
+              paddingTop: "10px",
+              borderTop: "1px solid var(--surface-container-high)",
+              display: "grid",
+              gap: "8px",
+            }}>
+            <button
+              onClick={() => {
+                setMobileNavOpen(false);
+                navigate("/cook/post-menu");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                width: "100%",
+                padding: "10px 12px",
+                borderRadius: "var(--radius-lg)",
+                border: "none",
+                background: "var(--primary-fixed)",
+                color: "var(--primary-container)",
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: "0.8125rem",
+              }}>
+              <PlusCircle size={14} /> Post Menu
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileNavOpen(false);
+                navigate("/cook/orders");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                width: "100%",
+                padding: "10px 12px",
+                borderRadius: "var(--radius-lg)",
+                border: "none",
+                background: "var(--primary-fixed)",
+                color: "var(--primary-container)",
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: "0.8125rem",
+              }}>
+              <ListOrdered size={14} /> Orders
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileNavOpen(false);
+                handleLogout();
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                width: "100%",
+                padding: "10px 12px",
+                borderRadius: "var(--radius-lg)",
+                border: "1px solid rgba(220,38,38,0.25)",
+                background: "#fee2e2",
+                color: "#991b1b",
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                fontSize: "0.8125rem",
+              }}>
+              <LogOut size={14} /> Logout
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* ── CONTENT ── */}
       <div
+        className='px-3 sm:px-4 md:px-6'
         style={{
           maxWidth: "1100px",
           margin: "0 auto",
-          padding: "40px 40px 64px",
+          padding: "40px clamp(12px, 4vw, 40px) 64px",
         }}>
         {/* Page header */}
-        <div style={{ marginBottom: "36px" }}>
+        <div className='mb-6 sm:mb-8 md:mb-9' style={{ marginBottom: "36px" }}>
           <h1
+            className='text-2xl sm:text-3xl md:text-4xl'
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 900,
@@ -391,18 +531,22 @@ function CookDashboard() {
               {user?.name?.split(" ")[0]}
             </span>
           </h1>
-          <p style={{ fontSize: "1rem", color: "var(--on-surface-variant)" }}>
+          <p
+            className='text-sm sm:text-base'
+            style={{ fontSize: "1rem", color: "var(--on-surface-variant)" }}>
             Here's your cook dashboard
           </p>
         </div>
 
         {/* ── STAT CARDS ── */}
         <div
+          className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8'
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "16px",
-            marginBottom: "32px",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
+            gap: "clamp(12px, 3vw, 16px)",
+            marginBottom: "clamp(24px, 5vw, 32px)",
           }}>
           {[
             {
@@ -435,34 +579,37 @@ function CookDashboard() {
           ].map(({ label, value, accent, extra }) => (
             <div
               key={label}
+              className='p-4 sm:p-5 md:p-6'
               style={{
                 background: "var(--surface-container-lowest)",
                 borderRadius: "var(--radius-lg)",
-                padding: "24px 24px 20px",
+                padding: "clamp(16px, 3vw, 24px)",
                 boxShadow: "0 2px 16px rgba(20,27,43,0.04)",
                 borderTop: `3px solid ${accent}`,
               }}>
               <p
+                className='text-xs sm:text-xs md:text-sm'
                 style={{
-                  fontSize: "0.6875rem",
+                  fontSize: "clamp(0.65rem, 1.5vw, 0.6875rem)",
                   fontWeight: 700,
                   color: "var(--on-surface-variant)",
                   textTransform: "uppercase",
                   letterSpacing: "0.07em",
-                  marginBottom: "10px",
+                  marginBottom: "clamp(6px, 1.5vw, 10px)",
                 }}>
                 {label}
               </p>
               <div
+                className='text-xl sm:text-2xl md:text-4xl'
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "2rem",
+                  fontSize: "clamp(1.25rem, 4vw, 2rem)",
                   fontWeight: 900,
                   color: accent,
                   letterSpacing: "-0.04em",
                   display: "flex",
                   alignItems: "center",
-                  gap: "6px",
+                  gap: "clamp(4px, 1vw, 6px)",
                 }}>
                 {value}
                 {extra}
@@ -473,20 +620,25 @@ function CookDashboard() {
 
         {/* ── TODAY'S LIVE MENU ── */}
         <div
+          className='mb-6 sm:mb-7'
           style={{
             background: "var(--surface-container-lowest)",
             borderRadius: "var(--radius-lg)",
-            boxShadow: "0 2px 16px rgba(20,27,43,0.04)",
-            marginBottom: "24px",
+            boxShadow: "0 8px 28px rgba(20,27,43,0.06)",
+            marginBottom: "clamp(20px, 4vw, 28px)",
+            border: "1px solid rgba(20,27,43,0.08)",
             overflow: "hidden",
           }}>
           {/* Header */}
           <div
+            className='flex flex-col sm:flex-row gap-3 sm:gap-4'
             style={{
-              padding: "20px 28px",
+              padding: "clamp(14px, 3vw, 20px) clamp(14px, 4vw, 28px)",
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               justifyContent: "space-between",
+              background:
+                "linear-gradient(180deg, rgba(6,78,59,0.06) 0%, rgba(6,78,59,0.02) 100%)",
               borderBottom: "1px solid var(--surface-container-high)",
             }}>
             {/* <button
@@ -497,24 +649,38 @@ function CookDashboard() {
               onClick={handleToggleAvailability}>
               {cookProfile?.isAvailable ? "🔴 Go Offline" : "🟢 Go Online"}
             </button> */}
-            <h2
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 800,
-                fontSize: "1rem",
-                color: "var(--on-surface)",
-                letterSpacing: "-0.02em",
-                margin: 0,
-              }}>
-              Today's Live Menu
-            </h2>
+            <div>
+              <h2
+                className='text-base sm:text-lg'
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: "clamp(0.95rem, 2.8vw, 1.1rem)",
+                  color: "var(--on-surface)",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}>
+                Today's Live Menu
+              </h2>
+              <p
+                className='text-xs sm:text-sm'
+                style={{
+                  marginTop: "4px",
+                  marginBottom: 0,
+                  color: "var(--on-surface-variant)",
+                  fontSize: "clamp(0.72rem, 2.2vw, 0.8125rem)",
+                }}>
+                Manage your active meals and cutoff timings.
+              </p>
+            </div>
             <button
               onClick={() => navigate("/cook/post-menu")}
+              className='w-full sm:w-auto justify-center'
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                padding: "8px 16px",
+                padding: "clamp(7px, 1.8vw, 9px) clamp(12px, 3vw, 16px)",
                 borderRadius: "var(--radius-lg)",
                 background: "var(--primary-fixed)",
                 color: "var(--primary-container)",
@@ -522,7 +688,7 @@ function CookDashboard() {
                 cursor: "pointer",
                 fontFamily: "var(--font-display)",
                 fontWeight: 700,
-                fontSize: "0.8125rem",
+                fontSize: "clamp(0.75rem, 2vw, 0.8125rem)",
                 transition: "background 0.2s",
               }}
               onMouseEnter={(e) =>
@@ -537,11 +703,15 @@ function CookDashboard() {
 
           {/* Empty state */}
           {todayMenus.length === 0 ? (
-            <div style={{ padding: "48px 28px", textAlign: "center" }}>
+            <div
+              style={{
+                padding: "clamp(32px, 8vw, 48px) clamp(14px, 4vw, 28px)",
+                textAlign: "center",
+              }}>
               <div
                 style={{
-                  width: "56px",
-                  height: "56px",
+                  width: "clamp(44px, 12vw, 56px)",
+                  height: "clamp(44px, 12vw, 56px)",
                   borderRadius: "50%",
                   background: "var(--surface-container-high)",
                   display: "flex",
@@ -553,7 +723,7 @@ function CookDashboard() {
               </div>
               <p
                 style={{
-                  fontSize: "0.9375rem",
+                  fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
                   fontWeight: 600,
                   color: "var(--on-surface)",
                   marginBottom: "6px",
@@ -562,7 +732,7 @@ function CookDashboard() {
               </p>
               <p
                 style={{
-                  fontSize: "0.8125rem",
+                  fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
                   color: "var(--on-surface-variant)",
                 }}>
                 Post your menu so customers can start ordering.
@@ -571,10 +741,10 @@ function CookDashboard() {
           ) : (
             <div
               style={{
-                padding: "20px 28px",
+                padding: "clamp(14px, 3vw, 20px) clamp(14px, 4vw, 28px)",
                 display: "flex",
                 flexDirection: "column",
-                gap: "12px",
+                gap: "clamp(10px, 2vw, 12px)",
               }}>
               {todayMenus.map((menu) => {
                 const expired = getTimeRemaining(menu.cutoffTime) === "Expired";
@@ -582,27 +752,29 @@ function CookDashboard() {
                   <div
                     key={menu._id}
                     style={{
-                      padding: "16px 20px",
+                      padding: "clamp(12px, 3vw, 16px) clamp(12px, 3vw, 20px)",
                       background: expired
                         ? "var(--surface-container-low)"
-                        : "var(--primary-fixed)",
+                        : "rgba(6,78,59,0.08)",
                       borderRadius: "var(--radius-lg)",
                       borderLeft: `4px solid ${expired ? "var(--outline)" : "var(--primary)"}`,
+                      border: `1px solid ${expired ? "rgba(20,27,43,0.08)" : "rgba(6,78,59,0.2)"}`,
                       opacity: expired ? 0.65 : 1,
-                      transition: "opacity 0.2s",
+                      transition: "opacity 0.2s, transform 0.2s",
                     }}>
                     <div
+                      className='flex flex-col sm:flex-row gap-2 sm:gap-3'
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center",
+                        alignItems: "flex-start",
                         marginBottom: "10px",
                       }}>
                       <span
                         style={{
                           fontFamily: "var(--font-display)",
                           fontWeight: 800,
-                          fontSize: "0.9375rem",
+                          fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
                           color: "var(--on-surface)",
                           textTransform: "capitalize",
                           letterSpacing: "-0.01em",
@@ -611,7 +783,7 @@ function CookDashboard() {
                       </span>
                       <span
                         style={{
-                          fontSize: "0.75rem",
+                          fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
                           fontWeight: 600,
                           color: expired
                             ? "var(--error)"
@@ -622,7 +794,8 @@ function CookDashboard() {
                           background: expired
                             ? "rgba(220,38,38,0.08)"
                             : "rgba(6,78,59,0.08)",
-                          padding: "4px 10px",
+                          padding:
+                            "clamp(3px, 1vw, 4px) clamp(8px, 2.5vw, 10px)",
                           borderRadius: "var(--radius-pill)",
                         }}>
                         <Clock size={11} />
@@ -637,7 +810,8 @@ function CookDashboard() {
                         <span
                           key={i}
                           style={{
-                            padding: "4px 12px",
+                            padding:
+                              "clamp(3px, 1vw, 4px) clamp(9px, 2.5vw, 12px)",
                             borderRadius: "var(--radius-pill)",
                             background: expired
                               ? "var(--surface-container-high)"
@@ -645,7 +819,7 @@ function CookDashboard() {
                             color: expired
                               ? "var(--on-surface-variant)"
                               : "var(--primary-container)",
-                            fontSize: "0.75rem",
+                            fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
                             fontWeight: 600,
                             fontFamily: "var(--font-body)",
                           }}>
@@ -671,34 +845,58 @@ function CookDashboard() {
           }}>
           {/* Header */}
           <div
+            className='px-4 sm:px-5 md:px-6 flex flex-col sm:flex-row gap-3 sm:gap-4'
             style={{
-              padding: "20px 28px",
+              padding: "clamp(16px, 3vw, 28px)",
               display: "flex",
-              alignItems: "center",
+              // alignItems: "center",
               justifyContent: "space-between",
+              background:
+                "linear-gradient(180deg, rgba(20,27,43,0.03) 0%, rgba(20,27,43,0) 100%)",
               borderBottom: "1px solid var(--surface-container-high)",
+              flexWrap: "wrap",
             }}>
-            <h2
+            <div>
+              <h2
+                className='text-base sm:text-lg md:text-xl'
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: "clamp(0.95rem, 2.8vw, 1.1rem)",
+                  color: "var(--on-surface)",
+                  letterSpacing: "-0.02em",
+                  margin: 0,
+                }}>
+                Your Profile
+              </h2>
+              <p
+                className='text-xs sm:text-sm'
+                style={{
+                  marginTop: "4px",
+                  marginBottom: 0,
+                  color: "var(--on-surface-variant)",
+                  fontSize: "clamp(0.72rem, 2.2vw, 0.8125rem)",
+                }}>
+                Keep details fresh to build customer trust.
+              </p>
+            </div>
+            <div
+              className='flex flex-wrap gap-2 sm:gap-3'
               style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 800,
-                fontSize: "1rem",
-                color: "var(--on-surface)",
-                letterSpacing: "-0.02em",
-                margin: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "clamp(8px, 2vw, 10px)",
               }}>
-              Your Profile
-            </h2>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               {/* Verified badge */}
               <span
+                className='text-xs sm:text-sm'
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "5px",
-                  padding: "4px 12px",
+                  padding: "clamp(3px, 1vw, 4px) clamp(9px, 2.2vw, 12px)",
                   borderRadius: "var(--radius-pill)",
-                  background: "var(--primary-fixed)",
+                  background: "rgba(6,78,59,0.12)",
                   color: "var(--primary-container)",
                   fontSize: "0.6875rem",
                   fontWeight: 700,
@@ -713,20 +911,20 @@ function CookDashboard() {
                   setSuccess("");
                   setError("");
                 }}
+                className='px-3 sm:px-4 py-2 text-xs sm:text-sm'
                 style={{
-                  padding: "8px 16px",
+                  padding: "clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px)",
                   borderRadius: "var(--radius-lg)",
                   background: editing
                     ? "var(--surface-container-high)"
-                    : "var(--primary-fixed)",
-                  color: editing
-                    ? "var(--on-surface-variant)"
-                    : "var(--primary-container)",
+                    : "var(--primary)",
+                  color: editing ? "var(--on-surface-variant)" : "#fff",
                   border: "none",
                   cursor: "pointer",
                   fontFamily: "var(--font-display)",
                   fontWeight: 700,
                   fontSize: "0.8125rem",
+                  boxShadow: editing ? "none" : "0 6px 16px rgba(6,78,59,0.22)",
                   transition: "all 0.2s",
                 }}>
                 {editing ? "Cancel" : "Edit Profile"}
@@ -746,11 +944,12 @@ function CookDashboard() {
             <form
               noValidate
               onSubmit={handleUpdate}
-              style={{ padding: "28px" }}>
+              className='px-3 sm:px-4 md:px-6'
+              style={{ padding: "clamp(16px, 4vw, 28px)" }}>
               {/* Photo */}
-              <div style={{ marginBottom: "20px" }}>
+              <div className='mb-4 sm:mb-5' style={{ marginBottom: "20px" }}>
                 <label
-                  className='inp-label'
+                  className='inp-label text-xs sm:text-sm'
                   style={{ display: "block", marginBottom: "8px" }}>
                   Profile Photo
                   <span
@@ -918,11 +1117,13 @@ function CookDashboard() {
           ) : (
             /* ── VIEW MODE ── */
             <div
+              className='px-3 sm:px-4 md:px-6'
               style={{
-                padding: "28px",
+                padding: "28px clamp(12px, 4vw, 28px)",
                 display: "flex",
-                gap: "28px",
+                gap: "clamp(20px, 4vw, 28px)",
                 alignItems: "flex-start",
+                flexWrap: "wrap",
               }}>
               {/* Photo */}
               {cookProfile?.photo && (
@@ -930,8 +1131,8 @@ function CookDashboard() {
                   src={cookProfile.photo}
                   alt='profile'
                   style={{
-                    width: "88px",
-                    height: "88px",
+                    width: "clamp(72px, 20vw, 88px)",
+                    height: "clamp(72px, 20vw, 88px)",
                     borderRadius: "var(--radius-lg)",
                     objectFit: "cover",
                     flexShrink: 0,
@@ -944,9 +1145,12 @@ function CookDashboard() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1.2fr 1fr",
-                  gap: "16px 48px",
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
+                  gap: "clamp(20px, 3vw, 48px)",
                   flex: 1,
+                  width: "100%",
+                  minWidth: "280px",
                 }}>
                 <div style={{ minWidth: 0 }}>
                   <p style={labelStyle}>
@@ -975,7 +1179,7 @@ function CookDashboard() {
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: "20px",
+                    gap: "clamp(20px, 3vw, 20px)",
                   }}>
                   {[
                     {
@@ -1032,17 +1236,18 @@ function NavBtn({ icon, label, onClick, danger }) {
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className='px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-xs md:text-sm'
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "6px",
-        padding: "8px 14px",
+        gap: "clamp(4px, 1vw, 6px)",
+        padding: "clamp(6px, 1vw, 8px) clamp(10px, 2vw, 14px)",
         borderRadius: "var(--radius-lg)",
         border: "none",
         cursor: "pointer",
         fontFamily: "var(--font-display)",
         fontWeight: 700,
-        fontSize: "0.8125rem",
+        fontSize: "clamp(0.7rem, 1.5vw, 0.8125rem)",
         transition: "all 0.2s",
         background: danger
           ? hovered
@@ -1056,8 +1261,9 @@ function NavBtn({ icon, label, onClick, danger }) {
             ? "#991b1b"
             : "var(--on-surface-variant)"
           : "var(--primary-container)",
+        whiteSpace: "nowrap",
       }}>
-      {icon} {label}
+      {icon} <span className='hidden sm:inline'>{label}</span>
     </button>
   );
 }

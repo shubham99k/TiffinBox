@@ -1,43 +1,49 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axiosInstance from '../../utils/axiosInstance'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/axiosInstance";
 import { ArrowLeft } from "lucide-react";
 
 function ForgotPassword() {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError("");
     try {
-      await axiosInstance.post('/auth/forgot-password', { email })
-      localStorage.setItem('resetEmail', email)
-      navigate('/reset-password')
+      await axiosInstance.post("/auth/forgot-password", { email });
+      localStorage.setItem("resetEmail", email);
+      navigate("/reset-password");
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong')
+      setError(err.response?.data?.message || "Something went wrong");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className='auth-wrap'>
-
       {/* ── LEFT ── */}
       <div className='auth-left'>
         <div className='auth-left-inner'>
-
-          <span className='auth-back' onClick={() => navigate('/login')}>
+          <span className='auth-back' onClick={() => navigate("/login")}>
             <ArrowLeft size={14} /> Back to login
           </span>
 
-          <div className='auth-page-title'>Forgot your password?</div>
-          <p className='auth-page-sub'>
-            No worries. Enter your email and we'll send you a reset OTP within minutes.
+          <div className='auth-page-title text-2xl sm:text-3xl'>
+            Forgot your password?
+          </div>
+          <p
+            className='auth-page-sub text-sm sm:text-base'
+            style={{
+              fontSize: "clamp(0.875rem, 2.2vw, 1rem)",
+              marginBottom: "clamp(20px, 5vw, 32px)",
+            }}>
+            No worries. Enter your email and we'll send you a reset OTP within
+            minutes.
           </p>
 
           {error && <div className='error-box'>{error}</div>}
@@ -59,15 +65,14 @@ function ForgotPassword() {
             </div>
 
             <button type='submit' className='auth-btn' disabled={loading}>
-              {loading ? 'Sending OTP…' : 'Send Reset OTP'}
+              {loading ? "Sending OTP…" : "Send Reset OTP"}
             </button>
           </form>
 
           <div className='auth-switch'>
             Remembered it?&nbsp;
-            <span onClick={() => navigate('/login')}>Back to Login</span>
+            <span onClick={() => navigate("/login")}>Back to Login</span>
           </div>
-
         </div>
       </div>
 
@@ -83,11 +88,15 @@ function ForgotPassword() {
 
           <div>
             <div className='auth-right-headline'>
-              We got<br />your<br />
+              We got
+              <br />
+              your
+              <br />
               <span className='accent'>back.</span>
             </div>
             <p className='auth-right-body'>
-              Enter your email and we'll send you an OTP to reset your password instantly.
+              Enter your email and we'll send you an OTP to reset your password
+              instantly.
             </p>
           </div>
 
@@ -97,12 +106,13 @@ function ForgotPassword() {
             <div className='auth-accent-bar-item short' />
           </div>
 
-          <div className='auth-right-note'>Reset OTP is valid for 10 minutes only.</div>
+          <div className='auth-right-note'>
+            Reset OTP is valid for 10 minutes only.
+          </div>
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default ForgotPassword
+export default ForgotPassword;

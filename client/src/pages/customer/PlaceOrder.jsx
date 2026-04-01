@@ -46,6 +46,7 @@ function PlaceOrder() {
         {/* ── Back ── */}
         <button
           onClick={() => navigate(-1)}
+          className='text-xs sm:text-sm'
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -54,11 +55,11 @@ function PlaceOrder() {
             border: "none",
             color: "var(--outline)",
             cursor: "pointer",
-            fontSize: "0.8125rem",
+            fontSize: "clamp(0.72rem, 2vw, 0.8125rem)",
             fontWeight: 600,
             fontFamily: "var(--font-body)",
             padding: 0,
-            marginBottom: "24px",
+            marginBottom: "clamp(16px, 4vw, 24px)",
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary)")}
@@ -69,27 +70,30 @@ function PlaceOrder() {
         </button>
 
         {/* ── Title ── */}
-        <div className='setup-title'>Place Order</div>
-        <div className='setup-sub'>Review your details and confirm</div>
+        <div className='setup-title text-2xl sm:text-3xl'>Place Order</div>
+        <div className='setup-sub text-sm sm:text-base'>
+          Review your details and confirm
+        </div>
 
         {/* ── Dish Summary Card ── */}
         <div
           style={{
             background: "var(--surface-container-low)",
             borderRadius: "var(--radius-lg)",
-            padding: "18px",
-            marginBottom: "24px",
+            padding: "clamp(12px, 3vw, 18px)",
+            marginBottom: "clamp(16px, 4vw, 24px)",
             display: "flex",
-            gap: "14px",
-            alignItems: "center",
+            gap: "clamp(10px, 3vw, 14px)",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
           }}>
           {dish?.photo && (
             <img
               src={dish.photo}
               alt={dish.name}
               style={{
-                width: "72px",
-                height: "72px",
+                width: "clamp(56px, 18vw, 72px)",
+                height: "clamp(56px, 18vw, 72px)",
                 borderRadius: "var(--radius-md)",
                 objectFit: "cover",
                 flexShrink: 0,
@@ -101,7 +105,7 @@ function PlaceOrder() {
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "1.0625rem",
+                fontSize: "clamp(0.9375rem, 3vw, 1.0625rem)",
                 fontWeight: 800,
                 color: "var(--on-surface)",
                 letterSpacing: "-0.02em",
@@ -112,7 +116,7 @@ function PlaceOrder() {
             <div
               style={{
                 fontFamily: "var(--font-display)",
-                fontSize: "1.125rem",
+                fontSize: "clamp(1rem, 3.2vw, 1.125rem)",
                 fontWeight: 900,
                 color: "var(--primary-container)",
                 letterSpacing: "-0.04em",
@@ -151,7 +155,13 @@ function PlaceOrder() {
               }}>
               QUANTITY
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "clamp(8px, 2.2vw, 12px)",
+                flexWrap: "wrap",
+              }}>
               {/* Stepper group */}
               <div
                 style={{
@@ -165,8 +175,8 @@ function PlaceOrder() {
                   type='button'
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   style={{
-                    width: "40px",
-                    height: "40px",
+                    width: "clamp(36px, 10vw, 40px)",
+                    height: "clamp(36px, 10vw, 40px)",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
@@ -190,10 +200,10 @@ function PlaceOrder() {
                 </button>
                 <span
                   style={{
-                    minWidth: "44px",
+                    minWidth: "clamp(38px, 10vw, 44px)",
                     textAlign: "center",
                     fontFamily: "var(--font-display)",
-                    fontSize: "1.125rem",
+                    fontSize: "clamp(1rem, 3.4vw, 1.125rem)",
                     fontWeight: 800,
                     color: "var(--on-surface)",
                     letterSpacing: "-0.02em",
@@ -204,8 +214,8 @@ function PlaceOrder() {
                   type='button'
                   onClick={() => setQuantity((q) => q + 1)}
                   style={{
-                    width: "40px",
-                    height: "40px",
+                    width: "clamp(36px, 10vw, 40px)",
+                    height: "clamp(36px, 10vw, 40px)",
                     background: "none",
                     border: "none",
                     cursor: "pointer",
@@ -229,15 +239,16 @@ function PlaceOrder() {
               {/* Running total */}
               <div
                 style={{
-                  marginLeft: "16px",
-                  fontSize: "0.875rem",
+                  marginLeft: 0,
+                  fontSize: "clamp(0.78rem, 2.3vw, 0.875rem)",
                   color: "var(--outline)",
+                  minWidth: "unset",
                 }}>
                 Total:{" "}
                 <strong
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "1.125rem",
+                    fontSize: "clamp(1rem, 3.2vw, 1.125rem)",
                     fontWeight: 900,
                     color: "var(--primary-container)",
                     letterSpacing: "-0.04em",
@@ -266,19 +277,19 @@ function PlaceOrder() {
             style={{
               background: "#FEF3C7",
               borderRadius: "var(--radius-lg)",
-              padding: "14px 16px",
-              marginBottom: "22px",
+              padding: "clamp(12px, 3vw, 14px) clamp(12px, 3.5vw, 16px)",
+              marginBottom: "clamp(16px, 4vw, 22px)",
               display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              fontSize: "0.8125rem",
+              alignItems: "flex-start",
+              gap: "clamp(8px, 2.5vw, 10px)",
+              fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
               color: "#92400E",
               fontWeight: 600,
             }}>
             <div
               style={{
-                width: "32px",
-                height: "32px",
+                width: "clamp(28px, 8vw, 32px)",
+                height: "clamp(28px, 8vw, 32px)",
                 borderRadius: "var(--radius-md)",
                 background: "#FDE68A",
                 display: "flex",
@@ -304,7 +315,11 @@ function PlaceOrder() {
             type='submit'
             className='auth-btn'
             disabled={loading}
-            style={{ opacity: loading ? 0.7 : 1 }}>
+            style={{
+              opacity: loading ? 0.7 : 1,
+              width: "100%",
+              maxWidth: "100%",
+            }}>
             {loading ? (
               <span
                 style={{
