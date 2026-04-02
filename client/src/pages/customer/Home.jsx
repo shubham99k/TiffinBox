@@ -29,7 +29,7 @@ function Home() {
         );
         setMenus(data.menus);
       } catch (err) {
-        console.log(err);
+        void err;
       } finally {
         setLoading(false);
       }

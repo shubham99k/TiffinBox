@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Alert from "../../components/Alert";
 import { validateCookProfile } from "../../utils/validate";
-import { LogOut } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
+import { useSelector } from "react-redux";
 import Footer from "../../components/Footer";
 
 const CUISINE_TAGS = [
@@ -20,7 +18,6 @@ const CUISINE_TAGS = [
 ];
 
 function CookProfileSetup() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 
@@ -38,11 +35,6 @@ function CookProfileSetup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [photoHovered, setPhotoHovered] = useState(false);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -100,15 +92,12 @@ function CookProfileSetup() {
         color: "var(--on-surface)",
       }}>
       {/* ── Navbar ── */}
-      <nav className='dashboard-navbar'>
+      {/* <nav className='dashboard-navbar'>
         <div
           className='dashboard-navbar-brand'
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/")}>
-          TiffinBox{" "}
-          <span
-            className='auth-brand-dot'
-            style={{ display: "inline-block" }}></span>
+          TiffinBox
         </div>
         <div className='dashboard-navbar-right'>
           <button
@@ -118,7 +107,7 @@ function CookProfileSetup() {
             Logout
           </button>
         </div>
-      </nav>
+      </nav> */}
 
       {/* ── MAIN ── */}
       <main

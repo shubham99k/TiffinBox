@@ -1,27 +1,10 @@
 import Menu from '../models/Menu.js'
 import CookProfile from '../models/CookProfile.js'
+import { isCutoffInPast, isCutoffPassed } from '../utils/cutoffTime.js'
 
 // Helper — get today's date as "YYYY-MM-DD"
 const getTodayDate = () => {
   return new Date().toISOString().split('T')[0]
-}
-
-// Helper — check if cutoff time has passed
-const isCutoffPassed = (cutoffTime) => {
-  const now = new Date()
-  const [hours, minutes] = cutoffTime.split(':').map(Number)
-  const cutoff = new Date()
-  cutoff.setHours(hours, minutes, 0, 0)
-  return now > cutoff
-}
-
-// Helper — check if cutoff time is in the past
-const isCutoffInPast = (cutoffTime) => {
-  const now = new Date()
-  const [hours, minutes] = cutoffTime.split(':').map(Number)
-  const cutoff = new Date()
-  cutoff.setHours(hours, minutes, 0, 0)
-  return cutoff <= now
 }
 
 // Helper — validate cutoff time based on meal type

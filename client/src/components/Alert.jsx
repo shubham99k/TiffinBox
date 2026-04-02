@@ -7,8 +7,10 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
   useEffect(() => {
     if (!message || !onClose) return;
 
-    setProgress(100);
-    setVisible(false);
+    const resetTimeout = setTimeout(() => {
+      setProgress(100);
+      setVisible(false);
+    }, 0);
 
     const enterTimeout = setTimeout(() => setVisible(true), 10);
 
@@ -25,6 +27,7 @@ function Alert({ type = "error", message, onClose, duration = 2500 }) {
     }, 100);
 
     return () => {
+      clearTimeout(resetTimeout);
       clearTimeout(enterTimeout);
       clearTimeout(timer);
       clearInterval(interval);

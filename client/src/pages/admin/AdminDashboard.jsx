@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import Navbar from "../../components/Navbar";
-import Alert from "../../components/Alert";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
@@ -27,7 +26,7 @@ function AdminDashboard() {
       setStats(statsRes.data.stats);
       setUsers(usersRes.data.users);
     } catch (err) {
-      console.log(err);
+      void err;
     } finally {
       setLoading(false);
     }
@@ -43,7 +42,7 @@ function AdminDashboard() {
       );
       setConfirmBanId(null);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 
@@ -53,7 +52,7 @@ function AdminDashboard() {
       setUsers((prev) => prev.filter((u) => u._id !== confirmDeleteId));
       setConfirmDeleteId(null);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 

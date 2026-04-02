@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
-import stockPhotos from "../../utils/stockPhotos";
 import Alert from "../../components/Alert";
 import { validateMenu } from "../../utils/validate";
 import NotificationBell from "../../components/NotificationBell";
@@ -35,7 +34,6 @@ function PostMenu() {
   const [success, setSuccess] = useState("");
   const [showPhotoPicker, setShowPhotoPicker] = useState(null);
   const [existingMenus, setExistingMenus] = useState([]);
-  const [editingMenu, setEditingMenu] = useState(null);
   const [confirmDeleteMenuId, setConfirmDeleteMenuId] = useState(null);
   const [inlineEditId, setInlineEditId] = useState(null);
   const [inlineFormData, setInlineFormData] = useState({});
@@ -65,7 +63,7 @@ function PostMenu() {
       const { data } = await axiosInstance.get("/menu/my");
       setExistingMenus(data.menus);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 
@@ -244,7 +242,7 @@ function PostMenu() {
         }}>
         <span
           className='text-lg sm:text-xl'
-          onClick={()=> navigate("/cook/dashboard")}
+          onClick={() => navigate("/cook/dashboard")}
           style={{
             fontFamily: "var(--font-display)",
             fontWeight: 900,

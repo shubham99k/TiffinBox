@@ -58,10 +58,7 @@ const sendEmail = async (to, subject, title, body) => {
       subject,
       html: emailTemplate(title, body)
     })
-
-    console.log(`Email sent to ${to}`)
   } catch (error) {
-    console.log('Email error:', error.message)
     throw error
   }
 }

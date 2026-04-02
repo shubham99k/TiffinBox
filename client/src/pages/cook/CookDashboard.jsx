@@ -111,7 +111,6 @@ function CookDashboard() {
     setUpdating(true);
     setError("");
     setSuccess("");
-    console.log(formData);
 
     try {
       const form = new FormData();
@@ -334,7 +333,7 @@ function CookDashboard() {
           zIndex: 10,
         }}>
         <span
-        onClick={()=> navigate("/cook/dashboard")}
+          onClick={() => navigate("/cook/dashboard")}
           className='text-lg sm:text-xl'
           style={{
             fontFamily: "var(--font-display)",

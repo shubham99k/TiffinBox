@@ -57,7 +57,7 @@ function CookOrders() {
       const { data } = await axiosInstance.get("/orders/cook");
       setOrders(data.orders);
     } catch (err) {
-      console.log(err);
+      void err;
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ function CookOrders() {
       );
       setReviews(data.reviews);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 
@@ -81,7 +81,7 @@ function CookOrders() {
       const { data } = await axiosInstance.get("/menu/history");
       setPastMenus(data.menus);
     } catch (err) {
-      console.log(err);
+      void err;
     } finally {
       setPastMenusLoading(false);
     }
@@ -247,7 +247,7 @@ function CookOrders() {
           }}>
           <span
             className='text-lg sm:text-xl'
-            onClick={()=> navigate("/cook/dashboard")}
+            onClick={() => navigate("/cook/dashboard")}
             style={{
               fontFamily: "var(--font-display)",
               fontWeight: 900,

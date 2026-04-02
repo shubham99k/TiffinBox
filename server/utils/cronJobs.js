@@ -14,7 +14,7 @@ const startCronJobs = () => {
 
       const today = now.toISOString().split('T')[0]
 
-      const result = await Menu.updateMany(
+      await Menu.updateMany(
         {
           date: today,
           isActive: true,
@@ -25,16 +25,8 @@ const startCronJobs = () => {
         }
       )
 
-      if (result.modifiedCount > 0) {
-        console.log(`Cron: Marked ${result.modifiedCount} menus as inactive`)
-      }
-
-    } catch (error) {
-      console.log('Cron error:', error.message)
-    }
+    } catch { }
   })
-
-  console.log('Cron jobs started')
 }
 
 export default startCronJobs

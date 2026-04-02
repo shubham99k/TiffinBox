@@ -34,7 +34,7 @@ function OrderHistory() {
       const { data } = await axiosInstance.get("/orders/my");
       setOrders(data.orders);
     } catch (err) {
-      console.log(err);
+      void err;
     } finally {
       setLoading(false);
     }

@@ -4,15 +4,7 @@ import CookProfile from '../models/CookProfile.js'
 import sendEmail from '../utils/sendEmail.js'
 import Notification from '../models/Notification.js'
 import Review from '../models/Review.js'
-
-// Helper — check if cutoff time has passed
-const isCutoffPassed = (cutoffTime) => {
-  const now = new Date()
-  const [hours, minutes] = cutoffTime.split(':').map(Number)
-  const cutoff = new Date()
-  cutoff.setHours(hours, minutes, 0, 0)
-  return now > cutoff
-}
+import { isCutoffPassed } from '../utils/cutoffTime.js'
 
 // @desc    Place order (COD)
 // @route   POST /api/orders
@@ -108,7 +100,6 @@ export const getMyOrders = async (req, res) => {
       .populate('cookId')
       .sort({ createdAt: -1 })
 
-    const Review = (await import('../models/Review.js')).default
     const orderIds = orders.map(o => o._id)
     const reviews = await Review.find({ orderId: { $in: orderIds } })
 

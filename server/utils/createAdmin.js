@@ -10,7 +10,6 @@ const createAdmin = async () => {
 
     const adminExists = await User.findOne({ role: 'admin' })
     if (adminExists) {
-      console.log('Admin already exists!')
       process.exit()
     }
 
@@ -23,13 +22,11 @@ const createAdmin = async () => {
       isVerified: true
     })
 
-    console.log('Admin created successfully!')
     process.exit()
 
   } catch (error) {
-    console.log('Error:', error.message)
     process.exit(1)
   }
 }
 
-createAdmin() 
+createAdmin()

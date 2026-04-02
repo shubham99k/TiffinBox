@@ -34,7 +34,7 @@ function NotificationBell() {
       const { data } = await axiosInstance.get("/notifications");
       setNotifications(data.notifications);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 
@@ -48,7 +48,7 @@ function NotificationBell() {
       try {
         await axiosInstance.put("/notifications/read");
       } catch (err) {
-        console.log(err);
+        void err;
       }
     } else {
       setNotifications(notifications.map((n) => ({ ...n, isRead: true })));

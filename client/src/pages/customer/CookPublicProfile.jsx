@@ -26,7 +26,7 @@ function CookPublicProfile() {
         setMenus(menuRes.data.menus);
         setReviews(reviewRes.data.reviews);
       } catch (err) {
-        console.log(err);
+        void err;
       } finally {
         setLoading(false);
       }

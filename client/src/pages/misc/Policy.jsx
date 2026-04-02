@@ -169,7 +169,6 @@ function Policy() {
                             borderLeft: isActive
                               ? "3px solid var(--primary)"
                               : "3px solid transparent",
-                            border: "none",
                           }}>
                           <span
                             className='material-symbols-outlined'

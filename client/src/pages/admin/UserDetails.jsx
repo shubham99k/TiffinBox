@@ -97,19 +97,19 @@ function UserDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance.get(`/admin/users/${id}`);
+        setData(res.data.data);
+      } catch (err) {
+        void err;
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchUser();
   }, [id]);
-
-  const fetchUser = async () => {
-    try {
-      const res = await axiosInstance.get(`/admin/users/${id}`);
-      setData(res.data.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading)
     return (

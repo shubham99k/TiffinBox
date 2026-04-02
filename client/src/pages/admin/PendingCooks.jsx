@@ -22,7 +22,7 @@ function PendingCooks() {
       const { data } = await axiosInstance.get("/admin/cooks/pending");
       setCooks(data.pendingCooks);
     } catch (err) {
-      console.log(err);
+      void err;
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ function PendingCooks() {
       setCooks(cooks.filter((c) => c._id !== confirmApproveId));
       setConfirmApproveId(null);
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 
@@ -48,7 +48,7 @@ function PendingCooks() {
       setRejectingId(null);
       setRejectReason("");
     } catch (err) {
-      console.log(err);
+      void err;
     }
   };
 

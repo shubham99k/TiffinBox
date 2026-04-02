@@ -15,7 +15,6 @@
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
-//     console.log("Support form submitted:", form);
 //   };
 
 //   const categories = [
