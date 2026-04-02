@@ -42,8 +42,17 @@ function PostMenu() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const getCurrentTime = () => {
-    const now = new Date();
-    return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(new Date());
+
+    const hours = parts.find((part) => part.type === "hour")?.value ?? "00";
+    const minutes = parts.find((part) => part.type === "minute")?.value ?? "00";
+
+    return `${hours}:${minutes}`;
   };
 
   useEffect(() => {

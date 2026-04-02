@@ -1,14 +1,27 @@
-const toCutoffDate = (cutoffTime) => {
+const BUSINESS_TIME_ZONE = 'Asia/Kolkata'
+
+const getNowMinutesInIST = () => {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: BUSINESS_TIME_ZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).formatToParts(new Date())
+
+  const hours = Number(parts.find(part => part.type === 'hour')?.value || 0)
+  const minutes = Number(parts.find(part => part.type === 'minute')?.value || 0)
+  return hours * 60 + minutes
+}
+
+const toCutoffMinutes = (cutoffTime) => {
   const [hours, minutes] = cutoffTime.split(':').map(Number)
-  const cutoff = new Date()
-  cutoff.setHours(hours, minutes, 0, 0)
-  return cutoff
+  return hours * 60 + minutes
 }
 
 export const isCutoffPassed = (cutoffTime) => {
-  return new Date() > toCutoffDate(cutoffTime)
+  return getNowMinutesInIST() > toCutoffMinutes(cutoffTime)
 }
 
 export const isCutoffInPast = (cutoffTime) => {
-  return toCutoffDate(cutoffTime) <= new Date()
+  return getNowMinutesInIST() >= toCutoffMinutes(cutoffTime)
 }
