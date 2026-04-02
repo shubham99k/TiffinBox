@@ -59,6 +59,7 @@ const sendEmail = async (to, subject, title, body) => {
       html: emailTemplate(title, body)
     })
   } catch (error) {
+    console.error('Email failed:', error.message)
     throw error
   }
 }
