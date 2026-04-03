@@ -209,12 +209,13 @@ export const getUserDetails = async (req, res) => {
 
     let menus = [];
     let cookOrders = [];
+    let cookReceivedReviews = [];
 
     // 3. If user is cook → fetch menus + orders received
     if (user.role === "cook" && cookProfile) {
       const cookId = cookProfile._id;
 
-      const [fetchedMenus, fetchedCookOrders] = await Promise.all([
+      const [fetchedMenus, fetchedCookOrders, fetchedCookReceivedReviews] = await Promise.all([
         Menu.find({ cookId })
           .sort({ createdAt: -1 })
           .limit(10),
@@ -224,10 +225,17 @@ export const getUserDetails = async (req, res) => {
           .populate("menuId", "title mealType date")
           .sort({ createdAt: -1 })
           .limit(10),
+
+        Review.find({ cookId })
+          .populate("customerId", "name avatar city")
+          .populate("orderId", "dish totalAmount createdAt")
+          .sort({ createdAt: -1 })
+          .limit(10),
       ]);
 
       menus = fetchedMenus;
       cookOrders = fetchedCookOrders;
+      cookReceivedReviews = fetchedCookReceivedReviews;
     }
 
     // 4. Order stats
@@ -257,6 +265,7 @@ export const getUserDetails = async (req, res) => {
           menus,
           orders: cookOrders,
           stats: cookOrderStats,
+          receivedReviews: cookReceivedReviews,
         },
         reviews,
         notifications,

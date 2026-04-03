@@ -19,7 +19,8 @@ const notificationSchema = new mongoose.Schema({
       'order_ready',
       'order_delivered',
       'order_cancelled',
-      'cook_approved'
+      'cook_approved',
+      'cook_profile_submitted'
     ]
   },
   isRead: {

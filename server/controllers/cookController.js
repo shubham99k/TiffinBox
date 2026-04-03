@@ -1,4 +1,6 @@
 import CookProfile from '../models/CookProfile.js'
+import Notification from '../models/Notification.js'
+import User from '../models/User.js'
 import cloudinary from '../utils/cloudinary.js'
 
 // @desc    Create cook profile
@@ -37,6 +39,24 @@ export const createCookProfile = async (req, res) => {
       address,
       photo: photoUrl
     })
+
+    const [cookUser, adminUsers] = await Promise.all([
+      User.findById(req.user.id).select('name city'),
+      User.find({ role: 'admin', isActive: true }).select('_id')
+    ])
+
+    if (adminUsers.length > 0) {
+      const cookName = cookUser?.name || 'A cook'
+      const cookCity = cookUser?.city ? ` (${cookUser.city})` : ''
+
+      await Notification.insertMany(
+        adminUsers.map(admin => ({
+          userId: admin._id,
+          message: `${cookName}${cookCity} submitted a cook profile for approval.`,
+          type: 'cook_profile_submitted'
+        }))
+      )
+    }
 
     res.status(201).json({
       success: true,
