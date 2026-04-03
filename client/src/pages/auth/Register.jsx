@@ -287,11 +287,11 @@ function Register() {
             ))}
           </div>
 
-          <div className='auth-accent-bar'>
+          {/* <div className='auth-accent-bar'>
             <div className='auth-accent-bar-item long' />
             <div className='auth-accent-bar-item short' />
             <div className='auth-accent-bar-item short' />
-          </div>
+          </div> */}
 
           <div className='auth-stats'>
             {[
