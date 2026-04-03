@@ -90,7 +90,7 @@ function Landing() {
                     position: "relative",
                   }}>
                   <img
-                    src='https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG9tZSUyMGNoZWZ8ZW58MHx8MHx8fDA%3D'
+                    src='https://res.cloudinary.com/dipcaws84/image/upload/v1775213584/garima_arora_eawf1a.jpg'
                     alt='Chef'
                     style={{
                       width: "100%",
@@ -110,7 +110,7 @@ function Landing() {
                           fontSize: "clamp(1.05rem, 4vw, 1.25rem)",
                           marginBottom: 0,
                         }}>
-                        Marco Rossi
+                        Garima Arora
                       </h4>
                       <div className='badge badge-verified'>
                         <Star size={12} fill='currentColor' /> 4.9
@@ -119,7 +119,7 @@ function Landing() {
                     <p
                       className='auth-right-note'
                       style={{ color: "var(--primary)", marginTop: "4px" }}>
-                      Specialty: Handmade Tuscan Pasta
+                      Specialty: Handmade Rajma-Chawal
                     </p>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ function Landing() {
               </div>
               <div style={{ flex: "1 1 400px", minHeight: "260px" }}>
                 <img
-                  src='https://images.unsplash.com/photo-1556911261-6bd341186b2f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNvb2tpbmd8ZW58MHx8MHx8fDA%3D'
+                  src='https://res.cloudinary.com/dipcaws84/image/upload/v1775108514/tiffinbox/cooks/punr6uiltmsfmxxw1unu.jpg'
                   alt='Cooking'
                   style={{
                     width: "100%",
