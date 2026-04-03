@@ -1,7 +1,8 @@
 # TiffinBox
-### *Connecting Home Cooks with Nearby Customers for Fresh, Homemade Meals*
 
-> **The problem:** Students and working professionals pay ₹150–200/meal for repetitive, reheated restaurant food.  
+### _Connecting Home Cooks with Nearby Customers for Fresh, Homemade Meals_
+
+> **The problem:** Students and working professionals pay ₹150–200/meal for repetitive, reheated restaurant food.
 > **The solution:** A city-based pre-order platform where home cooks post their daily menu and nearby customers get fresh, homemade meals for ₹60–80.
 
 ---
@@ -22,14 +23,14 @@
 
 ## 🎯 Project Overview
 
-| Pain Point | Who Suffers | TiffinBox Solution |
-|:-----------|:------------|:-------------------|
-| Expensive restaurant food (₹150–200/meal) | Customer | Home cooks charge ₹60–80, no middleman |
-| No homemade food option | Customer | Real home cooks making fresh regional food |
-| Food wastage — cook extra just in case | Cook | Pre-order cutoff means cook knows exact quantity |
-| Uncertain daily income | Cook | Dashboard shows confirmed orders & earnings |
-| No platform to reach customers | Cook | Profile page with photos, ratings, cuisine type |
-| Awkward cash collection | Both | Razorpay handles payments digitally |
+| Pain Point                                | Who Suffers | TiffinBox Solution                               |
+| :---------------------------------------- | :---------- | :----------------------------------------------- |
+| Expensive restaurant food (₹150–200/meal) | Customer    | Home cooks charge ₹60–80, no middleman           |
+| No homemade food option                   | Customer    | Real home cooks making fresh regional food       |
+| Food wastage — cook extra just in case    | Cook        | Pre-order cutoff means cook knows exact quantity |
+| Uncertain daily income                    | Cook        | Dashboard shows confirmed orders & earnings      |
+| No platform to reach customers            | Cook        | Profile page with photos, ratings, cuisine type  |
+| Awkward cash collection                   | Both        | Razorpay handles payments digitally              |
 
 ---
 
@@ -58,7 +59,7 @@ Browse Verified Home Cooks in Your City
         ↓
 View Cook Profile + Today's Menu (dish, price, portions left, cutoff time)
         ↓
-Place Order before Cutoff → Enter Delivery Address → Pay via Razorpay
+Place Order before Cutoff → Enter Delivery Address → Confirm COD Order
         ↓
 Track Live Status: Confirmed → Preparing → Ready → Delivered
         ↓
@@ -100,6 +101,7 @@ Handle Complaints / Ban Users if Required
 ## 🔧 Full Feature List
 
 ### 🔐 Auth System
+
 - Register & login with email/password
 - Role selection at register — **Customer** or **Cook**
 - Email OTP verification
@@ -107,17 +109,19 @@ Handle Complaints / Ban Users if Required
 - Forgot password via email OTP
 
 ### 🥗 Customer Features
+
 - City-based discovery of verified home cooks
 - View cook profile — bio, cuisine, rating, reviews
 - View today's menu — dish name, photo, price, portions left, cutoff time
 - Place order before cutoff time
 - Enter delivery address at checkout
-- Pay securely via Razorpay (test mode)
+- Cash-on-delivery flow (order is created with pending payment status)
 - Live order status tracking: `Confirmed → Preparing → Ready → Delivered`
 - Full order history
 - Rate & review cook after delivery
 
 ### 🍳 Cook Features
+
 - Create profile — name, bio, city, cuisine type, photo
 - Admin approval gate before going live
 - Post daily menu (dish name, price, max portions, cutoff time, photo)
@@ -127,16 +131,19 @@ Handle Complaints / Ban Users if Required
 - Earnings dashboard — daily, weekly, monthly summary
 
 ### 🛡️ Admin Features
+
 - Approve or reject pending cook registrations
 - View all users, cooks, orders
 - Platform stats — total users, total orders, active cooks
 - Ban users or handle disputes manually
 
 ### 🔔 Notifications
+
 - **Email (Nodemailer):** Order placed (to cook), order confirmed (to customer), order delivered
-- **In-app bell:** Basic notification panel
+- **In-app bell:** Basic notification panel (including admin alerts for new cook profile submissions)
 
 ### ⭐ Review System
+
 - Star rating (1–5) + optional written review
 - Only customers who received the order can review
 - Cook's average rating recalculated and shown on profile
@@ -145,38 +152,39 @@ Handle Complaints / Ban Users if Required
 
 ### 🔮 Building in v1.1
 
-| Feature | Reason Deferred |
-|:--------|:----------------|
-| Google OAuth | Keep auth simple for MVP |
-| Real-time Socket.io | Page polling sufficient for MVP |
+| Feature                | Reason Deferred                      |
+| :--------------------- | :----------------------------------- |
+| Google OAuth           | Keep auth simple for MVP             |
+| Real-time Socket.io    | Page polling sufficient for MVP      |
 | Live delivery tracking | Cook uses Porter/Dunzo independently |
-| In-app chat | Email notifications sufficient |
-| Subscription plans | Pay-per-meal is simpler |
-| Payout system | Manual payouts for MVP |
-| Dispute management | Admin handles manually |
+| In-app chat            | Email notifications sufficient       |
+| Subscription plans     | Pay-per-meal is simpler              |
+| Payout system          | Manual payouts for MVP               |
+| Dispute management     | Admin handles manually               |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|:------|:-----------|
-| **Frontend** | React + Redux Toolkit + Tailwind CSS |
-| **Backend** | Node.js + Express.js |
-| **Database** | MongoDB + Mongoose (Atlas) |
-| **Authentication** | JWT (JSON Web Tokens) |
-| **Payments** | Razorpay (Test Mode) |
-| **Image Storage** | Cloudinary |
-| **Email** | Nodemailer (Gmail SMTP) |
-| **Frontend Deploy** | Vercel |
-| **Backend Deploy** | Render |
-| **Database Host** | MongoDB Atlas |
+| Layer               | Technology                                                                          |
+| :------------------ | :---------------------------------------------------------------------------------- |
+| **Frontend**        | React + Redux Toolkit + Tailwind CSS                                                |
+| **Backend**         | Node.js + Express.js                                                                |
+| **Database**        | MongoDB + Mongoose (Atlas)                                                          |
+| **Authentication**  | JWT (JSON Web Tokens)                                                               |
+| **Payments**        | COD flow (Razorpay dependency present but payment verification route is not active) |
+| **Image Storage**   | Cloudinary                                                                          |
+| **Email**           | Nodemailer (Gmail SMTP)                                                             |
+| **Frontend Deploy** | Vercel                                                                              |
+| **Backend Deploy**  | Render                                                                              |
+| **Database Host**   | MongoDB Atlas                                                                       |
 
 ---
 
 ## 🗄️ Database Schema
 
 ### 1. `Users`
+
 ```js
 {
   name:           String,     // required
@@ -194,6 +202,7 @@ Handle Complaints / Ban Users if Required
 ```
 
 ### 2. `CookProfiles`
+
 ```js
 {
   userId:       ref → Users,   // unique
@@ -216,10 +225,11 @@ Handle Complaints / Ban Users if Required
 ```
 
 ### 3. `Menus`
+
 ```js
 {
   cookId:    ref → CookProfiles,
-  date:      Date,
+  date:      String,          // 'YYYY-MM-DD' in IST
   mealType:  Enum['lunch', 'dinner'],
   dishes: [{
     name:         String,
@@ -236,6 +246,7 @@ Handle Complaints / Ban Users if Required
 ```
 
 ### 4. `Orders`
+
 ```js
 {
   customerId: ref → Users,
@@ -258,6 +269,7 @@ Handle Complaints / Ban Users if Required
 ```
 
 ### 5. `Reviews`
+
 ```js
 {
   customerId: ref → Users,
@@ -270,12 +282,14 @@ Handle Complaints / Ban Users if Required
 ```
 
 ### 6. `Notifications`
+
 ```js
 {
   userId:  ref → Users,
   message: String,
   type:    Enum['order_placed', 'order_confirmed', 'order_preparing',
-                'order_delivered', 'order_cancelled', 'cook_approved'],
+                'order_ready', 'order_delivered', 'order_cancelled',
+                'cook_approved', 'cook_profile_submitted'],
   isRead:    Boolean,         // default: false
   createdAt: Date
 }
@@ -287,125 +301,130 @@ Handle Complaints / Ban Users if Required
 
 ### 🔐 Auth Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/api/auth/register` | Register new user | Public |
-| `POST` | `/api/auth/login` | Login user | Public |
-| `POST` | `/api/auth/forgot-password` | Send OTP to email | Public |
-| `POST` | `/api/auth/reset-password` | Reset password with OTP | Public |
-| `GET` | `/api/auth/me` | Get logged-in user info | 🔒 Private |
-| `POST` | `/api/auth/verify-otp` | Email OTP verification | 🔒 Private |
+| Method | Endpoint                    | Description             | Auth       |
+| :----- | :-------------------------- | :---------------------- | :--------- |
+| `POST` | `/api/auth/register`        | Register new user       | Public     |
+| `POST` | `/api/auth/login`           | Login user              | Public     |
+| `POST` | `/api/auth/forgot-password` | Send OTP to email       | Public     |
+| `POST` | `/api/auth/reset-password`  | Reset password with OTP | Public     |
+| `GET`  | `/api/auth/me`              | Get logged-in user info | 🔒 Private |
+| `POST` | `/api/auth/verify-otp`      | Email OTP verification  | Public     |
 
 ### 🍳 Cook Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/api/cook/profile` | Create cook profile | 🔒 Cook |
-| `GET` | `/api/cook/profile` | Get own cook profile | 🔒 Cook |
-| `PUT` | `/api/cook/profile` | Update cook profile | 🔒 Cook |
-| `GET` | `/api/cook/all?city=` | Get all verified cooks by city | 🔒 Customer |
-| `GET` | `/api/cook/:id` | Get single cook profile (public) | Public |
-| `PUT` | `/api/cook/availability` | Toggle available/unavailable | 🔒 Cook |
+| Method | Endpoint                 | Description                      | Auth        |
+| :----- | :----------------------- | :------------------------------- | :---------- |
+| `POST` | `/api/cook/profile`      | Create cook profile              | 🔒 Cook     |
+| `GET`  | `/api/cook/profile/me`   | Get own cook profile             | 🔒 Cook     |
+| `PUT`  | `/api/cook/profile`      | Update cook profile              | 🔒 Cook     |
+| `GET`  | `/api/cook/all?city=`    | Get all verified cooks by city   | Public      |
+| `GET`  | `/api/cook/:id`          | Get single cook profile (public) | Public      |
+| `PUT`  | `/api/cook/availability` | Toggle available/unavailable     | 🔒 Cook     |
 
 ### 📋 Menu Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/api/menu` | Cook posts today's menu | 🔒 Cook |
-| `GET` | `/api/menu/today/:cookId` | Get today's menu of a cook | Public |
-| `GET` | `/api/menu/my` | Cook sees their own menu | 🔒 Cook |
-| `PUT` | `/api/menu/:id` | Update menu | 🔒 Cook |
-| `DELETE` | `/api/menu/:id` | Delete menu | 🔒 Cook |
-| `GET` | `/api/menu/all` | Get all menus | 🔒 Cook |
-| `GET` | `/api/menu/history` | Get all expired menus | 🔒 Cook |
+| Method   | Endpoint                  | Description                | Auth    |
+| :------- | :------------------------ | :------------------------- | :------ |
+| `POST`   | `/api/menu`               | Cook posts today's menu    | 🔒 Cook |
+| `GET`    | `/api/menu/today/:cookId` | Get today's menu of a cook | Public  |
+| `GET`    | `/api/menu/my`            | Cook sees their own menu   | 🔒 Cook |
+| `PUT`    | `/api/menu/:id`           | Update menu                | 🔒 Cook |
+| `DELETE` | `/api/menu/:id`           | Delete menu                | 🔒 Cook |
+| `GET`    | `/api/menu/all`           | Get all menus              | Public  |
+| `GET`    | `/api/menu/history`       | Get all expired menus      | 🔒 Cook |
 
 ### 🛒 Order Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/api/orders` | Customer places order | 🔒 Customer |
-| `GET` | `/api/orders/my` | Customer's order history | 🔒 Customer |
-| `GET` | `/api/orders/cook` | Cook's incoming orders | 🔒 Cook |
-| `PUT` | `/api/orders/:id/status` | Cook updates order status | 🔒 Cook |
-| `PUT` | `/api/orders/:id/cancel` | Customer cancels order | 🔒 Customer |
-| `POST` | `/api/orders/verify-payment` | Verify Razorpay payment | 🔒 Customer |
+| Method | Endpoint                 | Description               | Auth        |
+| :----- | :----------------------- | :------------------------ | :---------- |
+| `POST` | `/api/orders`            | Customer places order     | 🔒 Customer |
+| `GET`  | `/api/orders/my`         | Customer's order history  | 🔒 Customer |
+| `GET`  | `/api/orders/cook`       | Cook's incoming orders    | 🔒 Cook     |
+| `PUT`  | `/api/orders/:id/status` | Cook updates order status | 🔒 Cook     |
+| `PUT`  | `/api/orders/:id/cancel` | Customer cancels order    | 🔒 Customer |
 
 ### ⭐ Review Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `POST` | `/api/reviews` | Customer submits review | 🔒 Customer |
-| `GET` | `/api/reviews/cook/:cookId` | Get all reviews of a cook | Public |
+| Method | Endpoint                    | Description               | Auth        |
+| :----- | :-------------------------- | :------------------------ | :---------- |
+| `POST` | `/api/reviews`              | Customer submits review   | 🔒 Customer |
+| `GET`  | `/api/reviews/cook/:cookId` | Get all reviews of a cook | Public      |
 
 ### 🔔 Notification Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/api/notifications` | Get all notifications for user | 🔒 Private |
-| `PUT` | `/api/notifications/read` | Mark all as read | 🔒 Private |
+| Method | Endpoint                  | Description                    | Auth       |
+| :----- | :------------------------ | :----------------------------- | :--------- |
+| `GET`  | `/api/notifications`      | Get all notifications for user | 🔒 Private |
+| `PUT`  | `/api/notifications/read` | Mark all as read               | 🔒 Private |
 
 ### 🛡️ Admin Routes
 
-| Method | Endpoint | Description | Auth |
-|:-------|:---------|:------------|:-----|
-| `GET` | `/api/admin/cooks/pending` | Get unverified cooks | 🔒 Admin |
-| `PUT` | `/api/admin/cooks/:id/verify` | Approve cook | 🔒 Admin |
-| `PUT` | `/api/admin/cooks/:id/reject` | Reject cook | 🔒 Admin |
-| `GET` | `/api/admin/users` | Get all users | 🔒 Admin |
-| `GET` | `/api/admin/orders` | Get all orders | 🔒 Admin |
-| `GET` | `/api/admin/stats` | Platform stats | 🔒 Admin |
-| `PUT` | `/api/admin/users/:id/ban` | Ban a user | 🔒 Admin |
-| `GET` | `/api/admin/users/:id` | Single user detailed data | 🔒 Admin |
+| Method | Endpoint                      | Description               | Auth     |
+| :----- | :---------------------------- | :------------------------ | :------- |
+| `GET`  | `/api/admin/cooks/pending`    | Get unverified cooks      | 🔒 Admin |
+| `PUT`  | `/api/admin/cooks/:id/verify` | Approve cook              | 🔒 Admin |
+| `PUT`  | `/api/admin/cooks/:id/reject` | Reject cook               | 🔒 Admin |
+| `GET`  | `/api/admin/users`            | Get all users             | 🔒 Admin |
+| `GET`  | `/api/admin/orders`           | Get all orders            | 🔒 Admin |
+| `GET`  | `/api/admin/stats`            | Platform stats            | 🔒 Admin |
+| `PUT`  | `/api/admin/users/:id/ban`    | Ban a user                | 🔒 Admin |
+| `GET`  | `/api/admin/users/:id`        | Single user detailed data | 🔒 Admin |
 
 ---
 
 ## 🧠 Key Business Logic
 
-| Logic | Where | How |
-|:------|:------|:----|
-| **Cutoff time check** | Order Controller | Compare `Date.now()` with menu `cutoffTime` — reject if passed |
-| **Decrement portions** | Order Controller | `$inc: { portionsLeft: -quantity }` via `findByIdAndUpdate` |
-| **Auto-close menu** | Order Controller | After decrement, if `portionsLeft <= 0` → set `isActive: false` |
-| **Review gate** | Review Controller | Check `order.status === 'delivered'` before saving review |
-| **Verified cooks only** | Cook Controller | Filter by `isVerified: true` in all customer-facing queries |
-| **Update cook rating** | Review Controller | Recalculate average, update `CookProfile.rating` |
-| **Email on status change** | Order Controller | Call `sendEmail()` utility on every status update |
-| **Create notifications** | Order Controller | Create `Notification` doc for both cook and customer |
-| **City-based discovery** | Cook Controller | Filter cooks where `city === customer.city` |
-| **Cancellation window** | Order Controller | Allow cancel only when `order.status === 'preparing'` |
+| Logic                      | Where                 | How                                                                              |
+| :------------------------- | :-------------------- | :------------------------------------------------------------------------------- |
+| **Cutoff time check**      | Order/Menu Controller | Compare current IST time with menu `cutoffTime` — reject if passed               |
+| **Decrement portions**     | Order Controller      | Decrement selected dish `portionsLeft` in memory, then `menu.save()`             |
+| **Auto-close menu**        | Order Controller      | After decrement, if `portionsLeft <= 0` → set `isActive: false`                  |
+| **Review gate**            | Review Controller     | Check `order.status === 'delivered'` before saving review                        |
+| **Verified cooks only**    | Cook Controller       | Filter by `isVerified: true` in all customer-facing queries                      |
+| **Update cook rating**     | Review Controller     | Recalculate average, update `CookProfile.rating`                                 |
+| **Email on status change** | Order Controller      | Call `sendEmail()` utility on every status update                                |
+| **Create notifications**   | Order Controller      | Create `Notification` doc for both cook and customer                             |
+| **City-based discovery**   | Cook Controller       | City filter is query-driven (`/api/cook/all?city=`) using case-insensitive match |
+| **Cancellation window**    | Order Controller      | Allow cancel only when `order.status` is `pending` or `confirmed`                |
+| **Timezone consistency**   | Menu/Order/Cron Utils | Business date/time and cutoff checks are normalized to IST (`Asia/Kolkata`)      |
 
 ---
 
 ## ⚙️ Installation & Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/your-username/tiffinbox.git
 cd tiffinbox
 ```
 
 ### 2. Install Dependencies
+
 ```bash
+cd server
+npm install
+
+cd ../client
 npm install
 ```
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file in the root:
+Create a `.env` file in `server/`:
 
 ```env
 # Database
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/tiffinbox
+MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/tiffinbox
 
 # Auth
 JWT_SECRET=your_super_secret_jwt_key
-
-# Payments
-RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
-RAZORPAY_KEY_SECRET=your_razorpay_secret
+JWT_EXPIRE=7d
 
 # Image Storage
-CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
 # Email
 EMAIL_USER=your_gmail@gmail.com
@@ -416,12 +435,25 @@ PORT=5000
 NODE_ENV=development
 ```
 
+Create a `.env` file in `client/`:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
 ### 4. Start the Development Server
+
 ```bash
+# terminal 1
+cd server
+npm run dev
+
+# terminal 2
+cd client
 npm run dev
 ```
 
-The API will be live at `http://localhost:5000`
+The API will be live at `http://localhost:5000` and client at `http://localhost:5173`
 
 ---
 
@@ -429,6 +461,6 @@ The API will be live at `http://localhost:5000`
 
 **Built with ❤️ for home cooks and food lovers across India**
 
-*TiffinBox — Because home food hits different.*
+_TiffinBox — Because home food hits different._
 
 </div>
