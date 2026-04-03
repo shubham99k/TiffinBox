@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -39,9 +40,52 @@ import UserDetails from "./pages/admin/UserDetails";
 // 404
 import NotFound from "./pages/misc/NotFound";
 
+const PAGE_TITLES = {
+  "/": "TiffinBox | Fresh Home Meals",
+  "/how-it-works": "How It Works | TiffinBox",
+  "/policy": "Privacy Policy | TiffinBox",
+  "/terms-and-conditions": "Terms & Conditions | TiffinBox",
+  "/banned": "Account Restricted | TiffinBox",
+  "/login": "Login | TiffinBox",
+  "/register": "Register | TiffinBox",
+  "/forgot-password": "Forgot Password | TiffinBox",
+  "/verify-otp": "Verify OTP | TiffinBox",
+  "/reset-password": "Reset Password | TiffinBox",
+  "/home": "Home | TiffinBox",
+  "/orders/place": "Place Order | TiffinBox",
+  "/orders/my": "My Orders | TiffinBox",
+  "/cook/setup": "Cook Profile Setup | TiffinBox",
+  "/cook/dashboard": "Cook Dashboard | TiffinBox",
+  "/cook/post-menu": "Post Menu | TiffinBox",
+  "/cook/orders": "Cook Orders | TiffinBox",
+  "/admin/dashboard": "Admin Dashboard | TiffinBox",
+  "/admin/pending-cooks": "Pending Cooks | TiffinBox",
+};
+
+function TitleManager() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname.startsWith("/cook/")) {
+      document.title = "Cook Profile | TiffinBox";
+      return;
+    }
+
+    if (pathname.startsWith("/admin/users/")) {
+      document.title = "User Details | TiffinBox";
+      return;
+    }
+
+    document.title = PAGE_TITLES[pathname] || "TiffinBox";
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <TitleManager />
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/how-it-works' element={<HowItWorks />} />

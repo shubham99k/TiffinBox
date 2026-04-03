@@ -17,11 +17,23 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
+const ROLE_NAV_LINKS = {
+  customer: [{ label: "My Orders", path: "/orders/my", icon: ClipboardList }],
+  cook: [
+    { label: "Post Menu", path: "/cook/post-menu", icon: PlusCircle },
+    { label: "Orders", path: "/cook/orders", icon: ListOrdered },
+  ],
+  admin: [
+    { label: "Pending Cooks", path: "/admin/pending-cooks", icon: Users },
+  ],
+};
+
 function Navbar({ showBack, backPath, backLabel }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const role = user?.role || "customer";
 
   const handleLogout = () => {
     dispatch(logout());
@@ -35,9 +47,26 @@ function Navbar({ showBack, backPath, backLabel }) {
   };
 
   const homePath = getHomePath();
+  const roleLinks = ROLE_NAV_LINKS[role] || [];
   const backDestination = typeof backPath === "string" ? backPath : null;
   const shouldShowMobileHomeShortcut =
     !showBack || !backDestination || backDestination !== homePath;
+
+  const mobileHomeLabel =
+    role === "admin"
+      ? "Admin Dashboard"
+      : role === "cook"
+        ? "Cook Dashboard"
+        : "Home";
+
+  const handleNavigate = (pathOrDelta) => {
+    navigate(pathOrDelta);
+  };
+
+  const closeMobileAndNavigate = (pathOrDelta) => {
+    setMobileNavOpen(false);
+    navigate(pathOrDelta);
+  };
 
   useEffect(() => {
     const onResize = () => {
@@ -101,43 +130,21 @@ function Navbar({ showBack, backPath, backLabel }) {
             <NavBtn
               icon={<ArrowLeft size={14} />}
               label={backLabel || "Back"}
-              onClick={() => navigate(backPath || -1)}
+              onClick={() => handleNavigate(backPath || -1)}
             />
           )}
 
-          {/* Customer links */}
-          {user?.role === "customer" && (
-            <NavBtn
-              icon={<ClipboardList size={14} />}
-              label='My Orders'
-              onClick={() => navigate("/orders/my")}
-            />
-          )}
-
-          {/* Cook links */}
-          {user?.role === "cook" && (
-            <>
+          {roleLinks.map((link) => {
+            const Icon = link.icon;
+            return (
               <NavBtn
-                icon={<PlusCircle size={14} />}
-                label='Post Menu'
-                onClick={() => navigate("/cook/post-menu")}
+                key={link.path}
+                icon={<Icon size={14} />}
+                label={link.label}
+                onClick={() => handleNavigate(link.path)}
               />
-              <NavBtn
-                icon={<ListOrdered size={14} />}
-                label='Orders'
-                onClick={() => navigate("/cook/orders")}
-              />
-            </>
-          )}
-
-          {/* Admin links */}
-          {user?.role === "admin" && (
-            <NavBtn
-              icon={<Users size={14} />}
-              label='Pending Cooks'
-              onClick={() => navigate("/admin/pending-cooks")}
-            />
-          )}
+            );
+          })}
 
           <NotificationBell />
 
@@ -219,10 +226,7 @@ function Navbar({ showBack, backPath, backLabel }) {
           }}>
           {showBack && (
             <button
-              onClick={() => {
-                setMobileNavOpen(false);
-                navigate(backPath || -1);
-              }}
+              onClick={() => closeMobileAndNavigate(backPath || -1)}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -244,10 +248,7 @@ function Navbar({ showBack, backPath, backLabel }) {
 
           {shouldShowMobileHomeShortcut && (
             <button
-              onClick={() => {
-                setMobileNavOpen(false);
-                navigate(homePath);
-              }}
+              onClick={() => closeMobileAndNavigate(homePath)}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -263,51 +264,17 @@ function Navbar({ showBack, backPath, backLabel }) {
                 fontWeight: 700,
                 fontSize: "0.8125rem",
               }}>
-              {user?.role === "cook" ? (
-                <ChefHat size={14} />
-              ) : (
-                <UserIcon size={14} />
-              )}{" "}
-              {user?.role === "admin"
-                ? "Admin Dashboard"
-                : user?.role === "cook"
-                  ? "Cook Dashboard"
-                  : "Home"}
+              {role === "cook" ? <ChefHat size={14} /> : <UserIcon size={14} />}{" "}
+              {mobileHomeLabel}
             </button>
           )}
 
-          {user?.role === "customer" && (
-            <button
-              onClick={() => {
-                setMobileNavOpen(false);
-                navigate("/orders/my");
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "var(--radius-lg)",
-                border: "none",
-                background: "var(--primary-fixed)",
-                color: "var(--primary-container)",
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: "0.8125rem",
-              }}>
-              <ClipboardList size={14} /> My Orders
-            </button>
-          )}
-
-          {user?.role === "cook" && (
-            <>
+          {roleLinks.map((link) => {
+            const Icon = link.icon;
+            return (
               <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  navigate("/cook/post-menu");
-                }}
+                key={`mobile-${link.path}`}
+                onClick={() => closeMobileAndNavigate(link.path)}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -323,57 +290,10 @@ function Navbar({ showBack, backPath, backLabel }) {
                   fontWeight: 700,
                   fontSize: "0.8125rem",
                 }}>
-                <PlusCircle size={14} /> Post Menu
+                <Icon size={14} /> {link.label}
               </button>
-              <button
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  navigate("/cook/orders");
-                }}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  width: "100%",
-                  padding: "10px 12px",
-                  borderRadius: "var(--radius-lg)",
-                  border: "none",
-                  background: "var(--primary-fixed)",
-                  color: "var(--primary-container)",
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: "0.8125rem",
-                }}>
-                <ListOrdered size={14} /> Orders
-              </button>
-            </>
-          )}
-
-          {user?.role === "admin" && (
-            <button
-              onClick={() => {
-                setMobileNavOpen(false);
-                navigate("/admin/pending-cooks");
-              }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "var(--radius-lg)",
-                border: "none",
-                background: "var(--primary-fixed)",
-                color: "var(--primary-container)",
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                fontSize: "0.8125rem",
-              }}>
-              <Users size={14} /> Pending Cooks
-            </button>
-          )}
+            );
+          })}
 
           <button
             onClick={() => {

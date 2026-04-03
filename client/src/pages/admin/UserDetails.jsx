@@ -155,6 +155,13 @@ function UserDetails() {
 
   const { user, cookProfile, orders, cookData, reviews, notifications } = data;
   const isCook = user.role === "cook";
+  const cookReceivedReviews = cookData?.receivedReviews ?? [];
+  const statsSource = isCook ? cookData?.stats : orders?.stats;
+  const totalOrdersCount = statsSource?.totalOrders ?? statsSource?.total ?? 0;
+  const deliveredOrdersCount =
+    statsSource?.deliveredOrders ?? statsSource?.delivered ?? 0;
+  const cancelledOrdersCount =
+    statsSource?.cancelledOrders ?? statsSource?.cancelled ?? 0;
   const compactStatsGridStyle = {
     marginBottom: "clamp(16px, 3vw, 28px)",
   };
@@ -295,7 +302,7 @@ function UserDetails() {
                 Total Orders
               </div>
               <div className='stat-card-value' style={compactStatValueStyle}>
-                {orders.stats.totalOrders}
+                {totalOrdersCount}
               </div>
             </div>
             <div className='stat-card' style={compactStatCardStyle}>
@@ -305,7 +312,7 @@ function UserDetails() {
               <div
                 className='stat-card-value green'
                 style={compactStatValueStyle}>
-                {orders.stats.deliveredOrders}
+                {deliveredOrdersCount}
               </div>
             </div>
             <div className='stat-card' style={compactStatCardStyle}>
@@ -315,7 +322,7 @@ function UserDetails() {
               <div
                 className='stat-card-value amber'
                 style={compactStatValueStyle}>
-                {orders.stats.cancelledOrders}
+                {cancelledOrdersCount}
               </div>
             </div>
             {isCook && (
@@ -470,141 +477,143 @@ function UserDetails() {
           {/* ══════════════════════════════════════════
             ORDERS PLACED (as customer)
         ══════════════════════════════════════════ */}
-          <div className='table-card' style={{ marginBottom: "28px" }}>
-            <SectionHeader
-              title='Orders Placed'
-              meta={`Last ${orders.recent.length}`}
-            />
+          {!isCook && (
+            <div className='table-card' style={{ marginBottom: "28px" }}>
+              <SectionHeader
+                title='Orders Placed'
+                meta={`Last ${orders.recent.length}`}
+              />
 
-            {orders.recent.length === 0 ? (
-              <div
-                style={{
-                  padding: "48px",
-                  textAlign: "center",
-                  color: "var(--outline)",
-                  fontSize: "0.875rem",
-                  fontFamily: "var(--font-body)",
-                }}>
-                No orders placed yet
-              </div>
-            ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Dish</th>
-                    <th>Cook</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Payment</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.recent.map((o) => (
-                    <tr key={o._id}>
-                      <td>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                          }}>
-                          {o.dish?.photo ? (
-                            <img
-                              src={o.dish.photo}
-                              alt={o.dish.name}
-                              style={{
-                                width: "36px",
-                                height: "36px",
-                                borderRadius: "var(--radius-md)",
-                                objectFit: "cover",
-                                flexShrink: 0,
-                              }}
-                            />
-                          ) : (
-                            <div
-                              style={{
-                                width: "36px",
-                                height: "36px",
-                                borderRadius: "var(--radius-md)",
-                                background: "var(--primary-fixed)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "16px",
-                                flexShrink: 0,
-                              }}>
-                              🍽️
-                            </div>
-                          )}
-                          <div>
-                            <div
-                              style={{
-                                fontWeight: 600,
-                                color: "var(--on-surface)",
-                                fontSize: "0.875rem",
-                                fontFamily: "var(--font-display)",
-                              }}>
-                              {o.dish?.name || "N/A"}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: "0.75rem",
-                                color: "var(--outline)",
-                              }}>
-                              ₹{o.dish?.price}
+              {orders.recent.length === 0 ? (
+                <div
+                  style={{
+                    padding: "48px",
+                    textAlign: "center",
+                    color: "var(--outline)",
+                    fontSize: "0.875rem",
+                    fontFamily: "var(--font-body)",
+                  }}>
+                  No orders placed yet
+                </div>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Dish</th>
+                      <th>Cook</th>
+                      <th>Qty</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th>Payment</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.recent.map((o) => (
+                      <tr key={o._id}>
+                        <td>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}>
+                            {o.dish?.photo ? (
+                              <img
+                                src={o.dish.photo}
+                                alt={o.dish.name}
+                                style={{
+                                  width: "36px",
+                                  height: "36px",
+                                  borderRadius: "var(--radius-md)",
+                                  objectFit: "cover",
+                                  flexShrink: 0,
+                                }}
+                              />
+                            ) : (
+                              <div
+                                style={{
+                                  width: "36px",
+                                  height: "36px",
+                                  borderRadius: "var(--radius-md)",
+                                  background: "var(--primary-fixed)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  fontSize: "16px",
+                                  flexShrink: 0,
+                                }}>
+                                🍽️
+                              </div>
+                            )}
+                            <div>
+                              <div
+                                style={{
+                                  fontWeight: 600,
+                                  color: "var(--on-surface)",
+                                  fontSize: "0.875rem",
+                                  fontFamily: "var(--font-display)",
+                                }}>
+                                {o.dish?.name || "N/A"}
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "0.75rem",
+                                  color: "var(--outline)",
+                                }}>
+                                ₹{o.dish?.price}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "var(--on-surface-variant)",
-                        }}>
-                        {o.cookId?.userId?.name || "N/A"}
-                      </td>
-                      <td
-                        style={{
-                          textAlign: "center",
-                          fontWeight: 600,
-                          color: "var(--on-surface)",
-                        }}>
-                        {o.quantity}
-                      </td>
-                      <td
-                        style={{
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 700,
-                          color: "var(--primary-container)",
-                        }}>
-                        ₹{o.totalAmount}
-                      </td>
-                      <td>
-                        <span className={`badge ${statusClass(o.status)}`}>
-                          {o.status}
-                        </span>
-                      </td>
-                      <td>
-                        <span
-                          className={`badge ${statusClass(o.paymentStatus)}`}>
-                          {o.paymentStatus}
-                        </span>
-                      </td>
-                      <td
-                        style={{
-                          color: "var(--outline)",
-                          fontSize: "0.8125rem",
-                        }}>
-                        {new Date(o.createdAt).toLocaleDateString("en-GB")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                        </td>
+                        <td
+                          style={{
+                            fontSize: "0.875rem",
+                            color: "var(--on-surface-variant)",
+                          }}>
+                          {o.cookId?.userId?.name || "N/A"}
+                        </td>
+                        <td
+                          style={{
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: "var(--on-surface)",
+                          }}>
+                          {o.quantity}
+                        </td>
+                        <td
+                          style={{
+                            fontFamily: "var(--font-display)",
+                            fontWeight: 700,
+                            color: "var(--primary-container)",
+                          }}>
+                          ₹{o.totalAmount}
+                        </td>
+                        <td>
+                          <span className={`badge ${statusClass(o.status)}`}>
+                            {o.status}
+                          </span>
+                        </td>
+                        <td>
+                          <span
+                            className={`badge ${statusClass(o.paymentStatus)}`}>
+                            {o.paymentStatus}
+                          </span>
+                        </td>
+                        <td
+                          style={{
+                            color: "var(--outline)",
+                            fontSize: "0.8125rem",
+                          }}>
+                          {new Date(o.createdAt).toLocaleDateString("en-GB")}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
 
           {/* ══════════════════════════════════════════
             ORDERS RECEIVED (cook only)
@@ -783,6 +792,119 @@ function UserDetails() {
                     ))}
                   </tbody>
                 </table>
+              )}
+            </div>
+          )}
+
+          {/* ══════════════════════════════════════════
+            COMMENTS RECEIVED (cook only)
+        ══════════════════════════════════════════ */}
+          {isCook && (
+            <div
+              className='table-card'
+              style={{ marginBottom: "clamp(20px, 4vw, 28px)" }}>
+              <SectionHeader
+                title='Comments Received'
+                meta={`Last ${cookReceivedReviews.length}`}
+              />
+
+              {cookReceivedReviews.length === 0 ? (
+                <div
+                  style={{
+                    padding: "48px",
+                    textAlign: "center",
+                    color: "var(--outline)",
+                    fontSize: "0.875rem",
+                    fontFamily: "var(--font-body)",
+                  }}>
+                  No comments received yet
+                </div>
+              ) : (
+                <div>
+                  {cookReceivedReviews.map((r, i) => (
+                    <div
+                      key={r._id}
+                      style={{
+                        padding:
+                          "clamp(14px, 3vw, 20px) clamp(16px, 4vw, 28px)",
+                        borderTop:
+                          i === 0 ? "none" : "1px solid var(--outline-variant)",
+                        display: "flex",
+                        gap: "clamp(12px, 3vw, 16px)",
+                        alignItems: "flex-start",
+                      }}>
+                      <Avatar
+                        src={r.customerId?.avatar}
+                        name={r.customerId?.name}
+                        size={40}
+                        radius='50%'
+                      />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            marginBottom: "6px",
+                            flexWrap: "wrap",
+                          }}>
+                          <span
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontWeight: 700,
+                              fontSize: "clamp(0.8rem, 2vw, 0.875rem)",
+                              color: "var(--on-surface)",
+                            }}>
+                            {r.customerId?.name ?? "Customer"}
+                          </span>
+                          <span style={{ display: "flex", gap: "1px" }}>
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <span
+                                key={s}
+                                style={{
+                                  fontSize: "0.9rem",
+                                  color:
+                                    s <= r.rating
+                                      ? "#f59e0b"
+                                      : "var(--outline-variant)",
+                                }}>
+                                ★
+                              </span>
+                            ))}
+                          </span>
+                          {r.orderId?.dish?.name && (
+                            <span
+                              style={{
+                                fontSize: "0.75rem",
+                                color: "var(--outline)",
+                                fontFamily: "var(--font-body)",
+                              }}>
+                              on {r.orderId.dish.name}
+                            </span>
+                          )}
+                          <span
+                            style={{
+                              marginLeft: "auto",
+                              fontSize: "0.75rem",
+                              color: "var(--outline)",
+                              whiteSpace: "nowrap",
+                            }}>
+                            {new Date(r.createdAt).toLocaleDateString("en-GB")}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "clamp(0.8rem, 2vw, 0.9rem)",
+                            color: "var(--on-surface-variant)",
+                            lineHeight: 1.65,
+                            fontFamily: "var(--font-body)",
+                          }}>
+                          {r.comment || "No written comment"}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}
