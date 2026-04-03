@@ -4,6 +4,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import Navbar from "../../components/Navbar";
 import { ChefHat, MapPin, Star, Utensils, Clock } from "lucide-react";
 import Footer from "../../components/Footer";
+import { getTimeRemainingToCutoffInIST } from "../../utils/timeZone";
 
 function CookPublicProfile() {
   const { id } = useParams();
@@ -37,17 +38,7 @@ function CookPublicProfile() {
   const filteredMenus = menus.filter((m) => m.mealType === mealType);
 
   const getTimeRemaining = (cutoffTime) => {
-    const now = new Date();
-    const [hours, minutes] = cutoffTime.split(":").map(Number);
-    const cutoff = new Date();
-    cutoff.setHours(hours, minutes, 0, 0);
-    const diff = cutoff - now;
-    if (diff <= 0) return "Expired";
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    if (h > 0) return `${h}h ${m}m remaining`;
-    if (m > 0) return `${m}m remaining`;
-    return `few seconds remaining`;
+    return getTimeRemainingToCutoffInIST(cutoffTime);
   };
 
   if (loading)

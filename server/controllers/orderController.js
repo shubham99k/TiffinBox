@@ -5,6 +5,10 @@ import sendEmail from '../utils/sendEmail.js'
 import Notification from '../models/Notification.js'
 import Review from '../models/Review.js'
 import { isCutoffPassed } from '../utils/cutoffTime.js'
+import {
+  getStartOfCurrentMonthInISTAsUTCDate,
+  getStartOfCurrentWeekInISTAsUTCDate
+} from '../utils/timeZone.js'
 
 // @desc    Place order (COD)
 // @route   POST /api/orders
@@ -151,12 +155,8 @@ export const updateOrderStatus = async (req, res) => {
 
     // Update cook earnings when delivered
     if (status === 'delivered') {
-      const now = new Date()
-      const startOfWeek = new Date(now)
-      startOfWeek.setDate(now.getDate() - now.getDay())
-      startOfWeek.setHours(0, 0, 0, 0)
-
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const startOfWeek = getStartOfCurrentWeekInISTAsUTCDate()
+      const startOfMonth = getStartOfCurrentMonthInISTAsUTCDate()
 
       const allDelivered = await Order.find({
         cookId: order.cookId,

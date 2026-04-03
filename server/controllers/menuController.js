@@ -1,10 +1,11 @@
 import Menu from '../models/Menu.js'
 import CookProfile from '../models/CookProfile.js'
 import { isCutoffInPast, isCutoffPassed } from '../utils/cutoffTime.js'
+import { getTodayDateInIST } from '../utils/timeZone.js'
 
 // Helper — get today's date as "YYYY-MM-DD"
 const getTodayDate = () => {
-  return new Date().toISOString().split('T')[0]
+  return getTodayDateInIST()
 }
 
 // Helper — validate cutoff time based on meal type

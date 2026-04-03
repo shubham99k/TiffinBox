@@ -19,6 +19,11 @@ import DishForm from "../../components/DishForm";
 import Footer from "../../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/slices/authSlice";
+import {
+  getCurrentTimeInIST,
+  getNowMinutesInIST,
+  isMenuExpiredInIST,
+} from "../../utils/timeZone";
 
 function PostMenu() {
   const navigate = useNavigate();
@@ -40,23 +45,29 @@ function PostMenu() {
   const [inlinePhotoPicker, setInlinePhotoPicker] = useState(null);
   const [inlineLoading, setInlineLoading] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [currentMinutesInIST, setCurrentMinutesInIST] = useState(0);
+
+  const isMenuExpired = (menu) => {
+    return isMenuExpiredInIST(menu, currentMinutesInIST);
+  };
 
   const getCurrentTime = () => {
-    const parts = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Asia/Kolkata",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).formatToParts(new Date());
-
-    const hours = parts.find((part) => part.type === "hour")?.value ?? "00";
-    const minutes = parts.find((part) => part.type === "minute")?.value ?? "00";
-
-    return `${hours}:${minutes}`;
+    return getCurrentTimeInIST();
   };
 
   useEffect(() => {
     fetchMyMenus();
+  }, []);
+
+  useEffect(() => {
+    const syncCurrentMinutes = () => {
+      setCurrentMinutesInIST(getNowMinutesInIST());
+    };
+
+    syncCurrentMinutes();
+    const intervalId = setInterval(syncCurrentMinutes, 30 * 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -534,72 +545,55 @@ function PostMenu() {
                 flexDirection: "column",
                 gap: "clamp(10px, 2.2vw, 12px)",
               }}>
-              {existingMenus.map((menu) => (
-                <div
-                  key={menu._id}
-                  style={{
-                    borderRadius: "var(--radius-lg)",
-                    border: `1px solid ${menu.isExpired ? "rgba(20,27,43,0.08)" : "rgba(6,78,59,0.2)"}`,
-                    overflow: "hidden",
-                    background: menu.isExpired
-                      ? "var(--surface-container-low)"
-                      : "rgba(6,78,59,0.08)",
-                  }}>
-                  {/* Menu summary row */}
+              {existingMenus.map((menu) => {
+                const expired = isMenuExpired(menu);
+
+                return (
                   <div
-                    className='flex flex-col sm:flex-row gap-3 sm:gap-3'
+                    key={menu._id}
                     style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      justifyContent: "space-between",
-                      padding:
-                        "clamp(12px, 3vw, 14px) clamp(12px, 3.2vw, 18px)",
-                      gap: "12px",
-                      flexWrap: "wrap",
+                      borderRadius: "var(--radius-lg)",
+                      border: `1px solid ${expired ? "rgba(20,27,43,0.08)" : "rgba(6,78,59,0.2)"}`,
+                      overflow: "hidden",
+                      background: expired
+                        ? "var(--surface-container-low)"
+                        : "rgba(6,78,59,0.08)",
                     }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      {/* Title + badges */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          flexWrap: "wrap",
-                          marginBottom: "4px",
-                        }}>
-                        <span
+                    {/* Menu summary row */}
+                    <div
+                      className='flex flex-col sm:flex-row gap-3 sm:gap-3'
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        padding:
+                          "clamp(12px, 3vw, 14px) clamp(12px, 3.2vw, 18px)",
+                        gap: "12px",
+                        flexWrap: "wrap",
+                      }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {/* Title + badges */}
+                        <div
                           style={{
-                            fontFamily: "var(--font-display)",
-                            fontWeight: 800,
-                            fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
-                            color: "var(--on-surface)",
-                            textTransform: "capitalize",
-                            letterSpacing: "-0.01em",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            flexWrap: "wrap",
+                            marginBottom: "4px",
                           }}>
-                          {menu.mealType} menu
-                        </span>
+                          <span
+                            style={{
+                              fontFamily: "var(--font-display)",
+                              fontWeight: 800,
+                              fontSize: "clamp(0.8125rem, 2.4vw, 0.9375rem)",
+                              color: "var(--on-surface)",
+                              textTransform: "capitalize",
+                              letterSpacing: "-0.01em",
+                            }}>
+                            {menu.mealType} menu
+                          </span>
 
-                        {/* Status badge */}
-                        <span
-                          style={{
-                            fontSize: "clamp(0.62rem, 1.9vw, 0.6875rem)",
-                            fontWeight: 700,
-                            padding:
-                              "clamp(3px, 1vw, 4px) clamp(8px, 2.3vw, 10px)",
-                            borderRadius: "var(--radius-pill)",
-                            background: menu.isExpired
-                              ? "#fee2e2"
-                              : "var(--primary-fixed)",
-                            color: menu.isExpired
-                              ? "#991b1b"
-                              : "var(--primary-container)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.04em",
-                          }}>
-                          {menu.isExpired ? "Expired" : "Live"}
-                        </span>
-
-                        {inlineEditId === menu._id && (
+                          {/* Status badge */}
                           <span
                             style={{
                               fontSize: "clamp(0.62rem, 1.9vw, 0.6875rem)",
@@ -607,247 +601,273 @@ function PostMenu() {
                               padding:
                                 "clamp(3px, 1vw, 4px) clamp(8px, 2.3vw, 10px)",
                               borderRadius: "var(--radius-pill)",
-                              background: "var(--primary-fixed-dim)",
-                              color: "var(--primary-container)",
+                              background: expired
+                                ? "#fee2e2"
+                                : "var(--primary-fixed)",
+                              color: expired
+                                ? "#991b1b"
+                                : "var(--primary-container)",
                               textTransform: "uppercase",
                               letterSpacing: "0.04em",
                             }}>
-                            Editing
+                            {expired ? "Expired" : "Live"}
                           </span>
-                        )}
-                      </div>
 
-                      {/* Meta */}
-                      <p
-                        style={{
-                          fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
-                          color: "var(--on-surface-variant)",
-                          marginBottom: "8px",
-                        }}>
-                        {menu.dishes?.length} dishes · cutoff {menu.cutoffTime}
-                      </p>
-
-                      {/* Dish tags */}
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "6px",
-                          flexWrap: "wrap",
-                        }}>
-                        {menu.dishes?.map((d, i) => (
-                          <span
-                            key={i}
-                            style={{
-                              padding:
-                                "clamp(3px, 1vw, 4px) clamp(8px, 2.2vw, 10px)",
-                              borderRadius: "var(--radius-pill)",
-                              background: "rgba(6,78,59,0.08)",
-                              color: "var(--primary-container)",
-                              fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
-                              fontWeight: 600,
-                              fontFamily: "var(--font-body)",
-                            }}>
-                            {d.name} · ₹{d.price}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action buttons */}
-                    {!menu.isExpired && (
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "8px",
-                          flexShrink: 0,
-                          flexWrap: "wrap",
-                        }}>
-                        <button
-                          onClick={() =>
-                            inlineEditId === menu._id
-                              ? setInlineEditId(null)
-                              : handleInlineEdit(menu)
-                          }
-                          className='text-xs sm:text-sm'
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            padding:
-                              "clamp(6px, 1.5vw, 7px) clamp(11px, 2.8vw, 14px)",
-                            borderRadius: "var(--radius-lg)",
-                            border: `1.5px solid ${inlineEditId === menu._id ? "transparent" : "var(--primary)"}`,
-                            background:
-                              inlineEditId === menu._id
-                                ? "var(--primary)"
-                                : "transparent",
-                            color:
-                              inlineEditId === menu._id
-                                ? "#fff"
-                                : "var(--primary)",
-                            fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            fontFamily: "var(--font-display)",
-                            transition: "all 0.2s",
-                          }}>
-                          {inlineEditId === menu._id ? (
-                            <>
-                              <X size={13} /> Cancel
-                            </>
-                          ) : (
-                            <>
-                              <Pencil size={13} /> Edit
-                            </>
+                          {inlineEditId === menu._id && (
+                            <span
+                              style={{
+                                fontSize: "clamp(0.62rem, 1.9vw, 0.6875rem)",
+                                fontWeight: 700,
+                                padding:
+                                  "clamp(3px, 1vw, 4px) clamp(8px, 2.3vw, 10px)",
+                                borderRadius: "var(--radius-pill)",
+                                background: "var(--primary-fixed-dim)",
+                                color: "var(--primary-container)",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.04em",
+                              }}>
+                              Editing
+                            </span>
                           )}
-                        </button>
-                        <button
-                          onClick={() => setConfirmDeleteMenuId(menu._id)}
-                          className='text-xs sm:text-sm'
+                        </div>
+
+                        {/* Meta */}
+                        <p
+                          style={{
+                            fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
+                            color: "var(--on-surface-variant)",
+                            marginBottom: "8px",
+                          }}>
+                          {menu.dishes?.length} dishes · cutoff{" "}
+                          {menu.cutoffTime}
+                        </p>
+
+                        {/* Dish tags */}
+                        <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
-                            gap: "5px",
-                            padding:
-                              "clamp(6px, 1.5vw, 7px) clamp(11px, 2.8vw, 14px)",
-                            borderRadius: "var(--radius-lg)",
-                            border: "1.5px solid rgba(220,38,38,0.25)",
-                            background: "#fee2e2",
-                            color: "#991b1b",
-                            fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            fontFamily: "var(--font-display)",
+                            gap: "6px",
+                            flexWrap: "wrap",
                           }}>
-                          <Trash2 size={13} /> Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* ── INLINE EDIT FORM ── */}
-                  {inlineEditId === menu._id && (
-                    <div
-                      style={{
-                        padding: "20px",
-                        borderTop: "1px solid var(--surface-container-high)",
-                        background: "var(--surface-container-lowest)",
-                      }}>
-                      {/* Cutoff time */}
-                      <div className='inp-group'>
-                        <label className='inp-label'>Cutoff Time (24hr)</label>
-                        <div className='inp-icon-wrap'>
-                          <span className='material-symbols-outlined inp-icon'>
-                            schedule
-                          </span>
-                          <input
-                            className='inp-field'
-                            type='time'
-                            value={inlineFormData.cutoffTime}
-                            onChange={(e) =>
-                              setInlineFormData({
-                                ...inlineFormData,
-                                cutoffTime: e.target.value,
-                              })
-                            }
-                            min={getCurrentTime()}
-                            max={menu.mealType === "lunch" ? "13:00" : "20:00"}
-                            required
-                          />
+                          {menu.dishes?.map((d, i) => (
+                            <span
+                              key={i}
+                              style={{
+                                padding:
+                                  "clamp(3px, 1vw, 4px) clamp(8px, 2.2vw, 10px)",
+                                borderRadius: "var(--radius-pill)",
+                                background: "rgba(6,78,59,0.08)",
+                                color: "var(--primary-container)",
+                                fontSize: "clamp(0.68rem, 2vw, 0.75rem)",
+                                fontWeight: 600,
+                                fontFamily: "var(--font-body)",
+                              }}>
+                              {d.name} · ₹{d.price}
+                            </span>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Dishes */}
-                      {inlineFormData.dishes?.map((dish, index) => (
-                        <DishForm
-                          key={index}
-                          dish={dish}
-                          index={index}
-                          onFieldChange={handleInlineDishChange}
-                          onRemove={handleInlineRemoveDish}
-                          canRemove={inlineFormData.dishes.length > 1}
-                          photoPicker={inlinePhotoPicker}
-                          setPhotoPicker={setInlinePhotoPicker}
-                          onSelectPhoto={handleInlineSelectPhoto}
-                        />
-                      ))}
-
-                      {/* Add dish */}
-                      <button
-                        type='button'
-                        onClick={handleInlineAddDish}
-                        style={{
-                          width: "100%",
-                          padding: "12px",
-                          background: "var(--primary-fixed)",
-                          color: "var(--primary-container)",
-                          border: "2px dashed rgba(5,150,105,0.35)",
-                          borderRadius: "var(--radius-lg)",
-                          fontFamily: "var(--font-display)",
-                          fontWeight: 700,
-                          fontSize: "0.875rem",
-                          cursor: "pointer",
-                          marginBottom: "16px",
-                          transition: "background 0.2s",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "6px",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.background =
-                            "var(--primary-fixed-dim)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.background =
-                            "var(--primary-fixed)")
-                        }>
-                        <span
-                          className='material-symbols-outlined'
-                          style={{ fontSize: "16px" }}>
-                          add
-                        </span>
-                        Add Another Dish
-                      </button>
-
-                      {/* Save / Cancel */}
-                      <div style={{ display: "flex", gap: "10px" }}>
-                        <button
-                          onClick={() => handleInlineSubmit(menu._id)}
-                          disabled={inlineLoading}
-                          className='auth-btn'
-                          style={{ flex: 1, margin: 0 }}>
-                          {inlineLoading ? "Saving…" : "Save Changes"}
-                        </button>
-                        <button
-                          onClick={() => setInlineEditId(null)}
+                      {/* Action buttons */}
+                      {!expired && (
+                        <div
                           style={{
-                            padding: "12px 20px",
+                            display: "flex",
+                            gap: "8px",
+                            flexShrink: 0,
+                            flexWrap: "wrap",
+                          }}>
+                          <button
+                            onClick={() =>
+                              inlineEditId === menu._id
+                                ? setInlineEditId(null)
+                                : handleInlineEdit(menu)
+                            }
+                            className='text-xs sm:text-sm'
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              padding:
+                                "clamp(6px, 1.5vw, 7px) clamp(11px, 2.8vw, 14px)",
+                              borderRadius: "var(--radius-lg)",
+                              border: `1.5px solid ${inlineEditId === menu._id ? "transparent" : "var(--primary)"}`,
+                              background:
+                                inlineEditId === menu._id
+                                  ? "var(--primary)"
+                                  : "transparent",
+                              color:
+                                inlineEditId === menu._id
+                                  ? "#fff"
+                                  : "var(--primary)",
+                              fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              fontFamily: "var(--font-display)",
+                              transition: "all 0.2s",
+                            }}>
+                            {inlineEditId === menu._id ? (
+                              <>
+                                <X size={13} /> Cancel
+                              </>
+                            ) : (
+                              <>
+                                <Pencil size={13} /> Edit
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => setConfirmDeleteMenuId(menu._id)}
+                            className='text-xs sm:text-sm'
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "5px",
+                              padding:
+                                "clamp(6px, 1.5vw, 7px) clamp(11px, 2.8vw, 14px)",
+                              borderRadius: "var(--radius-lg)",
+                              border: "1.5px solid rgba(220,38,38,0.25)",
+                              background: "#fee2e2",
+                              color: "#991b1b",
+                              fontSize: "clamp(0.72rem, 2.1vw, 0.8125rem)",
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              fontFamily: "var(--font-display)",
+                            }}>
+                            <Trash2 size={13} /> Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* ── INLINE EDIT FORM ── */}
+                    {inlineEditId === menu._id && (
+                      <div
+                        style={{
+                          padding: "20px",
+                          borderTop: "1px solid var(--surface-container-high)",
+                          background: "var(--surface-container-lowest)",
+                        }}>
+                        {/* Cutoff time */}
+                        <div className='inp-group'>
+                          <label className='inp-label'>
+                            Cutoff Time (24hr)
+                          </label>
+                          <div className='inp-icon-wrap'>
+                            <span className='material-symbols-outlined inp-icon'>
+                              schedule
+                            </span>
+                            <input
+                              className='inp-field'
+                              type='time'
+                              value={inlineFormData.cutoffTime}
+                              onChange={(e) =>
+                                setInlineFormData({
+                                  ...inlineFormData,
+                                  cutoffTime: e.target.value,
+                                })
+                              }
+                              min={getCurrentTime()}
+                              max={
+                                menu.mealType === "lunch" ? "13:00" : "20:00"
+                              }
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        {/* Dishes */}
+                        {inlineFormData.dishes?.map((dish, index) => (
+                          <DishForm
+                            key={index}
+                            dish={dish}
+                            index={index}
+                            onFieldChange={handleInlineDishChange}
+                            onRemove={handleInlineRemoveDish}
+                            canRemove={inlineFormData.dishes.length > 1}
+                            photoPicker={inlinePhotoPicker}
+                            setPhotoPicker={setInlinePhotoPicker}
+                            onSelectPhoto={handleInlineSelectPhoto}
+                          />
+                        ))}
+
+                        {/* Add dish */}
+                        <button
+                          type='button'
+                          onClick={handleInlineAddDish}
+                          style={{
+                            width: "100%",
+                            padding: "12px",
+                            background: "var(--primary-fixed)",
+                            color: "var(--primary-container)",
+                            border: "2px dashed rgba(5,150,105,0.35)",
                             borderRadius: "var(--radius-lg)",
-                            border: "1px solid var(--surface-container-high)",
-                            background: "var(--surface-container-low)",
-                            color: "var(--on-surface-variant)",
-                            fontSize: "0.9375rem",
-                            fontWeight: 600,
-                            cursor: "pointer",
                             fontFamily: "var(--font-display)",
-                            transition: "background 0.15s",
+                            fontWeight: 700,
+                            fontSize: "0.875rem",
+                            cursor: "pointer",
+                            marginBottom: "16px",
+                            transition: "background 0.2s",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "6px",
                           }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.background =
-                              "var(--surface-container-high)")
+                              "var(--primary-fixed-dim)")
                           }
                           onMouseLeave={(e) =>
                             (e.currentTarget.style.background =
-                              "var(--surface-container-low)")
+                              "var(--primary-fixed)")
                           }>
-                          Cancel
+                          <span
+                            className='material-symbols-outlined'
+                            style={{ fontSize: "16px" }}>
+                            add
+                          </span>
+                          Add Another Dish
                         </button>
+
+                        {/* Save / Cancel */}
+                        <div style={{ display: "flex", gap: "10px" }}>
+                          <button
+                            onClick={() => handleInlineSubmit(menu._id)}
+                            disabled={inlineLoading}
+                            className='auth-btn'
+                            style={{ flex: 1, margin: 0 }}>
+                            {inlineLoading ? "Saving…" : "Save Changes"}
+                          </button>
+                          <button
+                            onClick={() => setInlineEditId(null)}
+                            style={{
+                              padding: "12px 20px",
+                              borderRadius: "var(--radius-lg)",
+                              border: "1px solid var(--surface-container-high)",
+                              background: "var(--surface-container-low)",
+                              color: "var(--on-surface-variant)",
+                              fontSize: "0.9375rem",
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              fontFamily: "var(--font-display)",
+                              transition: "background 0.15s",
+                            }}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.background =
+                                "var(--surface-container-high)")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.background =
+                                "var(--surface-container-low)")
+                            }>
+                            Cancel
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

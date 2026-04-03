@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { validateCookProfile } from "../../utils/validate";
 import Footer from "../../components/Footer";
+import { getTimeRemainingToCutoffInIST } from "../../utils/timeZone";
 
 function CookDashboard() {
   const navigate = useNavigate();
@@ -43,18 +44,7 @@ function CookDashboard() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const getTimeRemaining = (cutoffTime) => {
-    const now = new Date();
-    const [hours, minutes] = cutoffTime.split(":").map(Number);
-    const cutoff = new Date();
-    cutoff.setHours(hours, minutes, 0, 0);
-    const diff = cutoff - now;
-    if (diff <= 0) return "Expired";
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diff % (1000 * 60)) / 1000);
-    if (h > 0) return `${h}h ${m}m remaining`;
-    if (m > 0) return `${m}m remaining`;
-    return `${s}s remaining`;
+    return getTimeRemainingToCutoffInIST(cutoffTime, true);
   };
 
   useEffect(() => {

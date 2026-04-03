@@ -71,7 +71,7 @@ function Navbar({ showBack, backPath, backLabel }) {
         }}>
         {/* Brand */}
         <span
-          className='text-lg sm:text-xl'
+          className='text-lg sm:text-xl cursor-pointer'
           onClick={() => navigate(getHomePath())}
           style={{
             fontFamily: "var(--font-display)",

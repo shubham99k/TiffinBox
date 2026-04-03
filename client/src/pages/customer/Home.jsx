@@ -5,6 +5,10 @@ import axiosInstance from "../../utils/axiosInstance";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import {
+  getNowPartsInIST,
+  getTimeRemainingToCutoffInIST,
+} from "../../utils/timeZone";
+import {
   Utensils,
   MapPin,
   ChefHat,
@@ -37,22 +41,12 @@ function Home() {
     fetchMenus();
   }, [mealType]);
 
-  const getHour = new Date().getHours();
+  const getHour = getNowPartsInIST().hour;
   const greeting =
     getHour < 12 ? "Morning" : getHour < 17 ? "Afternoon" : "Evening";
 
   const getTimeRemaining = (cutoffTime) => {
-    const now = new Date();
-    const [hours, minutes] = cutoffTime.split(":").map(Number);
-    const cutoff = new Date();
-    cutoff.setHours(hours, minutes, 0, 0);
-    const diff = cutoff - now;
-    if (diff <= 0) return "Expired";
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    if (h > 0) return `${h}h ${m}m remaining`;
-    if (m > 0) return `${m}m remaining`;
-    return `few seconds remaining`;
+    return getTimeRemainingToCutoffInIST(cutoffTime);
   };
 
   return (
