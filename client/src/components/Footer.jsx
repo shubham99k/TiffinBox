@@ -4,8 +4,9 @@ import { useEffect } from "react";
 const footerLinks = [
   { label: "Privacy Policy", path: "/policy" },
   { label: "Terms & Conditions", path: "/terms-and-conditions" },
-  { label: "How it works", path: "/how-it-works" },
+  { label: "How it works ↗", path: "/how-it-works" },
   // { label: "Help Center", path: "/help-center" },
+  { label: "Why we built this ↗", path: "/fix-my-itch" },
 ];
 
 // Scroll to top whenever the route changes

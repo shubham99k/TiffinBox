@@ -6,6 +6,8 @@ import {
   Users,
   Utensils,
   Soup,
+  Flame,
+  ExternalLink,
 } from "lucide-react";
 import Footer from "../../components/Footer";
 import MiscNavbar from "../../components/MiscNavbar";
@@ -23,11 +25,31 @@ function Landing() {
           <section
             className='dashboard-content relative flex items-center overflow-hidden px-4 sm:px-6 md:px-8 lg:px-10'
             style={{ minHeight: "90vh" }}>
-            <div className='max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center'>
+            <div className='max-w-7xl mt-10 mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center'>
               <div className='relative z-20 ml-4 mr-4'>
-                <span className='inline-block py-1 px-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-4 sm:mb-6 rounded-sm'>
+                {/* <span className='inline-block py-1 px-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-4 sm:mb-6 rounded-sm'>
                   Finally. Tiffin Done Right.
-                </span>
+                </span> */}
+                <a
+                  href='/fix-my-itch'
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "4px 12px",
+                    background: "#141b2b",
+                    color: "#ffffff",
+                    fontSize: "clamp(0.40rem, 1.5vw, 0.65rem)",
+                    fontWeight: 500,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    borderRadius: "6px",
+                    textDecoration: "none",
+                    marginBottom: "16px",
+                  }}>
+                  <Flame size={11} /> Solving a Razorpay Fix My Itch problem{" "}
+                  <ExternalLink size={11} />
+                </a>
                 <h1
                   className='auth-right-headline'
                   style={{
@@ -43,6 +65,7 @@ function Landing() {
                     today.
                   </span>
                 </h1>
+
                 <p
                   className='auth-page-sub'
                   style={{
@@ -56,6 +79,7 @@ function Landing() {
                   eating what someone else decided. Fresh, homemade, exactly
                   what you want.
                 </p>
+
                 <div className='grid grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-10 w-full max-w-[36rem]'>
                   <button
                     onClick={() => navigate("/register")}

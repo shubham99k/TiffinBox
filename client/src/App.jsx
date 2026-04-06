@@ -12,6 +12,7 @@ import HowItWorks from "./pages/misc/HowItWorks";
 import Footer from "./components/Footer";
 import Policy from "./pages/misc/Policy";
 import TermsAndConditions from "./pages/misc/TermsAndConditions";
+import FixMyItchPage from "./pages/misc/FixMyItchPage";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -92,6 +93,7 @@ function App() {
         {/* <Route path='/help-center' element={<HelpCenter />} /> */}
         <Route path='/policy' element={<Policy />} />
         <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+        <Route path="/fix-my-itch" element={<FixMyItchPage />} />
 
         {/* ── Banned Route ── */}
         <Route path='/banned' element={<BannedPage />} />
