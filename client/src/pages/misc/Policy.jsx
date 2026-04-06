@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import MiscNavbar from "../../components/MiscNavbar";
+import { Link } from "react-router-dom";
 
 const sections = [
   { id: "introduction", icon: "auto_awesome", label: "Introduction" },
@@ -193,15 +194,19 @@ function Policy() {
                       overflow: "hidden",
                     }}>
                     <div style={{ position: "relative", zIndex: 1 }}>
-                      <p
+                      <Link
+                        to='/terms-and-conditions'
                         style={{
                           fontFamily: "var(--font-display)",
                           fontWeight: 800,
                           fontSize: "0.9375rem",
                           marginBottom: "8px",
+                          cursor: "pointer",
+                          textDecoration: "none",
+                          color: "inherit",
                         }}>
                         Need Clarity?
-                      </p>
+                      </Link>
                       <p
                         style={{
                           fontSize: "0.8125rem",

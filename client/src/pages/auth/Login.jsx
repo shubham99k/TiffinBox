@@ -145,43 +145,38 @@ function Login() {
         <img
           className='auth-right-photo'
           src='https://images.unsplash.com/photo-1547592180-85f173990554?w=900&auto=format&fit=crop'
-          alt='Home cooked food'
+          alt='Fresh tiffin meals'
         />
         <div className='auth-right-content'>
           <div className='auth-right-brand'>TiffinBox</div>
 
-          <div>
+          <div style={{ marginBottom: "35px" }}>
             <div className='auth-right-headline'>
-              Taste the
+              Not what
               <br />
-              home
+              they send —
               <br />
-              <span className='accent'>you miss.</span>
+              <span className='accent'>what you want.</span>
             </div>
             <p className='auth-right-body'>
-              Fresh homemade meals from verified home cooks in your city.
-              Pre-order before cutoff and eat like home.
+              Subscribe to a verified home cook and Tiffin service provider near
+              you and pick your meal every morning — fresh, homemade, exactly
+              what you want. No more eating what someone else decided.
             </p>
           </div>
 
-          {/* <div className='auth-accent-bar'>
-            <div className='auth-accent-bar-item long' />
-            <div className='auth-accent-bar-item short' />
-            <div className='auth-accent-bar-item short' />
-          </div> */}
-
-          <div className='auth-stats'>
-            {[
-              ["2K+", "Home Cooks"],
-              ["50K+", "Meals Served"],
-              ["4.8★", "Avg Rating"],
-            ].map(([num, label], i) => (
-              <div key={i}>
-                <div className='auth-stat-num'>{num}</div>
-                <div className='auth-stat-label'>{label}</div>
-              </div>
-            ))}
-          </div>
+          {/* <div className='auth-stats'>
+      {[
+        ["2K+", "Home Cooks"],
+        ["50K+", "Meals Served"],
+        ["4.8★", "Avg Rating"],
+      ].map(([num, label], i) => (
+        <div key={i}>
+          <div className='auth-stat-num'>{num}</div>
+          <div className='auth-stat-label'>{label}</div>
+        </div>
+      ))}
+    </div> */}
         </div>
       </div>
     </div>

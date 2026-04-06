@@ -67,7 +67,7 @@ function Home() {
             </span>
           </div>
           <div className='dashboard-subtitle text-sm sm:text-base'>
-            Fresh homemade meals available today
+            Fresh meals available today
           </div>
         </div>
 

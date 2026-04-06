@@ -16,10 +16,8 @@ function Landing() {
   return (
     <div>
       {/* ── Top Navigation Bar ── */}
-        <MiscNavbar activeItem='home' />
+      <MiscNavbar activeItem='home' />
       <div className='dashboard-wrap bg-background'>
-
-
         <main>
           {/* ── Hero Section ── */}
           <section
@@ -28,33 +26,35 @@ function Landing() {
             <div className='max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center'>
               <div className='relative z-20 ml-4 mr-4'>
                 <span className='inline-block py-1 px-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-4 sm:mb-6 rounded-sm'>
-                  Crafted for Excellence
+                  Finally. Tiffin Done Right.
                 </span>
                 <h1
                   className='auth-right-headline'
                   style={{
                     color: "var(--on-surface)",
-                    fontSize: "clamp(3.0rem, 10vw, 5rem)",
+                    fontSize: "clamp(2.2rem, 7vw, 3.8rem)",
                     lineHeight: 1.05,
                     textAlign: "justify",
                   }}>
-                  Mastery in <br />
-                  Every{" "}
+                  Choose what
+                  <br />
+                  you eat{" "}
                   <span className='accent' style={{ color: "var(--primary)" }}>
-                    Meal.
+                    today.
                   </span>
                 </h1>
                 <p
                   className='auth-page-sub'
                   style={{
-                    fontSize: "clamp(1rem, 3.8vw, 1.25rem)",
+                    fontSize: "clamp(0.85rem, 2.8vw, 1rem)",
                     marginTop: "16px",
                     maxWidth: "500px",
                     textAlign: "left",
                   }}>
-                  Connect with local Home Cooks crafting fresh, home-cooked
-                  dishes delivered to your door. Purely homemade, exceptionally
-                  mastered.
+                  Subscribe to a verified tiffin service provider & home cook
+                  near you and pick your meal every morning. No fixed menus. No
+                  eating what someone else decided. Fresh, homemade, exactly
+                  what you want.
                 </p>
                 <div className='grid grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-10 w-full max-w-[36rem]'>
                   <button
@@ -163,8 +163,8 @@ function Landing() {
                     Unmatched Quality
                   </h3>
                   <p className='auth-page-sub' style={{ maxWidth: "450px" }}>
-                    Every dish is a masterpiece, prepared by vetted home chefs
-                    who prioritize fresh ingredients and authentic techniques.
+                    Every dish is a masterpiece, prepared by vetted chefs who
+                    prioritize fresh ingredients and authentic techniques.
                   </p>
                 </div>
 
@@ -232,11 +232,12 @@ function Landing() {
                     <h3
                       className='auth-page-title'
                       style={{ color: "#fff", fontSize: "2rem" }}>
-                      Purely Homemade.
+                      Cooked After You Order.
                     </h3>
                     <p className='auth-right-body'>
-                      No industrial kitchens. No hidden additives. Just the
-                      magic of real cooking from real homes.
+                      No industrial kitchens. No reheated food sitting since
+                      morning. Your cook starts only after orders are locked at
+                      cutoff. That's the difference.
                     </p>
                   </div>
                   <Utensils size={64} style={{ opacity: 0.12 }} />
@@ -271,7 +272,7 @@ function Landing() {
                     fontSize: "clamp(1.9rem, 8vw, 3rem)",
                     lineHeight: 1.08,
                   }}>
-                  Turn your kitchen into a sanctuary of craft.
+                  Run your own tiffin service. From your kitchen.
                 </h2>
                 <p
                   className='auth-page-sub'
@@ -279,21 +280,22 @@ function Landing() {
                     color: "var(--on-surface-variant)",
                     fontSize: "1.15rem",
                   }}>
-                  Join our network of elite home cooks. We provide the platform,
-                  the audience, and the tools—you provide the magic.
+                  Post your daily menu, set your cutoff time, and let
+                  subscribers choose. You cook exactly what's ordered — zero
+                  waste, guaranteed income, full control.
                 </p>
                 <div className='flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-8'>
                   <button
                     onClick={() => navigate("/register")}
                     className='auth-btn'
                     style={{ width: "100%", maxWidth: "20rem" }}>
-                    Join as a Cook
+                    Start Your Tiffin Service
                   </button>
                   <button
                     onClick={() => navigate("/how-it-works")}
                     className='auth-back'
                     style={{ marginLeft: "0", width: "fit-content" }}>
-                    Learn about our vetting <ArrowRight size={16} />
+                    See how it works <ArrowRight size={16} />
                   </button>
                 </div>
               </div>

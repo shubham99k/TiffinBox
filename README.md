@@ -1,9 +1,10 @@
 # TiffinBox
 
-### _Connecting Home Cooks with Nearby Customers for Fresh, Homemade Meals_
+### _Connecting Home Cooks & Tiffin Service Provider with Nearby Customers for Fresh, Homemade Meals_
 
-> **The problem:** Students and working professionals pay ₹150–200/meal for repetitive, reheated restaurant food.
-> **The solution:** A city-based pre-order platform where home cooks post their daily menu and nearby customers get fresh, homemade meals for ₹60–80.
+> **The problem:**  Professionals subscribing to tiffin services receive pre-decided daily menus with no customization options. Customers endure dishes they dislike 2-3 times weekly but cannot switch to alternatives.No tiffin service allows day-to-day menu selection.
+
+> **The solution:** A city-based pre-order platform where home cooks & tiffin servide provider post their daily menu and nearby customers get fresh, personalized, and cost-effective meals.
 
 ---
 
@@ -23,15 +24,16 @@
 
 ## 🎯 Project Overview
 
-| Pain Point                                | Who Suffers | TiffinBox Solution                               |
-| :---------------------------------------- | :---------- | :----------------------------------------------- |
-| Expensive restaurant food (₹150–200/meal) | Customer    | Home cooks charge ₹60–80, no middleman           |
-| No homemade food option                   | Customer    | Real home cooks making fresh regional food       |
-| Food wastage — cook extra just in case    | Cook        | Pre-order cutoff means cook knows exact quantity |
-| Uncertain daily income                    | Cook        | Dashboard shows confirmed orders & earnings      |
-| No platform to reach customers            | Cook        | Profile page with photos, ratings, cuisine type  |
-| Awkward cash collection                   | Both        | Razorpay handles payments digitally              |
-
+| Pain Point                                          | Who Suffers | TiffinBox Solution                                                |
+| :-------------------------------------------------- | :---------- | :---------------------------------------------------------------- |
+| Expensive restaurant meals (₹150–200/meal)           | Customer    | Affordable home-cooked meals at ₹60–80, no middlemen              |
+| Fixed tiffin menus with no customization             | Customer    | Daily meal selection based on personal taste and preferences      |
+| Repetitive meals leading to dissatisfaction          | Customer    | Variety of dishes from multiple cooks                        |
+| Wasted money due to rigid subscriptions              | Customer    | Flexible ordering without being locked into full subscriptions    |
+| Lack of fresh, homemade food options                 | Customer    | Verified home cooks offering authentic regional meals             |
+| Food wastage due to uncertain demand                 | Cook        | Pre-order system ensures exact quantity preparation               |
+| Unpredictable daily income                           | Cook        | Dashboard with confirmed orders and clear earnings                |
+| No direct way for cooks to reach customers           | Cook        | Dedicated profile with menu, photos, ratings, and cuisine         |
 ---
 
 ## ⚡ Core Innovation — The Pre-Order Window
@@ -55,7 +57,7 @@ TiffinBox      →  Pre-order by cutoff  →  Cooked fresh, just for you
 ```
 Register / Login → Select City
         ↓
-Browse Verified Home Cooks in Your City
+Browse Verified Cooks in Your City
         ↓
 View Cook Profile + Today's Menu (dish, price, portions left, cutoff time)
         ↓
@@ -66,7 +68,7 @@ Track Live Status: Confirmed → Preparing → Ready → Delivered
 Receive Meal → Rate & Review the Cook ⭐
 ```
 
-### 🍳 Home Cook Flow
+### 🍳 Cook Flow
 
 ```
 Register → Fill Profile (bio, cuisine, city, photo)
@@ -110,7 +112,7 @@ Handle Complaints / Ban Users if Required
 
 ### 🥗 Customer Features
 
-- City-based discovery of verified home cooks
+- City-based discovery of verified cooks
 - View cook profile — bio, cuisine, rating, reviews
 - View today's menu — dish name, photo, price, portions left, cutoff time
 - Place order before cutoff time
@@ -312,14 +314,14 @@ Handle Complaints / Ban Users if Required
 
 ### 🍳 Cook Routes
 
-| Method | Endpoint                 | Description                      | Auth        |
-| :----- | :----------------------- | :------------------------------- | :---------- |
-| `POST` | `/api/cook/profile`      | Create cook profile              | 🔒 Cook     |
-| `GET`  | `/api/cook/profile/me`   | Get own cook profile             | 🔒 Cook     |
-| `PUT`  | `/api/cook/profile`      | Update cook profile              | 🔒 Cook     |
-| `GET`  | `/api/cook/all?city=`    | Get all verified cooks by city   | Public      |
-| `GET`  | `/api/cook/:id`          | Get single cook profile (public) | Public      |
-| `PUT`  | `/api/cook/availability` | Toggle available/unavailable     | 🔒 Cook     |
+| Method | Endpoint                 | Description                      | Auth    |
+| :----- | :----------------------- | :------------------------------- | :------ |
+| `POST` | `/api/cook/profile`      | Create cook profile              | 🔒 Cook |
+| `GET`  | `/api/cook/profile/me`   | Get own cook profile             | 🔒 Cook |
+| `PUT`  | `/api/cook/profile`      | Update cook profile              | 🔒 Cook |
+| `GET`  | `/api/cook/all?city=`    | Get all verified cooks by city   | Public  |
+| `GET`  | `/api/cook/:id`          | Get single cook profile (public) | Public  |
+| `PUT`  | `/api/cook/availability` | Toggle available/unavailable     | 🔒 Cook |
 
 ### 📋 Menu Routes
 
@@ -459,8 +461,8 @@ The API will be live at `http://localhost:5000` and client at `http://localhost:
 
 <div align="center">
 
-**Built with ❤️ for home cooks and food lovers across India**
+**Built with ❤️ for home cooks, tiffin service provider and food lovers across India**
 
-_TiffinBox — Because home food hits different._
+_TiffinBox — Where every meal feels like home._
 
 </div>

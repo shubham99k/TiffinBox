@@ -90,7 +90,7 @@ const HowItWorks = () => {
                   alignItems: "center",
                   gap: "10px",
                 }}>
-                <CookingPot size={18} /> I'm a Home Cook
+                <CookingPot size={18} /> I'm a Cook
               </a>
             </div>
           </section>
@@ -161,13 +161,13 @@ const HowItWorks = () => {
                   <h3
                     className='table-card-title'
                     style={{ fontSize: "1.25rem", marginBottom: "12px" }}>
-                    1. Browse Local Menus
+                    1. Find Your Cook
                   </h3>
                   <p
                     className='auth-right-body'
                     style={{ color: "var(--on-surface-variant)" }}>
-                    Discover talented home cooks in your neighborhood. Filter by
-                    cuisine or dietary needs.
+                    Browse verified cooks in your city. Check their menu,
+                    ratings, and subscriber reviews before committing.
                   </p>
                 </div>
 
@@ -197,13 +197,14 @@ const HowItWorks = () => {
                   <h3
                     className='table-card-title'
                     style={{ fontSize: "1.25rem", marginBottom: "12px" }}>
-                    2. Simple Ordering
+                    2. Pick Today's Dish
                   </h3>
                   <p
                     className='auth-right-body'
                     style={{ color: "var(--on-surface-variant)" }}>
-                    Select your dishes, specify preferences, and checkout
-                    securely with one click.
+                    Every morning your cook posts what's available. Choose your
+                    dish before the cutoff — your order is locked and cooking
+                    begins.
                   </p>
                 </div>
 
@@ -233,13 +234,13 @@ const HowItWorks = () => {
                   <h3
                     className='table-card-title'
                     style={{ fontSize: "1.25rem", marginBottom: "12px" }}>
-                    3. Track &amp; Enjoy
+                    3. Eat Fresh. Always.
                   </h3>
                   <p
                     className='auth-right-body'
                     style={{ color: "var(--on-surface-variant)" }}>
-                    Receive real-time updates as your meal is prepared and
-                    delivered fresh to your doorstep.
+                    Your meal is cooked after orders close — never reheated,
+                    never pre-made. Track it live and eat like home, every day.
                   </p>
                 </div>
               </div>
@@ -280,25 +281,26 @@ const HowItWorks = () => {
                   <h4
                     className='auth-page-title'
                     style={{ fontSize: "2.25rem", marginTop: "8px" }}>
-                    Experience Quality Firsthand
+                    No More Tiffin Regret.
                   </h4>
                   <p className='auth-page-sub'>
-                    Our rating system ensures every meal meets high standards.
-                    Read reviews from neighbors and see photos of actual meals.
+                    Traditional tiffin services send you whatever they decide.
+                    TiffinBox subscribers choose every single day. Same
+                    subscription price. Completely different experience.
                   </p>
                   <div className='auth-features'>
                     <div className='auth-feature-item'>
                       <div className='auth-feature-dot'></div>
                       <span
                         style={{ fontWeight: 700, color: "var(--on-surface)" }}>
-                        Verified Home Cooks
+                        Verified Home Cooks & Tiffin service provider
                       </span>
                     </div>
                     <div className='auth-feature-item'>
                       <div className='auth-feature-dot'></div>
                       <span
                         style={{ fontWeight: 700, color: "var(--on-surface)" }}>
-                        Sustainable Packaging Options
+                        Daily choice from cook's fresh menu
                       </span>
                     </div>
                   </div>
@@ -331,7 +333,7 @@ const HowItWorks = () => {
               <h2
                 className='auth-right-brand'
                 style={{ color: "var(--primary)", fontSize: "1.25rem" }}>
-                For Home Cooks
+                For Cooks
               </h2>
               <div
                 style={{
@@ -358,18 +360,18 @@ const HowItWorks = () => {
                 {[
                   {
                     id: "A",
-                    title: "Register Your Kitchen",
-                    desc: "Submit credentials and safety verification. We help you with the paperwork.",
+                    title: "Set Up Your Tiffin Service",
+                    desc: "Create your cook profile, pick your dishes from our catalog, and get verified. Admin approves you before you go live.",
                   },
                   {
                     id: "B",
-                    title: "Post Your Menu",
-                    desc: "Upload photos, set prices, and availability. You are in full control.",
+                    title: "Post Your Menu Daily",
+                    desc: "Every morning, activate today's dishes and set your cutoff time. Subscribers pick their meal — you cook exactly what's ordered.",
                   },
                   {
                     id: "C",
-                    title: "Manage & Grow",
-                    desc: "Receive orders via your dashboard. Track earnings and manage inventory.",
+                    title: "Earn. Grow. Repeat.",
+                    desc: "Track daily orders, confirmed earnings, and subscriber count from your dashboard. Zero food waste. Guaranteed income.",
                   },
                 ].map((step) => (
                   <div key={step.id} style={{ display: "flex", gap: "24px" }}>
@@ -474,7 +476,7 @@ const HowItWorks = () => {
                     <div
                       className='auth-stat-label'
                       style={{ color: "var(--secondary-fixed)" }}>
-                      Instant Payouts
+                      Confirmed earnings
                     </div>
                   </div>
                   <img
@@ -494,7 +496,6 @@ const HowItWorks = () => {
           </section>
 
           {/* ── CTA Section ── */}
-          {/* ── CTA Section ── */}
           <section className='dashboard-content'>
             <div
               className='auth-right'
@@ -502,22 +503,24 @@ const HowItWorks = () => {
                 borderRadius: "var(--radius-lg)",
                 position: "relative",
                 height: "auto",
-                minHeight: "400px", // Ensures enough space for the visual effect
+                minHeight: "400px",
                 padding: "var(--space-xl) var(--space-md)",
-                display: "flex", // Flex is required for alignItems to work
+                display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 marginBottom: "2rem",
                 textAlign: "center",
-                overflow: "hidden", // Clips the ::after pseudo-element to the radius
+                overflow: "hidden",
               }}>
-              {/* Content Wrapper to stay above the CSS ::after gradient */}
-              <div style={{ position: "relative", zIndex: 2 }}>
+              {/* This kills the ::after gradient */}
+              <style>{`.auth-right::after { display: none !important; }`}</style>
+
+              <div style={{ position: "relative", zIndex: 10 }}>
                 <h2
                   className='auth-right-headline'
                   style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}>
-                  Ready to start your journey?
+                  Your tiffin. Your choice. Starting today.
                 </h2>
                 <p
                   className='auth-right-body'
@@ -525,10 +528,10 @@ const HowItWorks = () => {
                     maxWidth: "600px",
                     marginBottom: "var(--space-lg)",
                     marginInline: "auto",
-                    color: "rgba(255,255,255,0.8)", // Slightly brighter for readability
+                    color: "rgba(255,255,255,0.8)",
                   }}>
-                  Join thousands of others transforming the way they experience
-                  food. Whether eating or cooking, there's a place for you.
+                  Join subscribers who finally look forward to lunchtime — and
+                  home cooks who earn from doing what they love most.
                 </p>
 
                 <div
@@ -542,13 +545,13 @@ const HowItWorks = () => {
                     onClick={() => navigate("/login")}
                     className='auth-btn'
                     style={{
-                      background: "var(--surface-container-lowest)", // Level 2 White
-                      color: "var(--primary-container)", // Anchor Green Text
+                      background: "var(--surface-container-lowest)",
+                      color: "var(--primary-container)",
                       width: "auto",
                       padding: "16px 40px",
-                      boxShadow: "none", // Remove emerald glow for contrast
+                      boxShadow: "none",
                     }}>
-                    Start Browsing
+                    Choose Today's Meal
                   </button>
                   <button
                     onClick={() => navigate("/register")}
@@ -563,7 +566,7 @@ const HowItWorks = () => {
                       alignItems: "center",
                       gap: "10px",
                     }}>
-                    Open Your Kitchen
+                    Start Your Tiffin Service
                   </button>
                 </div>
               </div>

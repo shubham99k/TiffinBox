@@ -257,35 +257,35 @@ function Register() {
           src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&auto=format&fit=crop'
           alt='Homemade food spread'
         />
-        <div className='auth-right-content'>
+        <div className='auth-right-content' style={{ marginBottom: "35px" }}>
           <div className='auth-right-brand'>TiffinBox</div>
 
-          <div>
-            <div className='auth-right-headline'>
-              Miss mom's
-              <br />
-              cooking?
-              <br />
-              <span className='accent'>We got you.</span>
-            </div>
-            <p className='auth-right-body'>
-              Pre-order fresh homemade meals from verified home cooks in your
-              city. Skip the mess, eat like home.
-            </p>
-          </div>
-
-          <div className='auth-features'>
-            {[
-              "Order 2–3 hours before mealtime",
-              "Fresh food, zero wastage",
-              "Home cooks earn from their kitchen",
-            ].map((f, i) => (
-              <div key={i} className='auth-feature-item'>
-                <div className='auth-feature-dot' />
-                {f}
+            <div >
+              <div className='auth-right-headline'>
+                Miss mom's
+                <br />
+                cooking?
+                <br />
+                <span className='accent'>We got you.</span>
               </div>
-            ))}
-          </div>
+              <p className='auth-right-body'>
+                Pre-order fresh homemade meals from verified tiffin service provider & home cooks in your
+                city. Skip the hassle, eat like home.
+              </p>
+            </div>
+
+            <div className='auth-features'>
+              {[
+                "Order 2–3 hours before mealtime",
+                "Fresh food, zero wastage",
+                "No fixed menu — you choose, every day",
+              ].map((f, i) => (
+                <div key={i} className='auth-feature-item'>
+                  <div className='auth-feature-dot' />
+                  {f}
+                </div>
+              ))}
+            </div>
 
           {/* <div className='auth-accent-bar'>
             <div className='auth-accent-bar-item long' />
@@ -293,7 +293,7 @@ function Register() {
             <div className='auth-accent-bar-item short' />
           </div> */}
 
-          <div className='auth-stats'>
+          {/* <div className='auth-stats'>
             {[
               ["2K+", "Home Cooks"],
               ["50K+", "Meals Served"],
@@ -304,7 +304,7 @@ function Register() {
                 <div className='auth-stat-label'>{label}</div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

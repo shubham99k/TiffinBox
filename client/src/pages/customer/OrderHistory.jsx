@@ -201,7 +201,7 @@ function OrderHistory() {
                   color: "var(--outline)",
                   marginBottom: "28px",
                 }}>
-                Browse home cooks and place your first order!
+                Browse cooks and place your first order!
               </div>
               <button
                 className='auth-btn'

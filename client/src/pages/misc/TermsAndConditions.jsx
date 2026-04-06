@@ -116,7 +116,7 @@ function TermsAndConditions() {
                   maxWidth: "600px",
                   margin: isMobile ? "0 auto" : 0,
                 }}>
-                Last Updated: June 15, 2024. These terms govern your use of
+                Last Updated: April 01, 2026. These terms govern your use of
                 TiffinBox's platform and services. Please read them carefully.
               </p>
             </header>
