@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 const emailTemplate = (title, body) => `
 <!DOCTYPE html>
@@ -44,27 +44,21 @@ const emailTemplate = (title, body) => `
 
 const sendEmail = async (to, subject, title, body) => {
   try {
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      throw new Error('Email credentials are not configured')
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('Resend API key is not configured')
     }
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    })
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    await transporter.sendMail({
-      from: `"TiffinBox " <${process.env.EMAIL_USER}>`,
+    const { error } = await resend.emails.send({
+      from: 'TiffinBox <noreply@shubhamsali.site>',
       to,
       subject,
-      html: emailTemplate(title, body)
+      html: emailTemplate(title, body),
     })
+
+    if (error) throw new Error(error.message)
+
   } catch (error) {
     console.error('Email failed:', error.message)
     throw error

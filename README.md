@@ -141,7 +141,7 @@ Handle Complaints / Ban Users if Required
 
 ### 🔔 Notifications
 
-- **Email (Nodemailer):** Order placed (to cook), order confirmed (to customer), order delivered
+- **Email (Resend):** Order placed (to cook), order confirmed (to customer), order delivered
 - **In-app bell:** Basic notification panel (including admin alerts for new cook profile submissions)
 
 ### ⭐ Review System
@@ -176,7 +176,7 @@ Handle Complaints / Ban Users if Required
 | **Authentication**  | JWT (JSON Web Tokens)                                                               |
 | **Payments**        | COD flow (Razorpay dependency present but payment verification route is not active) |
 | **Image Storage**   | Cloudinary                                                                          |
-| **Email**           | Nodemailer (Gmail SMTP)                                                             |
+| **Email**           | Resend                                                                              |
 | **Frontend Deploy** | Vercel                                                                              |
 | **Backend Deploy**  | Render                                                                              |
 | **Database Host**   | MongoDB Atlas                                                                       |
@@ -429,8 +429,7 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
 # Email
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASS=your_gmail_app_password
+RESEND_API_KEY=your_resend_api_key
 
 # Server
 PORT=5000
