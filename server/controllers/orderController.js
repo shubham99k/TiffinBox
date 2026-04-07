@@ -68,8 +68,14 @@ export const placeOrder = async (req, res) => {
       type: 'order_placed'
     })
 
-    // Send email to cook
-    await sendEmail(
+    res.status(201).json({
+      success: true,
+      message: 'Order placed successfully!',
+      order
+    })
+
+    // Send email after the API response so a slow SMTP provider cannot block checkout.
+    void sendEmail(
       cookData.userId.email,
       'New order received! ',
       'You have a new order!',
@@ -83,12 +89,8 @@ export const placeOrder = async (req, res) => {
     </div>
     <p class="text">Please prepare the order on time.</p>
   `
-    )
-
-    res.status(201).json({
-      success: true,
-      message: 'Order placed successfully!',
-      order
+    ).catch(error => {
+      console.error('Failed to send cook order email:', error.message)
     })
 
   } catch (error) {
