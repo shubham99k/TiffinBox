@@ -34,8 +34,8 @@ export const verifyCook = async (req, res) => {
     cookProfile.isVerified = true
     await cookProfile.save()
 
-    // Send approval email
-    await sendEmail(
+    // Send approval email without blocking the admin action.
+    void sendEmail(
       cookProfile.userId.email,
       'Your TiffinBox cook profile is approved! 🎉',
       'You are approved! 🎉',
@@ -44,7 +44,9 @@ export const verifyCook = async (req, res) => {
     <p class="text">Your cook profile has been <strong>approved</strong> by the TiffinBox team. You can now start posting your daily menu and accepting orders.</p>
     <p class="text">Welcome to the TiffinBox family! </p>
   `
-    )
+    ).catch(error => {
+      console.error('Failed to send cook approval email:', error.message)
+    })
 
     res.status(200).json({ success: true, message: 'Cook approved successfully' })
 
@@ -66,8 +68,8 @@ export const rejectCook = async (req, res) => {
       return res.status(404).json({ message: 'Cook not found' })
     }
 
-    // Send rejection email
-    await sendEmail(
+    // Send rejection email without blocking profile rejection.
+    void sendEmail(
       cookProfile.userId.email,
       'TiffinBox cook profile update',
       'Profile Not Approved',
@@ -82,7 +84,9 @@ export const rejectCook = async (req, res) => {
     </div>
     <p class="text">You can update your profile and apply again. We'd love to have you on board!</p>
   `
-    )
+    ).catch(error => {
+      console.error('Failed to send cook rejection email:', error.message)
+    })
     await CookProfile.findByIdAndDelete(req.params.id)
 
     res.status(200).json({ success: true, message: 'Cook rejected and notified' })

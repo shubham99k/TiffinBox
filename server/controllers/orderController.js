@@ -186,8 +186,10 @@ export const updateOrderStatus = async (req, res) => {
       type: `order_${status}`
     })
 
-    // Send email to customer
-    await sendEmail(
+    res.status(200).json({ success: true, order })
+
+    // Send email after the API response so order status updates are not blocked by SMTP issues.
+    void sendEmail(
       order.customerId.email,
       `Your TiffinBox order is ${status}!`,
       `Order ${status.charAt(0).toUpperCase() + status.slice(1)}!`,
@@ -203,9 +205,9 @@ export const updateOrderStatus = async (req, res) => {
         : '<p class="text">We\'ll keep you updated as your order progresses!</p>'
       }
   `
-    )
-
-    res.status(200).json({ success: true, order })
+    ).catch(error => {
+      console.error('Failed to send customer status email:', error.message)
+    })
 
   } catch (error) {
     res.status(500).json({ message: error.message })

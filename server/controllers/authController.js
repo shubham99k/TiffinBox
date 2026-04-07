@@ -23,11 +23,11 @@ export const register = async (req, res) => {
       verifyOTPExpiry: otpExpiry
     })
 
-  await sendEmail(
-  email,
-  'Verify your TiffinBox account',
-  'Welcome to TiffinBox! 👋',
-  `
+    void sendEmail(
+      email,
+      'Verify your TiffinBox account',
+      'Welcome to TiffinBox! 👋',
+      `
     <p class="text">Hi ${name}, thanks for joining TiffinBox!</p>
     <p class="text">Your verification OTP is:</p>
     <div class="highlight" style="text-align:center;">
@@ -35,7 +35,9 @@ export const register = async (req, res) => {
     </div>
     <p class="text">This OTP expires in <strong>10 minutes</strong>. If you didn't register, ignore this email.</p>
   `
-)
+    ).catch(error => {
+      console.error('Failed to send registration OTP email:', error.message)
+    })
 
     res.status(201).json({
       success: true,
