@@ -270,6 +270,7 @@ function PostMenu() {
             color: "var(--on-surface)",
             letterSpacing: "-0.02em",
             whiteSpace: "nowrap",
+            cursor: "pointer",
           }}>
           TiffinBox
         </span>

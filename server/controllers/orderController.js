@@ -197,7 +197,7 @@ export const updateOrderStatus = async (req, res) => {
     <p class="text">Hi ${order.customerId.name},</p>
     <div class="highlight">
       <div class="highlight-row"><span class="highlight-label">Dish:&nbsp;</span><span class="highlight-value">${order.dish.name}</span></div>
-      <div class="highlight-row"><span class="highlight-label">Status:&nbsp;</span><span class="highlight-value" style="color:#7C3AED;">${status.toUpperCase()}</span></div>
+      <div class="highlight-row"><span class="highlight-label">Status:&nbsp;</span><span class="highlight-value" style="color: #047857;">${status.toUpperCase()}</span></div>
       <div class="highlight-row"><span class="highlight-label">Amount:&nbsp;</span><span class="highlight-value">₹${order.totalAmount}</span></div>
     </div>
     ${status === 'delivered'
