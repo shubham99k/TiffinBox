@@ -19,7 +19,7 @@ axiosInstance.interceptors.response.use(
   response => response,
   error => {
     if (
-      error.response?.status === 401 &&
+      error.response?.status === 403 &&
       error.response?.data?.message === 'Your account has been suspended'
     ) {
       store.dispatch(setBanned())
