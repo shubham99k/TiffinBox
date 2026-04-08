@@ -2,6 +2,9 @@ import User from '../models/User.js'
 import generateToken from '../utils/generateToken.js'
 import sendEmail from '../utils/sendEmail.js'
 import { generateOTP } from './otpController.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -37,6 +40,25 @@ export const register = async (req, res) => {
   `
     ).catch(error => {
       console.error('Failed to send registration OTP email:', error.message)
+    })
+
+    void sendEmail(
+      process.env.ADMIN_EMAIL,
+      'New user registered on TiffinBox',
+      'New User Alert 🚨',
+      `
+    <p class="text">A new user has registered on TiffinBox.</p>
+    <p class="text">User Details:</p>
+    <ul>
+      <li><strong>Name:</strong> ${name}</li>
+      <li><strong>Email:</strong> ${email}</li>
+      <li><strong>Role:</strong> ${role}</li>
+      <li><strong>City:</strong> ${city}</li>
+      <li><strong>Phone:</strong> ${phone}</li>
+    </ul>
+  `
+    ).catch(error => {
+      console.error('Failed to send registration notification email:', error.message)
     })
 
     res.status(201).json({
