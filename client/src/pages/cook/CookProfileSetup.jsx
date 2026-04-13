@@ -17,6 +17,8 @@ const CUISINE_TAGS = [
   "Jain",
 ];
 
+const MAX_PROFILE_PHOTO_SIZE = 5 * 1024 * 1024;
+
 function CookProfileSetup() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -42,6 +44,19 @@ function CookProfileSetup() {
   const handlePhoto = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        setError("Please select a valid image file.");
+        e.target.value = "";
+        return;
+      }
+
+      if (file.size > MAX_PROFILE_PHOTO_SIZE) {
+        setError("Photo must be 5MB or smaller. Please choose a smaller image.");
+        e.target.value = "";
+        return;
+      }
+
+      setError("");
       setPhoto(file);
       setPreview(URL.createObjectURL(file));
     }
@@ -71,9 +86,7 @@ function CookProfileSetup() {
       form.append("address", formData.address);
       if (photo) form.append("photo", photo);
 
-      await axiosInstance.post("/cook/profile", form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axiosInstance.post("/cook/profile", form);
       setSuccess("Profile submitted successfully!");
       setTimeout(() => navigate("/cook/dashboard"), 1500);
     } catch (err) {
