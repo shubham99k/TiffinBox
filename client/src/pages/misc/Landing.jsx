@@ -143,7 +143,7 @@ function Landing() {
                     <p
                       className='auth-right-note'
                       style={{ color: "var(--primary)", marginTop: "4px" }}>
-                      Specialty: Handmade Rajma-Chawal
+                      Specialty: Handmade Dumplings, Momos, Thukpa
                     </p>
                   </div>
                 </div>
